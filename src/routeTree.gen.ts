@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SignupRoleRouteImport } from './routes/signup.$role'
 
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
@@ -23,40 +26,80 @@ const RoleSelectRoute = RoleSelectRouteImport.update({
   path: '/role-select',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotRoute = ForgotRouteImport.update({
+  id: '/forgot',
+  path: '/forgot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoleRoute = SignupRoleRouteImport.update({
+  id: '/signup/$role',
+  path: '/signup/$role',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/forgot': typeof ForgotRoute
+  '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
+  '/signup/$role': typeof SignupRoleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot': typeof ForgotRoute
+  '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
+  '/signup/$role': typeof SignupRoleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/forgot': typeof ForgotRoute
+  '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
+  '/signup/$role': typeof SignupRoleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/role-select' | '/welcome'
+  fullPaths:
+    | '/'
+    | '/forgot'
+    | '/login'
+    | '/role-select'
+    | '/welcome'
+    | '/signup/$role'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/role-select' | '/welcome'
-  id: '__root__' | '/' | '/role-select' | '/welcome'
+  to: '/' | '/forgot' | '/login' | '/role-select' | '/welcome' | '/signup/$role'
+  id:
+    | '__root__'
+    | '/'
+    | '/forgot'
+    | '/login'
+    | '/role-select'
+    | '/welcome'
+    | '/signup/$role'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ForgotRoute: typeof ForgotRoute
+  LoginRoute: typeof LoginRoute
   RoleSelectRoute: typeof RoleSelectRoute
   WelcomeRoute: typeof WelcomeRoute
+  SignupRoleRoute: typeof SignupRoleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,6 +118,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoleSelectRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot': {
+      id: '/forgot'
+      path: '/forgot'
+      fullPath: '/forgot'
+      preLoaderRoute: typeof ForgotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -82,13 +139,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup/$role': {
+      id: '/signup/$role'
+      path: '/signup/$role'
+      fullPath: '/signup/$role'
+      preLoaderRoute: typeof SignupRoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ForgotRoute: ForgotRoute,
+  LoginRoute: LoginRoute,
   RoleSelectRoute: RoleSelectRoute,
   WelcomeRoute: WelcomeRoute,
+  SignupRoleRoute: SignupRoleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
