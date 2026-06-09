@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as VaultRouteImport } from './routes/vault'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as KycRouteImport } from './routes/kyc'
@@ -17,7 +18,13 @@ import { Route as InvestRouteImport } from './routes/invest'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WalletSwapRouteImport } from './routes/wallet.swap'
+import { Route as WalletSecurityRouteImport } from './routes/wallet.security'
 import { Route as WalletIntroRouteImport } from './routes/wallet.intro'
+import { Route as WalletImportRouteImport } from './routes/wallet.import'
+import { Route as WalletHistoryRouteImport } from './routes/wallet.history'
+import { Route as WalletCreateRouteImport } from './routes/wallet.create'
+import { Route as WalletConfirmRouteImport } from './routes/wallet.confirm'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
 import { Route as InvestPropertyRouteImport } from './routes/invest.property'
 import { Route as InvestFarmvestRouteImport } from './routes/invest.farmvest'
@@ -29,6 +36,11 @@ import { Route as InvestCheckoutIdRouteImport } from './routes/invest.checkout.$
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VaultRoute = VaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoleSelectRoute = RoleSelectRouteImport.update({
@@ -66,9 +78,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WalletSwapRoute = WalletSwapRouteImport.update({
+  id: '/wallet/swap',
+  path: '/wallet/swap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletSecurityRoute = WalletSecurityRouteImport.update({
+  id: '/wallet/security',
+  path: '/wallet/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WalletIntroRoute = WalletIntroRouteImport.update({
   id: '/wallet/intro',
   path: '/wallet/intro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletImportRoute = WalletImportRouteImport.update({
+  id: '/wallet/import',
+  path: '/wallet/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletHistoryRoute = WalletHistoryRouteImport.update({
+  id: '/wallet/history',
+  path: '/wallet/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletCreateRoute = WalletCreateRouteImport.update({
+  id: '/wallet/create',
+  path: '/wallet/create',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletConfirmRoute = WalletConfirmRouteImport.update({
+  id: '/wallet/confirm',
+  path: '/wallet/confirm',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoleRoute = SignupRoleRouteImport.update({
@@ -115,11 +157,18 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
+  '/vault': typeof VaultRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/wallet/confirm': typeof WalletConfirmRoute
+  '/wallet/create': typeof WalletCreateRoute
+  '/wallet/history': typeof WalletHistoryRoute
+  '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
+  '/wallet/security': typeof WalletSecurityRoute
+  '/wallet/swap': typeof WalletSwapRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -133,11 +182,18 @@ export interface FileRoutesByTo {
   '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
+  '/vault': typeof VaultRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/wallet/confirm': typeof WalletConfirmRoute
+  '/wallet/create': typeof WalletCreateRoute
+  '/wallet/history': typeof WalletHistoryRoute
+  '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
+  '/wallet/security': typeof WalletSecurityRoute
+  '/wallet/swap': typeof WalletSwapRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -152,11 +208,18 @@ export interface FileRoutesById {
   '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
+  '/vault': typeof VaultRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/wallet/confirm': typeof WalletConfirmRoute
+  '/wallet/create': typeof WalletCreateRoute
+  '/wallet/history': typeof WalletHistoryRoute
+  '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
+  '/wallet/security': typeof WalletSecurityRoute
+  '/wallet/swap': typeof WalletSwapRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -172,11 +235,18 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/login'
     | '/role-select'
+    | '/vault'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
     | '/signup/$role'
+    | '/wallet/confirm'
+    | '/wallet/create'
+    | '/wallet/history'
+    | '/wallet/import'
     | '/wallet/intro'
+    | '/wallet/security'
+    | '/wallet/swap'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -190,11 +260,18 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/login'
     | '/role-select'
+    | '/vault'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
     | '/signup/$role'
+    | '/wallet/confirm'
+    | '/wallet/create'
+    | '/wallet/history'
+    | '/wallet/import'
     | '/wallet/intro'
+    | '/wallet/security'
+    | '/wallet/swap'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -208,11 +285,18 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/login'
     | '/role-select'
+    | '/vault'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
     | '/signup/$role'
+    | '/wallet/confirm'
+    | '/wallet/create'
+    | '/wallet/history'
+    | '/wallet/import'
     | '/wallet/intro'
+    | '/wallet/security'
+    | '/wallet/swap'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -227,9 +311,16 @@ export interface RootRouteChildren {
   KycRoute: typeof KycRoute
   LoginRoute: typeof LoginRoute
   RoleSelectRoute: typeof RoleSelectRoute
+  VaultRoute: typeof VaultRoute
   WelcomeRoute: typeof WelcomeRoute
   SignupRoleRoute: typeof SignupRoleRoute
+  WalletConfirmRoute: typeof WalletConfirmRoute
+  WalletCreateRoute: typeof WalletCreateRoute
+  WalletHistoryRoute: typeof WalletHistoryRoute
+  WalletImportRoute: typeof WalletImportRoute
   WalletIntroRoute: typeof WalletIntroRoute
+  WalletSecurityRoute: typeof WalletSecurityRoute
+  WalletSwapRoute: typeof WalletSwapRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -239,6 +330,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vault': {
+      id: '/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof VaultRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/role-select': {
@@ -290,11 +388,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/wallet/swap': {
+      id: '/wallet/swap'
+      path: '/wallet/swap'
+      fullPath: '/wallet/swap'
+      preLoaderRoute: typeof WalletSwapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet/security': {
+      id: '/wallet/security'
+      path: '/wallet/security'
+      fullPath: '/wallet/security'
+      preLoaderRoute: typeof WalletSecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/wallet/intro': {
       id: '/wallet/intro'
       path: '/wallet/intro'
       fullPath: '/wallet/intro'
       preLoaderRoute: typeof WalletIntroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet/import': {
+      id: '/wallet/import'
+      path: '/wallet/import'
+      fullPath: '/wallet/import'
+      preLoaderRoute: typeof WalletImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet/history': {
+      id: '/wallet/history'
+      path: '/wallet/history'
+      fullPath: '/wallet/history'
+      preLoaderRoute: typeof WalletHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet/create': {
+      id: '/wallet/create'
+      path: '/wallet/create'
+      fullPath: '/wallet/create'
+      preLoaderRoute: typeof WalletCreateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet/confirm': {
+      id: '/wallet/confirm'
+      path: '/wallet/confirm'
+      fullPath: '/wallet/confirm'
+      preLoaderRoute: typeof WalletConfirmRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup/$role': {
@@ -398,9 +538,16 @@ const rootRouteChildren: RootRouteChildren = {
   KycRoute: KycRoute,
   LoginRoute: LoginRoute,
   RoleSelectRoute: RoleSelectRoute,
+  VaultRoute: VaultRoute,
   WelcomeRoute: WelcomeRoute,
   SignupRoleRoute: SignupRoleRoute,
+  WalletConfirmRoute: WalletConfirmRoute,
+  WalletCreateRoute: WalletCreateRoute,
+  WalletHistoryRoute: WalletHistoryRoute,
+  WalletImportRoute: WalletImportRoute,
   WalletIntroRoute: WalletIntroRoute,
+  WalletSecurityRoute: WalletSecurityRoute,
+  WalletSwapRoute: WalletSwapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
