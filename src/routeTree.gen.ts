@@ -11,12 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PrichatRouteImport } from './routes/prichat'
+import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as KycRouteImport } from './routes/kyc'
 import { Route as InvestRouteImport } from './routes/invest'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForgotRouteImport } from './routes/forgot'
+import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WalletSwapRouteImport } from './routes/wallet.swap'
 import { Route as WalletSecurityRouteImport } from './routes/wallet.security'
@@ -26,8 +31,11 @@ import { Route as WalletHistoryRouteImport } from './routes/wallet.history'
 import { Route as WalletCreateRouteImport } from './routes/wallet.create'
 import { Route as WalletConfirmRouteImport } from './routes/wallet.confirm'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
+import { Route as ServicesMpRouteImport } from './routes/services.mp'
+import { Route as PrichatIdRouteImport } from './routes/prichat.$id'
 import { Route as InvestPropertyRouteImport } from './routes/invest.property'
 import { Route as InvestFarmvestRouteImport } from './routes/invest.farmvest'
+import { Route as ServicesMpIdRouteImport } from './routes/services.mp.$id'
 import { Route as InvestSuccessIdRouteImport } from './routes/invest.success.$id'
 import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
 import { Route as InvestFarmvestIdRouteImport } from './routes/invest.farmvest.$id'
@@ -43,9 +51,29 @@ const VaultRoute = VaultRouteImport.update({
   path: '/vault',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoleSelectRoute = RoleSelectRouteImport.update({
   id: '/role-select',
   path: '/role-select',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrichatRoute = PrichatRouteImport.update({
+  id: '/prichat',
+  path: '/prichat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerRoute = PartnerRouteImport.update({
+  id: '/partner',
+  path: '/partner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -71,6 +99,11 @@ const HomeRoute = HomeRouteImport.update({
 const ForgotRoute = ForgotRouteImport.update({
   id: '/forgot',
   path: '/forgot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentsRoute = DocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -118,6 +151,16 @@ const SignupRoleRoute = SignupRoleRouteImport.update({
   path: '/signup/$role',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesMpRoute = ServicesMpRouteImport.update({
+  id: '/mp',
+  path: '/mp',
+  getParentRoute: () => ServicesRoute,
+} as any)
+const PrichatIdRoute = PrichatIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PrichatRoute,
+} as any)
 const InvestPropertyRoute = InvestPropertyRouteImport.update({
   id: '/property',
   path: '/property',
@@ -127,6 +170,11 @@ const InvestFarmvestRoute = InvestFarmvestRouteImport.update({
   id: '/farmvest',
   path: '/farmvest',
   getParentRoute: () => InvestRoute,
+} as any)
+const ServicesMpIdRoute = ServicesMpIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ServicesMpRoute,
 } as any)
 const InvestSuccessIdRoute = InvestSuccessIdRouteImport.update({
   id: '/success/$id',
@@ -151,16 +199,23 @@ const InvestCheckoutIdRoute = InvestCheckoutIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/documents': typeof DocumentsRoute
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
   '/invest': typeof InvestRouteWithChildren
   '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
+  '/partner': typeof PartnerRoute
+  '/prichat': typeof PrichatRouteWithChildren
+  '/profile': typeof ProfileRoute
   '/role-select': typeof RoleSelectRoute
+  '/services': typeof ServicesRouteWithChildren
   '/vault': typeof VaultRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
+  '/prichat/$id': typeof PrichatIdRoute
+  '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
@@ -173,19 +228,27 @@ export interface FileRoutesByFullPath {
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/invest/success/$id': typeof InvestSuccessIdRoute
+  '/services/mp/$id': typeof ServicesMpIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/documents': typeof DocumentsRoute
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
   '/invest': typeof InvestRouteWithChildren
   '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
+  '/partner': typeof PartnerRoute
+  '/prichat': typeof PrichatRouteWithChildren
+  '/profile': typeof ProfileRoute
   '/role-select': typeof RoleSelectRoute
+  '/services': typeof ServicesRouteWithChildren
   '/vault': typeof VaultRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
+  '/prichat/$id': typeof PrichatIdRoute
+  '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
@@ -198,20 +261,28 @@ export interface FileRoutesByTo {
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/invest/success/$id': typeof InvestSuccessIdRoute
+  '/services/mp/$id': typeof ServicesMpIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/documents': typeof DocumentsRoute
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
   '/invest': typeof InvestRouteWithChildren
   '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
+  '/partner': typeof PartnerRoute
+  '/prichat': typeof PrichatRouteWithChildren
+  '/profile': typeof ProfileRoute
   '/role-select': typeof RoleSelectRoute
+  '/services': typeof ServicesRouteWithChildren
   '/vault': typeof VaultRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
+  '/prichat/$id': typeof PrichatIdRoute
+  '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
@@ -224,21 +295,29 @@ export interface FileRoutesById {
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/invest/success/$id': typeof InvestSuccessIdRoute
+  '/services/mp/$id': typeof ServicesMpIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/documents'
     | '/forgot'
     | '/home'
     | '/invest'
     | '/kyc'
     | '/login'
+    | '/partner'
+    | '/prichat'
+    | '/profile'
     | '/role-select'
+    | '/services'
     | '/vault'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
+    | '/prichat/$id'
+    | '/services/mp'
     | '/signup/$role'
     | '/wallet/confirm'
     | '/wallet/create'
@@ -251,19 +330,27 @@ export interface FileRouteTypes {
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/invest/success/$id'
+    | '/services/mp/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/documents'
     | '/forgot'
     | '/home'
     | '/invest'
     | '/kyc'
     | '/login'
+    | '/partner'
+    | '/prichat'
+    | '/profile'
     | '/role-select'
+    | '/services'
     | '/vault'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
+    | '/prichat/$id'
+    | '/services/mp'
     | '/signup/$role'
     | '/wallet/confirm'
     | '/wallet/create'
@@ -276,19 +363,27 @@ export interface FileRouteTypes {
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/invest/success/$id'
+    | '/services/mp/$id'
   id:
     | '__root__'
     | '/'
+    | '/documents'
     | '/forgot'
     | '/home'
     | '/invest'
     | '/kyc'
     | '/login'
+    | '/partner'
+    | '/prichat'
+    | '/profile'
     | '/role-select'
+    | '/services'
     | '/vault'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
+    | '/prichat/$id'
+    | '/services/mp'
     | '/signup/$role'
     | '/wallet/confirm'
     | '/wallet/create'
@@ -301,16 +396,22 @@ export interface FileRouteTypes {
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/invest/success/$id'
+    | '/services/mp/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DocumentsRoute: typeof DocumentsRoute
   ForgotRoute: typeof ForgotRoute
   HomeRoute: typeof HomeRoute
   InvestRoute: typeof InvestRouteWithChildren
   KycRoute: typeof KycRoute
   LoginRoute: typeof LoginRoute
+  PartnerRoute: typeof PartnerRoute
+  PrichatRoute: typeof PrichatRouteWithChildren
+  ProfileRoute: typeof ProfileRoute
   RoleSelectRoute: typeof RoleSelectRoute
+  ServicesRoute: typeof ServicesRouteWithChildren
   VaultRoute: typeof VaultRoute
   WelcomeRoute: typeof WelcomeRoute
   SignupRoleRoute: typeof SignupRoleRoute
@@ -339,11 +440,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaultRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/role-select': {
       id: '/role-select'
       path: '/role-select'
       fullPath: '/role-select'
       preLoaderRoute: typeof RoleSelectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prichat': {
+      id: '/prichat'
+      path: '/prichat'
+      fullPath: '/prichat'
+      preLoaderRoute: typeof PrichatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner': {
+      id: '/partner'
+      path: '/partner'
+      fullPath: '/partner'
+      preLoaderRoute: typeof PartnerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -379,6 +508,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot'
       fullPath: '/forgot'
       preLoaderRoute: typeof ForgotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documents': {
+      id: '/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof DocumentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -444,6 +580,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/mp': {
+      id: '/services/mp'
+      path: '/mp'
+      fullPath: '/services/mp'
+      preLoaderRoute: typeof ServicesMpRouteImport
+      parentRoute: typeof ServicesRoute
+    }
+    '/prichat/$id': {
+      id: '/prichat/$id'
+      path: '/$id'
+      fullPath: '/prichat/$id'
+      preLoaderRoute: typeof PrichatIdRouteImport
+      parentRoute: typeof PrichatRoute
+    }
     '/invest/property': {
       id: '/invest/property'
       path: '/property'
@@ -457,6 +607,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/invest/farmvest'
       preLoaderRoute: typeof InvestFarmvestRouteImport
       parentRoute: typeof InvestRoute
+    }
+    '/services/mp/$id': {
+      id: '/services/mp/$id'
+      path: '/$id'
+      fullPath: '/services/mp/$id'
+      preLoaderRoute: typeof ServicesMpIdRouteImport
+      parentRoute: typeof ServicesMpRoute
     }
     '/invest/success/$id': {
       id: '/invest/success/$id'
@@ -530,14 +687,54 @@ const InvestRouteChildren: InvestRouteChildren = {
 const InvestRouteWithChildren =
   InvestRoute._addFileChildren(InvestRouteChildren)
 
+interface PrichatRouteChildren {
+  PrichatIdRoute: typeof PrichatIdRoute
+}
+
+const PrichatRouteChildren: PrichatRouteChildren = {
+  PrichatIdRoute: PrichatIdRoute,
+}
+
+const PrichatRouteWithChildren =
+  PrichatRoute._addFileChildren(PrichatRouteChildren)
+
+interface ServicesMpRouteChildren {
+  ServicesMpIdRoute: typeof ServicesMpIdRoute
+}
+
+const ServicesMpRouteChildren: ServicesMpRouteChildren = {
+  ServicesMpIdRoute: ServicesMpIdRoute,
+}
+
+const ServicesMpRouteWithChildren = ServicesMpRoute._addFileChildren(
+  ServicesMpRouteChildren,
+)
+
+interface ServicesRouteChildren {
+  ServicesMpRoute: typeof ServicesMpRouteWithChildren
+}
+
+const ServicesRouteChildren: ServicesRouteChildren = {
+  ServicesMpRoute: ServicesMpRouteWithChildren,
+}
+
+const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
+  ServicesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DocumentsRoute: DocumentsRoute,
   ForgotRoute: ForgotRoute,
   HomeRoute: HomeRoute,
   InvestRoute: InvestRouteWithChildren,
   KycRoute: KycRoute,
   LoginRoute: LoginRoute,
+  PartnerRoute: PartnerRoute,
+  PrichatRoute: PrichatRouteWithChildren,
+  ProfileRoute: ProfileRoute,
   RoleSelectRoute: RoleSelectRoute,
+  ServicesRoute: ServicesRouteWithChildren,
   VaultRoute: VaultRoute,
   WelcomeRoute: WelcomeRoute,
   SignupRoleRoute: SignupRoleRoute,
