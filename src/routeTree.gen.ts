@@ -12,9 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as InvestRouteImport } from './routes/invest'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
+import { Route as InvestPropertyRouteImport } from './routes/invest.property'
+import { Route as InvestFarmvestRouteImport } from './routes/invest.farmvest'
+import { Route as InvestSuccessIdRouteImport } from './routes/invest.success.$id'
+import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
+import { Route as InvestFarmvestIdRouteImport } from './routes/invest.farmvest.$id'
+import { Route as InvestCheckoutIdRouteImport } from './routes/invest.checkout.$id'
 
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
@@ -29,6 +37,16 @@ const RoleSelectRoute = RoleSelectRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestRoute = InvestRouteImport.update({
+  id: '/invest',
+  path: '/invest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotRoute = ForgotRouteImport.update({
@@ -46,56 +64,142 @@ const SignupRoleRoute = SignupRoleRouteImport.update({
   path: '/signup/$role',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvestPropertyRoute = InvestPropertyRouteImport.update({
+  id: '/property',
+  path: '/property',
+  getParentRoute: () => InvestRoute,
+} as any)
+const InvestFarmvestRoute = InvestFarmvestRouteImport.update({
+  id: '/farmvest',
+  path: '/farmvest',
+  getParentRoute: () => InvestRoute,
+} as any)
+const InvestSuccessIdRoute = InvestSuccessIdRouteImport.update({
+  id: '/success/$id',
+  path: '/success/$id',
+  getParentRoute: () => InvestRoute,
+} as any)
+const InvestPropertyIdRoute = InvestPropertyIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => InvestPropertyRoute,
+} as any)
+const InvestFarmvestIdRoute = InvestFarmvestIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => InvestFarmvestRoute,
+} as any)
+const InvestCheckoutIdRoute = InvestCheckoutIdRouteImport.update({
+  id: '/checkout/$id',
+  path: '/checkout/$id',
+  getParentRoute: () => InvestRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/forgot': typeof ForgotRoute
+  '/home': typeof HomeRoute
+  '/invest': typeof InvestRouteWithChildren
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
+  '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
+  '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/invest/checkout/$id': typeof InvestCheckoutIdRoute
+  '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
+  '/invest/property/$id': typeof InvestPropertyIdRoute
+  '/invest/success/$id': typeof InvestSuccessIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forgot': typeof ForgotRoute
+  '/home': typeof HomeRoute
+  '/invest': typeof InvestRouteWithChildren
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
+  '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
+  '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/invest/checkout/$id': typeof InvestCheckoutIdRoute
+  '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
+  '/invest/property/$id': typeof InvestPropertyIdRoute
+  '/invest/success/$id': typeof InvestSuccessIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/forgot': typeof ForgotRoute
+  '/home': typeof HomeRoute
+  '/invest': typeof InvestRouteWithChildren
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
+  '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
+  '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/invest/checkout/$id': typeof InvestCheckoutIdRoute
+  '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
+  '/invest/property/$id': typeof InvestPropertyIdRoute
+  '/invest/success/$id': typeof InvestSuccessIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/forgot'
+    | '/home'
+    | '/invest'
     | '/login'
     | '/role-select'
     | '/welcome'
+    | '/invest/farmvest'
+    | '/invest/property'
     | '/signup/$role'
+    | '/invest/checkout/$id'
+    | '/invest/farmvest/$id'
+    | '/invest/property/$id'
+    | '/invest/success/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forgot' | '/login' | '/role-select' | '/welcome' | '/signup/$role'
+  to:
+    | '/'
+    | '/forgot'
+    | '/home'
+    | '/invest'
+    | '/login'
+    | '/role-select'
+    | '/welcome'
+    | '/invest/farmvest'
+    | '/invest/property'
+    | '/signup/$role'
+    | '/invest/checkout/$id'
+    | '/invest/farmvest/$id'
+    | '/invest/property/$id'
+    | '/invest/success/$id'
   id:
     | '__root__'
     | '/'
     | '/forgot'
+    | '/home'
+    | '/invest'
     | '/login'
     | '/role-select'
     | '/welcome'
+    | '/invest/farmvest'
+    | '/invest/property'
     | '/signup/$role'
+    | '/invest/checkout/$id'
+    | '/invest/farmvest/$id'
+    | '/invest/property/$id'
+    | '/invest/success/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ForgotRoute: typeof ForgotRoute
+  HomeRoute: typeof HomeRoute
+  InvestRoute: typeof InvestRouteWithChildren
   LoginRoute: typeof LoginRoute
   RoleSelectRoute: typeof RoleSelectRoute
   WelcomeRoute: typeof WelcomeRoute
@@ -125,6 +229,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invest': {
+      id: '/invest'
+      path: '/invest'
+      fullPath: '/invest'
+      preLoaderRoute: typeof InvestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forgot': {
       id: '/forgot'
       path: '/forgot'
@@ -146,12 +264,97 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invest/property': {
+      id: '/invest/property'
+      path: '/property'
+      fullPath: '/invest/property'
+      preLoaderRoute: typeof InvestPropertyRouteImport
+      parentRoute: typeof InvestRoute
+    }
+    '/invest/farmvest': {
+      id: '/invest/farmvest'
+      path: '/farmvest'
+      fullPath: '/invest/farmvest'
+      preLoaderRoute: typeof InvestFarmvestRouteImport
+      parentRoute: typeof InvestRoute
+    }
+    '/invest/success/$id': {
+      id: '/invest/success/$id'
+      path: '/success/$id'
+      fullPath: '/invest/success/$id'
+      preLoaderRoute: typeof InvestSuccessIdRouteImport
+      parentRoute: typeof InvestRoute
+    }
+    '/invest/property/$id': {
+      id: '/invest/property/$id'
+      path: '/$id'
+      fullPath: '/invest/property/$id'
+      preLoaderRoute: typeof InvestPropertyIdRouteImport
+      parentRoute: typeof InvestPropertyRoute
+    }
+    '/invest/farmvest/$id': {
+      id: '/invest/farmvest/$id'
+      path: '/$id'
+      fullPath: '/invest/farmvest/$id'
+      preLoaderRoute: typeof InvestFarmvestIdRouteImport
+      parentRoute: typeof InvestFarmvestRoute
+    }
+    '/invest/checkout/$id': {
+      id: '/invest/checkout/$id'
+      path: '/checkout/$id'
+      fullPath: '/invest/checkout/$id'
+      preLoaderRoute: typeof InvestCheckoutIdRouteImport
+      parentRoute: typeof InvestRoute
+    }
   }
 }
+
+interface InvestFarmvestRouteChildren {
+  InvestFarmvestIdRoute: typeof InvestFarmvestIdRoute
+}
+
+const InvestFarmvestRouteChildren: InvestFarmvestRouteChildren = {
+  InvestFarmvestIdRoute: InvestFarmvestIdRoute,
+}
+
+const InvestFarmvestRouteWithChildren = InvestFarmvestRoute._addFileChildren(
+  InvestFarmvestRouteChildren,
+)
+
+interface InvestPropertyRouteChildren {
+  InvestPropertyIdRoute: typeof InvestPropertyIdRoute
+}
+
+const InvestPropertyRouteChildren: InvestPropertyRouteChildren = {
+  InvestPropertyIdRoute: InvestPropertyIdRoute,
+}
+
+const InvestPropertyRouteWithChildren = InvestPropertyRoute._addFileChildren(
+  InvestPropertyRouteChildren,
+)
+
+interface InvestRouteChildren {
+  InvestFarmvestRoute: typeof InvestFarmvestRouteWithChildren
+  InvestPropertyRoute: typeof InvestPropertyRouteWithChildren
+  InvestCheckoutIdRoute: typeof InvestCheckoutIdRoute
+  InvestSuccessIdRoute: typeof InvestSuccessIdRoute
+}
+
+const InvestRouteChildren: InvestRouteChildren = {
+  InvestFarmvestRoute: InvestFarmvestRouteWithChildren,
+  InvestPropertyRoute: InvestPropertyRouteWithChildren,
+  InvestCheckoutIdRoute: InvestCheckoutIdRoute,
+  InvestSuccessIdRoute: InvestSuccessIdRoute,
+}
+
+const InvestRouteWithChildren =
+  InvestRoute._addFileChildren(InvestRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ForgotRoute: ForgotRoute,
+  HomeRoute: HomeRoute,
+  InvestRoute: InvestRouteWithChildren,
   LoginRoute: LoginRoute,
   RoleSelectRoute: RoleSelectRoute,
   WelcomeRoute: WelcomeRoute,
@@ -160,3 +363,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
