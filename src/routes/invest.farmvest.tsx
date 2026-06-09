@@ -62,7 +62,7 @@ function FarmVest() {
             >
               <div className={`h-32 bg-gradient-to-br ${a.cover} relative`}>
                 <div className="absolute top-2 left-2 flex gap-1.5">
-                  <span className="rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-medium text-navy">
+                  <span className="rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-medium text-[oklch(0.27_0.07_268)]">
                     {a.status}
                   </span>
                   <span className="rounded-full bg-agro/90 px-2 py-0.5 text-[10px] font-medium text-white">

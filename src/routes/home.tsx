@@ -124,7 +124,7 @@ function Home() {
                 className="min-w-[230px] rounded-3xl border border-border bg-card overflow-hidden shadow-card"
               >
                 <div className={`h-28 bg-gradient-to-br ${a.cover} relative`}>
-                  <span className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-medium text-navy">
+                  <span className="absolute bottom-2 left-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-medium text-[oklch(0.27_0.07_268)]">
                     {a.risk}
                   </span>
                 </div>

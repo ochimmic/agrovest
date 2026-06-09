@@ -77,12 +77,12 @@ function Detail() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQty(Math.max(1, qty - 1))}
-                className="h-8 w-8 rounded-full bg-white text-navy shadow-card"
+                className="h-8 w-8 rounded-full bg-background text-foreground border border-border shadow-card"
               >−</button>
               <span className="w-8 text-center text-sm font-semibold tabular">{qty}</span>
               <button
                 onClick={() => setQty(qty + 1)}
-                className="h-8 w-8 rounded-full bg-white text-navy shadow-card"
+                className="h-8 w-8 rounded-full bg-background text-foreground border border-border shadow-card"
               >+</button>
             </div>
           </div>

@@ -99,6 +99,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/png", href: "/__l5e/assets-v1/8f18047b-c63c-4c28-b32a-e9d51ae1e812/agrovest-logo.png" },
       { rel: "apple-touch-icon", href: "/__l5e/assets-v1/8f18047b-c63c-4c28-b32a-e9d51ae1e812/agrovest-logo.png" },
     ],
+    scripts: [
+      {
+        children: `(function(){try{var t=localStorage.getItem('agrovest.theme')||'system';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
