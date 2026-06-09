@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as KycRouteImport } from './routes/kyc'
 import { Route as InvestRouteImport } from './routes/invest'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WalletIntroRouteImport } from './routes/wallet.intro'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
 import { Route as InvestPropertyRouteImport } from './routes/invest.property'
 import { Route as InvestFarmvestRouteImport } from './routes/invest.farmvest'
@@ -39,6 +41,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KycRoute = KycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InvestRoute = InvestRouteImport.update({
   id: '/invest',
   path: '/invest',
@@ -57,6 +64,11 @@ const ForgotRoute = ForgotRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletIntroRoute = WalletIntroRouteImport.update({
+  id: '/wallet/intro',
+  path: '/wallet/intro',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoleRoute = SignupRoleRouteImport.update({
@@ -100,12 +112,14 @@ export interface FileRoutesByFullPath {
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
   '/invest': typeof InvestRouteWithChildren
+  '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/wallet/intro': typeof WalletIntroRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -116,12 +130,14 @@ export interface FileRoutesByTo {
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
   '/invest': typeof InvestRouteWithChildren
+  '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/wallet/intro': typeof WalletIntroRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -133,12 +149,14 @@ export interface FileRoutesById {
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
   '/invest': typeof InvestRouteWithChildren
+  '/kyc': typeof KycRoute
   '/login': typeof LoginRoute
   '/role-select': typeof RoleSelectRoute
   '/welcome': typeof WelcomeRoute
   '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
   '/invest/property': typeof InvestPropertyRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
+  '/wallet/intro': typeof WalletIntroRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -151,12 +169,14 @@ export interface FileRouteTypes {
     | '/forgot'
     | '/home'
     | '/invest'
+    | '/kyc'
     | '/login'
     | '/role-select'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
     | '/signup/$role'
+    | '/wallet/intro'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -167,12 +187,14 @@ export interface FileRouteTypes {
     | '/forgot'
     | '/home'
     | '/invest'
+    | '/kyc'
     | '/login'
     | '/role-select'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
     | '/signup/$role'
+    | '/wallet/intro'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -183,12 +205,14 @@ export interface FileRouteTypes {
     | '/forgot'
     | '/home'
     | '/invest'
+    | '/kyc'
     | '/login'
     | '/role-select'
     | '/welcome'
     | '/invest/farmvest'
     | '/invest/property'
     | '/signup/$role'
+    | '/wallet/intro'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -200,10 +224,12 @@ export interface RootRouteChildren {
   ForgotRoute: typeof ForgotRoute
   HomeRoute: typeof HomeRoute
   InvestRoute: typeof InvestRouteWithChildren
+  KycRoute: typeof KycRoute
   LoginRoute: typeof LoginRoute
   RoleSelectRoute: typeof RoleSelectRoute
   WelcomeRoute: typeof WelcomeRoute
   SignupRoleRoute: typeof SignupRoleRoute
+  WalletIntroRoute: typeof WalletIntroRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -227,6 +253,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kyc': {
+      id: '/kyc'
+      path: '/kyc'
+      fullPath: '/kyc'
+      preLoaderRoute: typeof KycRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/invest': {
@@ -255,6 +288,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet/intro': {
+      id: '/wallet/intro'
+      path: '/wallet/intro'
+      fullPath: '/wallet/intro'
+      preLoaderRoute: typeof WalletIntroRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup/$role': {
@@ -355,10 +395,12 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotRoute: ForgotRoute,
   HomeRoute: HomeRoute,
   InvestRoute: InvestRouteWithChildren,
+  KycRoute: KycRoute,
   LoginRoute: LoginRoute,
   RoleSelectRoute: RoleSelectRoute,
   WelcomeRoute: WelcomeRoute,
   SignupRoleRoute: SignupRoleRoute,
+  WalletIntroRoute: WalletIntroRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
