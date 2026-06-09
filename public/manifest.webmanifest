@@ -1,0 +1,23 @@
+{
+  "name": "AgroVest",
+  "short_name": "AgroVest",
+  "description": "Privacy-first real-world asset investing.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1330",
+  "theme_color": "#0B1330",
+  "icons": [
+    {
+      "src": "/__l5e/assets-v1/8f18047b-c63c-4c28-b32a-e9d51ae1e812/agrovest-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/__l5e/assets-v1/8f18047b-c63c-4c28-b32a-e9d51ae1e812/agrovest-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
