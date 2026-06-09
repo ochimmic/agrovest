@@ -109,7 +109,7 @@
 
 @layer base {
   * { border-color: var(--color-border); }
-  html, body { background: oklch(0.96 0.005 260); }
+  html, body { background: var(--color-background); }
   body {
     color: var(--color-foreground);
     font-family: var(--font-sans);
@@ -118,6 +118,7 @@
   }
   h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 600; }
 }
+
 
 @layer utilities {
   .gradient-navy {
