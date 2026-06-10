@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
-import { StatusStrip, deriveStatus } from "@/components/farmvest/StatusStrip";
 import { useAppState } from "@/lib/store";
 import { farmAssets } from "@/lib/mock-data";
 import {
@@ -49,7 +48,6 @@ function HoldingDetail() {
   const netPrincipal = holding.invested - platformFee;
   const projectedYr = Math.round(holding.invested * 0.105);
   const txHash = `0x${holding.id.replace(/[^a-f0-9]/gi, "").padEnd(8, "a").slice(0, 8)}…${holding.id.slice(-4)}`;
-  const chainState = deriveStatus(holding.id, holding.purchasedAt);
 
   const timeline = [
     { label: "Investment confirmed", date: holding.purchasedAt, done: true, icon: <CheckCircle2 size={14} /> },
@@ -208,19 +206,24 @@ function HoldingDetail() {
 
         {/* On-chain / Off-chain status */}
         <section className="rounded-3xl border border-border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-navy">Status</h2>
-          </div>
-          <div className="mt-3">
-            <StatusStrip
-              chain={chainState.chain}
-              custody={chainState.custody}
-              updatedAt={chainState.updatedAt}
-              detail={{ chain: txHash, custody: "Vault: Lagos Custodian" }}
+          <h2 className="text-sm font-semibold text-navy">Status</h2>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <StatusCard
+              title="On-chain"
+              status="Anchored"
+              detail={txHash}
+              tone="agro"
+              icon={<Link2 size={14} />}
+            />
+            <StatusCard
+              title="Off-chain"
+              status="Custody active"
+              detail="Vault: Lagos Custodian"
+              tone="navy"
+              icon={<ShieldCheck size={14} />}
             />
           </div>
         </section>
-
 
         {/* Timeline */}
         <section className="rounded-3xl border border-border bg-card p-4">
