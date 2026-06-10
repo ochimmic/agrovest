@@ -211,7 +211,7 @@ function FarmVest() {
               key={c.id}
               onClick={() => setCat(c.id)}
               className={`shrink-0 rounded-full px-3.5 h-9 text-xs font-medium transition ${
-                cat === c.id ? "bg-navy text-white" : "bg-secondary text-secondary-foreground"
+                cat === c.id ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
               }`}
             >
               {c.label}
