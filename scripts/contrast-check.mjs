@@ -42,10 +42,10 @@ const RULES = [
   {
     id: "text-navy-on-dark-surface",
     message:
-      "`text-navy` on a fixed-dark surface (bg-navy / bg-graphite / gradient-navy / from-navy) collapses to light-on-light in dark mode. Use a literal dark color like `text-[oklch(0.27_0.07_268)]` or `text-primary-foreground`.",
+      "`text-navy` on a fixed-dark surface (solid bg-navy / bg-graphite / gradient-navy / from-navy) collapses to light-on-light in dark mode. Use a literal dark color like `text-[oklch(0.27_0.07_268)]` or `text-primary-foreground`. (Opacity-tinted variants like `bg-navy/10` are OK because the tint flips with the text.)",
     test: (line) =>
       /\btext-navy\b/.test(line) &&
-      /(bg-navy|bg-graphite|gradient-navy|from-navy|from-\[oklch\(0\.2)/.test(
+      /(\bbg-navy\b(?!\/)|\bbg-graphite\b(?!\/)|gradient-navy|\bfrom-navy\b(?!\/))/.test(
         line,
       ),
   },
