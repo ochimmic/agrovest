@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { useAppState } from "@/lib/store";
 import { farmAssets } from "@/lib/mock-data";
@@ -14,6 +15,11 @@ import {
   Link2,
   ShieldCheck,
   Sprout,
+  BadgeCheck,
+  Loader2,
+  AlertTriangle,
+  Send,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 
