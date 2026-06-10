@@ -15,6 +15,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useAppState } from "@/lib/store";
+import { StatusStrip, StatusBadge, deriveStatus } from "@/components/farmvest/StatusStrip";
 
 export const Route = createFileRoute("/invest/farmvest/")({ component: FarmVest });
 
@@ -70,8 +71,21 @@ function FarmVest() {
       acc[h.category] = (acc[h.category] ?? 0) + h.invested;
       return acc;
     }, {});
-    return { count: holdings.length, invested, plots, projected, byCat };
+
+    // Aggregate on-chain / off-chain status across holdings (worst-case wins).
+    const rank = { failed: 2, pending: 1, anchored: 0, active: 0 } as const;
+    let chain: "anchored" | "pending" | "failed" = "anchored";
+    let custody: "active" | "pending" | "failed" = "active";
+    let updatedAt = new Date().toISOString();
+    for (const h of holdings) {
+      const s = deriveStatus(h.id, h.purchasedAt);
+      if (rank[s.chain] > rank[chain]) chain = s.chain;
+      if (rank[s.custody] > rank[custody]) custody = s.custody;
+      if (new Date(s.updatedAt) < new Date(updatedAt)) updatedAt = s.updatedAt;
+    }
+    return { count: holdings.length, invested, plots, projected, byCat, chain, custody, updatedAt };
   }, [holdings]);
+
 
   const series = useMemo(() => {
     const days = ranges.find((r) => r.id === range)!.days;
@@ -148,6 +162,18 @@ function FarmVest() {
               icon={<FileText size={16} />}
             />
           </div>
+
+          {/* Aggregated status */}
+          {dash.count > 0 && (
+            <div className="mt-4">
+              <StatusStrip
+                chain={dash.chain}
+                custody={dash.custody}
+                updatedAt={dash.updatedAt}
+                variant="dark"
+              />
+            </div>
+          )}
         </section>
 
         {dash.count > 0 && (
@@ -161,6 +187,7 @@ function FarmVest() {
             <div className="mt-2 space-y-2">
               {holdings.slice(0, 4).map((h) => {
                 const asset = farmAssets.find((a) => a.id === h.assetId);
+                const s = deriveStatus(h.id, h.purchasedAt);
                 return (
                   <Link
                     key={h.id}
@@ -179,6 +206,10 @@ function FarmVest() {
                         {h.units} {h.unit}
                         {h.units > 1 ? "s" : ""} · {asset?.expectedYield ?? "—"}
                       </p>
+                      <div className="mt-1 flex flex-wrap items-center gap-1">
+                        <StatusBadge kind="chain" status={s.chain} compact />
+                        <StatusBadge kind="custody" status={s.custody} compact />
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold text-navy">
