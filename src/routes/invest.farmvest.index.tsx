@@ -171,3 +171,13 @@ function Stat({ k, v, accent }: { k: string; v: string; accent?: boolean }) {
     </div>
   );
 }
+
+function DashStat({ icon, k, v }: { icon: React.ReactNode; k: string; v: string }) {
+  return (
+    <div className="rounded-2xl bg-white/10 p-2.5">
+      <div className="flex items-center gap-1 text-white/70 text-[10px]">{icon}<span>{k}</span></div>
+      <p className="mt-1 text-sm font-semibold">{v}</p>
+    </div>
+  );
+}
+
