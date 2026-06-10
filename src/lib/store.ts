@@ -33,7 +33,7 @@ export type AppState = {
   user: { name: string; email: string; country: string } | null;
   role: Role | null;
   kyc: KycStatus;
-  wallet: { created: boolean; address: string; clyst: number; bnb: number } | null;
+  wallet: { created: boolean; address: string; clyst: number; bnb: number; cusd?: number; autoTopUp?: { enabled: boolean; min: number; refill: number }; lastConversion?: { from: "cUSD" | "CLYST"; to: "cUSD" | "CLYST"; inAmt: number; outAmt: number; at: string } | null } | null;
   partnerProgress: number; // 0..100
   holdings: Holding[];
   txs: Tx[];
