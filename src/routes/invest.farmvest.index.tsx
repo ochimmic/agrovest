@@ -15,6 +15,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useAppState } from "@/lib/store";
+import { StatusStrip, StatusBadge, deriveStatus } from "@/components/farmvest/StatusStrip";
 
 export const Route = createFileRoute("/invest/farmvest/")({ component: FarmVest });
 
