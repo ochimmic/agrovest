@@ -2,7 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/shell/AppShell";
 import { farmAssets } from "@/lib/mock-data";
 import { useMemo, useState } from "react";
-import { Search, Sprout, TrendingUp, Wallet, PieChart, ArrowUpRight } from "lucide-react";
+import {
+  Search,
+  Sprout,
+  TrendingUp,
+  Wallet,
+  PieChart,
+  ArrowUpRight,
+  Plus,
+  RefreshCw,
+  Receipt,
+  FileText,
+} from "lucide-react";
 import { useAppState } from "@/lib/store";
 
 export const Route = createFileRoute("/invest/farmvest/")({ component: FarmVest });
@@ -14,25 +25,59 @@ const cats = [
   { id: "latex", label: "Latex" },
 ] as const;
 
+const ranges = [
+  { id: "1M", days: 30 },
+  { id: "6M", days: 182 },
+  { id: "YTD", days: ytdDays() },
+  { id: "1Y", days: 365 },
+] as const;
+
+function ytdDays() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  return Math.max(1, Math.round((+now - +start) / 86400000));
+}
+
+// Deterministic pseudo-random walk for projected yield (so it doesn't jump per render)
+function genSeries(principal: number, days: number, apr = 0.105) {
+  const pts = Math.min(60, Math.max(12, Math.round(days / 6)));
+  const daily = apr / 365;
+  const arr: number[] = [];
+  let v = principal;
+  for (let i = 0; i < pts; i++) {
+    const drift = principal * daily * (days / pts);
+    const wobble = Math.sin(i * 1.7) * principal * 0.004 + Math.cos(i * 0.9) * principal * 0.003;
+    v += drift + wobble;
+    arr.push(v);
+  }
+  return arr;
+}
+
 function FarmVest() {
   const [cat, setCat] = useState<string>("all");
   const [q, setQ] = useState("");
+  const [range, setRange] = useState<(typeof ranges)[number]["id"]>("6M");
   const holdings = useAppState((s) => s.holdings);
 
   const dash = useMemo(() => {
-    const farmHoldings = holdings; // all holdings are farm in this prototype
-    const invested = farmHoldings.reduce((sum, h) => sum + h.invested, 0);
-    const plots = farmHoldings.reduce((sum, h) => {
-      const factor = h.unit === "plot" ? 1 : h.unit === "acre" ? 6 : 15;
-      return sum + h.units * factor;
+    const invested = holdings.reduce((s, h) => s + h.invested, 0);
+    const plots = holdings.reduce((s, h) => {
+      const f = h.unit === "plot" ? 1 : h.unit === "acre" ? 6 : 15;
+      return s + h.units * f;
     }, 0);
-    const projected = Math.round(invested * 0.105); // ~10.5% blended yield
-    const byCat = farmHoldings.reduce<Record<string, number>>((acc, h) => {
+    const projected = Math.round(invested * 0.105);
+    const byCat = holdings.reduce<Record<string, number>>((acc, h) => {
       acc[h.category] = (acc[h.category] ?? 0) + h.invested;
       return acc;
     }, {});
-    return { count: farmHoldings.length, invested, plots, projected, byCat };
+    return { count: holdings.length, invested, plots, projected, byCat };
   }, [holdings]);
+
+  const series = useMemo(() => {
+    const days = ranges.find((r) => r.id === range)!.days;
+    const principal = Math.max(dash.invested, 1000); // demo line if no holdings
+    return genSeries(principal, days);
+  }, [range, dash.invested]);
 
   const list = farmAssets.filter(
     (a) => (cat === "all" || a.category === cat) && a.name.toLowerCase().includes(q.toLowerCase())
@@ -52,7 +97,9 @@ function FarmVest() {
             <div>
               <p className="text-[11px] uppercase tracking-wide text-white/60">FarmVest portfolio</p>
               <p className="mt-1 text-2xl font-semibold">${dash.invested.toLocaleString()}</p>
-              <p className="text-[11px] text-white/70">across {dash.count} holding{dash.count === 1 ? "" : "s"}</p>
+              <p className="text-[11px] text-white/70">
+                across {dash.count} holding{dash.count === 1 ? "" : "s"}
+              </p>
             </div>
             <div className="h-11 w-11 rounded-2xl bg-white/10 grid place-items-center">
               <PieChart size={20} />
@@ -65,35 +112,81 @@ function FarmVest() {
             <DashStat icon={<Wallet size={14} />} k="Assets" v={Object.keys(dash.byCat).length.toString()} />
           </div>
 
-          {dash.count > 0 && (
-            <Link
-              to="/portfolio"
-              className="mt-4 flex items-center justify-between rounded-2xl bg-white/10 px-3 py-2 text-xs"
-            >
-              <span>View full portfolio</span>
-              <ArrowUpRight size={14} />
-            </Link>
-          )}
+          {/* Yield chart */}
+          <div className="mt-4 rounded-2xl bg-white/10 p-3">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] text-white/70">Projected yield · {range}</p>
+              <p className="text-[11px] font-medium text-emerald-300">
+                +${Math.max(0, Math.round(series[series.length - 1] - series[0])).toLocaleString()}
+              </p>
+            </div>
+            <YieldChart data={series} />
+            <div className="mt-2 flex gap-1.5">
+              {ranges.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => setRange(r.id)}
+                  className={`flex-1 rounded-lg py-1.5 text-[11px] font-medium transition ${
+                    range === r.id ? "bg-white text-navy" : "bg-white/5 text-white/70"
+                  }`}
+                >
+                  {r.id}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick actions */}
+          <div className="mt-4 grid grid-cols-4 gap-2">
+            <QuickAction to="/invest/farmvest" label="Invest" icon={<Plus size={16} />} />
+            <QuickAction to="/wallet/swap" label="Swap" icon={<RefreshCw size={16} />} />
+            <QuickAction to="/wallet/history" label="Txns" icon={<Receipt size={16} />} />
+            <QuickAction
+              to={dash.count > 0 ? "/invest/farmvest/holding/$hid" : "/invest/farmvest"}
+              params={dash.count > 0 ? { hid: holdings[0].id } : undefined}
+              label="Docs"
+              icon={<FileText size={16} />}
+            />
+          </div>
         </section>
 
         {dash.count > 0 && (
           <section className="mt-4">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-navy">Your holdings</h2>
-              <Link to="/portfolio" className="text-[11px] text-agro font-medium">See all</Link>
+              <Link to="/wallet/history" className="text-[11px] text-agro font-medium">
+                See all
+              </Link>
             </div>
             <div className="mt-2 space-y-2">
-              {holdings.slice(0, 3).map((h) => {
+              {holdings.slice(0, 4).map((h) => {
                 const asset = farmAssets.find((a) => a.id === h.assetId);
                 return (
-                  <div key={h.id} className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3">
-                    <div className={`h-10 w-10 rounded-xl bg-gradient-to-br ${asset?.cover ?? "from-agro to-emerald-700"}`} />
+                  <Link
+                    key={h.id}
+                    to="/invest/farmvest/holding/$hid"
+                    params={{ hid: h.id }}
+                    className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3"
+                  >
+                    <div
+                      className={`h-10 w-10 rounded-xl bg-gradient-to-br ${
+                        asset?.cover ?? "from-agro to-emerald-700"
+                      }`}
+                    />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-navy truncate">{h.name}</p>
-                      <p className="text-[11px] text-muted-foreground">{h.units} {h.unit}{h.units > 1 ? "s" : ""} · {asset?.expectedYield ?? "—"}</p>
+                      <p className="text-[11px] text-muted-foreground">
+                        {h.units} {h.unit}
+                        {h.units > 1 ? "s" : ""} · {asset?.expectedYield ?? "—"}
+                      </p>
                     </div>
-                    <p className="text-sm font-semibold text-navy">${h.invested.toLocaleString()}</p>
-                  </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-navy">
+                        ${h.invested.toLocaleString()}
+                      </p>
+                      <ArrowUpRight size={14} className="ml-auto text-muted-foreground" />
+                    </div>
+                  </Link>
                 );
               })}
             </div>
@@ -102,9 +195,7 @@ function FarmVest() {
 
         <h2 className="mt-6 text-sm font-semibold text-navy">Explore farms</h2>
 
-
-
-        <div className="mt-4 flex items-center gap-2 rounded-2xl border border-border bg-card px-3 h-11">
+        <div className="mt-3 flex items-center gap-2 rounded-2xl border border-border bg-card px-3 h-11">
           <Search size={16} className="text-muted-foreground" />
           <input
             value={q}
@@ -175,9 +266,58 @@ function Stat({ k, v, accent }: { k: string; v: string; accent?: boolean }) {
 function DashStat({ icon, k, v }: { icon: React.ReactNode; k: string; v: string }) {
   return (
     <div className="rounded-2xl bg-white/10 p-2.5">
-      <div className="flex items-center gap-1 text-white/70 text-[10px]">{icon}<span>{k}</span></div>
+      <div className="flex items-center gap-1 text-white/70 text-[10px]">
+        {icon}
+        <span>{k}</span>
+      </div>
       <p className="mt-1 text-sm font-semibold">{v}</p>
     </div>
   );
 }
 
+function QuickAction({
+  to,
+  params,
+  label,
+  icon,
+}: {
+  to: string;
+  params?: Record<string, string>;
+  label: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <Link
+      to={to as any}
+      params={params as any}
+      className="flex flex-col items-center justify-center gap-1 rounded-2xl bg-white/10 py-3 text-white text-[11px] font-medium hover:bg-white/15 transition"
+    >
+      <span className="h-8 w-8 grid place-items-center rounded-full bg-white/15">{icon}</span>
+      {label}
+    </Link>
+  );
+}
+
+function YieldChart({ data }: { data: number[] }) {
+  const w = 300;
+  const h = 90;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const span = Math.max(1, max - min);
+  const step = w / (data.length - 1);
+  const pts = data.map((v, i) => [i * step, h - ((v - min) / span) * (h - 8) - 4] as const);
+  const path = pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+  const area = `${path} L${w},${h} L0,${h} Z`;
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="mt-2 h-20 w-full">
+      <defs>
+        <linearGradient id="yg" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="rgb(110 231 183)" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="rgb(110 231 183)" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={area} fill="url(#yg)" />
+      <path d={path} fill="none" stroke="rgb(110 231 183)" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
