@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ShieldCheck, ArrowRight, Sprout, LineChart, Wallet, GraduationCap,
   AlertTriangle, FileText, Headphones, Sparkles, Lock,
+  Activity, ShoppingBag, Building2, Gift, ArrowDownLeft, ArrowUpRight, RefreshCw,
 } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
@@ -15,6 +16,7 @@ function Home() {
   const kyc = useAppState((s) => s.kyc);
   const holdings = useAppState((s) => s.holdings);
   const wallet = useAppState((s) => s.wallet);
+  const txs = useAppState((s) => s.txs);
 
   const portfolioValue = holdings.reduce((sum, h) => sum + h.invested, 0);
   const first = user?.name?.split(" ")[0] ?? "Investor";
@@ -93,6 +95,58 @@ function Home() {
             <Tile icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" to="/vault" tone="navy" />
             <Tile icon={FileText} label="Documents" sub="Receipts & contracts" to="/documents" tone="soft" />
           </div>
+        </section>
+
+        {/* Activity */}
+        <section>
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Activity size={14} className="text-violet" />
+              <h2 className="text-sm font-semibold text-navy">Recent activity</h2>
+            </div>
+            <Link to="/wallet/history" className="text-xs text-violet">See all</Link>
+          </div>
+          {txs.length === 0 ? (
+            <div className="rounded-3xl border border-dashed border-border bg-card p-5 text-center">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-violet-soft text-violet">
+                <Activity size={16} />
+              </span>
+              <p className="mt-2 text-sm font-medium text-navy">No activity yet</p>
+              <p className="text-[11px] text-muted-foreground">
+                Your purchases, investments and rewards will appear here.
+              </p>
+            </div>
+          ) : (
+            <ul className="space-y-2">
+              {txs.slice(0, 5).map((t) => {
+                const meta = activityMeta(t.type, t.meta);
+                return (
+                  <li
+                    key={t.id}
+                    className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-card"
+                  >
+                    <span className={`flex h-10 w-10 items-center justify-center rounded-2xl ${meta.bg} ${meta.fg}`}>
+                      <meta.Icon size={16} />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-navy truncate">{meta.title}</p>
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        {t.meta ?? meta.subtitle} · {timeAgo(t.date)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-navy tabular">
+                        ${t.amount.toLocaleString()}
+                      </p>
+                      <p className={`text-[10px] ${t.status === "confirmed" ? "text-agro" : "text-warn"}`}>
+                        {t.status}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </section>
 
         {/* Education */}
@@ -209,4 +263,38 @@ function Tile({
       <p className="text-[11px] text-muted-foreground">{sub}</p>
     </Link>
   );
+}
+
+function activityMeta(type: string, meta?: string) {
+  const m = (meta ?? "").toLowerCase();
+  if (type === "invest" && m.includes("propert")) {
+    return { Icon: Building2, title: "Asset purchased", subtitle: "Buy Assets", bg: "bg-violet-soft", fg: "text-violet" };
+  }
+  if (type === "invest") {
+    return { Icon: Sprout, title: "Investment bought", subtitle: "FarmVest", bg: "bg-agro-soft", fg: "text-agro" };
+  }
+  if (type === "swap") {
+    return { Icon: RefreshCw, title: "Token swap", subtitle: "Wallet", bg: "bg-violet-soft", fg: "text-violet" };
+  }
+  if (type === "receive") {
+    return { Icon: ArrowDownLeft, title: "Received", subtitle: "Wallet", bg: "bg-agro-soft", fg: "text-agro" };
+  }
+  if (type === "send") {
+    return { Icon: ArrowUpRight, title: "Sent", subtitle: "Wallet", bg: "bg-secondary", fg: "text-navy" };
+  }
+  if (type === "reward") {
+    return { Icon: Gift, title: "Reward earned", subtitle: "Broker", bg: "bg-violet-soft", fg: "text-violet" };
+  }
+  return { Icon: ShoppingBag, title: "Product purchased", subtitle: "Order", bg: "bg-secondary", fg: "text-navy" };
+}
+
+function timeAgo(iso: string) {
+  const s = Math.max(1, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
 }
