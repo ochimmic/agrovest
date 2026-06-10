@@ -97,6 +97,58 @@ function Home() {
           </div>
         </section>
 
+        {/* Activity */}
+        <section>
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Activity size={14} className="text-violet" />
+              <h2 className="text-sm font-semibold text-navy">Recent activity</h2>
+            </div>
+            <Link to="/wallet/history" className="text-xs text-violet">See all</Link>
+          </div>
+          {txs.length === 0 ? (
+            <div className="rounded-3xl border border-dashed border-border bg-card p-5 text-center">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-violet-soft text-violet">
+                <Activity size={16} />
+              </span>
+              <p className="mt-2 text-sm font-medium text-navy">No activity yet</p>
+              <p className="text-[11px] text-muted-foreground">
+                Your purchases, investments and rewards will appear here.
+              </p>
+            </div>
+          ) : (
+            <ul className="space-y-2">
+              {txs.slice(0, 5).map((t) => {
+                const meta = activityMeta(t.type, t.meta);
+                return (
+                  <li
+                    key={t.id}
+                    className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-card"
+                  >
+                    <span className={`flex h-10 w-10 items-center justify-center rounded-2xl ${meta.bg} ${meta.fg}`}>
+                      <meta.Icon size={16} />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-navy truncate">{meta.title}</p>
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        {t.meta ?? meta.subtitle} · {timeAgo(t.date)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-navy tabular">
+                        ${t.amount.toLocaleString()}
+                      </p>
+                      <p className={`text-[10px] ${t.status === "confirmed" ? "text-agro" : "text-warn"}`}>
+                        {t.status}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+
         {/* Education */}
         <section className="rounded-3xl border border-border bg-card p-4">
           <div className="flex items-center gap-2">
