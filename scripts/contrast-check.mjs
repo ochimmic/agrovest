@@ -21,36 +21,39 @@ const IGNORE = [
   "src/components/ui/", // shadcn primitives — semantic tokens already
 ];
 
-// Each rule: { id, message, test(line) -> boolean, allow?(file) }
+// Rules target *regression* patterns proven to break dark mode in this
+// codebase. Keep them precise — broad heuristics produce noise because
+// many `text-white`/`bg-white` usages are intentional inside dark
+// gradient hero containers.
 const RULES = [
   {
-    id: "hardcoded-white-text",
+    id: "hsl-var-token",
     message:
-      "Hardcoded `text-white` on a non-dark-fixed surface — flips invisible on light/dark inversions. Use `text-primary-foreground` or a semantic token, or pair with an explicitly-dark `bg-*` utility.",
+      "`hsl(var(--token))` does not work — design tokens are defined in oklch. Use `var(--color-<token>)` instead.",
+    test: (line) => /hsl\(\s*var\(--/.test(line),
+  },
+  {
+    id: "navy-on-white-text",
+    message:
+      "`bg-navy` + `text-white` (or `bg-primary` + `text-white`) breaks in dark mode — `--navy` remaps to a light color, leaving white-on-white. Use `text-primary-foreground`.",
     test: (line) =>
-      /\btext-white\b/.test(line) &&
-      !/(bg-navy|bg-primary|bg-violet|bg-agro|bg-black|bg-gradient|gradient-|from-navy|from-violet|from-agro|from-emerald|from-slate|from-zinc|from-gray|from-stone|from-neutral|bg-\[)/.test(
+      /\b(bg-navy|bg-primary)\b/.test(line) && /\btext-white\b/.test(line),
+  },
+  {
+    id: "text-navy-on-dark-surface",
+    message:
+      "`text-navy` on a fixed-dark surface (bg-navy / bg-graphite / gradient-navy / from-navy) collapses to light-on-light in dark mode. Use a literal dark color like `text-[oklch(0.27_0.07_268)]` or `text-primary-foreground`.",
+    test: (line) =>
+      /\btext-navy\b/.test(line) &&
+      /(bg-navy|bg-graphite|gradient-navy|from-navy|from-\[oklch\(0\.2)/.test(
         line,
       ),
   },
   {
     id: "hardcoded-black-text",
     message:
-      "Hardcoded `text-black` — invisible on dark mode. Use `text-foreground` or `text-navy` (semantic).",
+      "Hardcoded `text-black` — invisible on dark mode. Use `text-foreground`.",
     test: (line) => /\btext-black\b/.test(line),
-  },
-  {
-    id: "bg-white-no-dark",
-    message:
-      "Hardcoded `bg-white` — stays white in dark mode. Use `bg-card` or `bg-background`.",
-    test: (line) =>
-      /\bbg-white\b/.test(line) && !/dark:bg-/.test(line),
-  },
-  {
-    id: "hsl-var-token",
-    message:
-      "`hsl(var(--token))` won't work — design tokens are defined in oklch. Use `var(--color-<token>)` instead.",
-    test: (line) => /hsl\(var\(--/.test(line),
   },
   {
     id: "arbitrary-gray-text",
@@ -66,7 +69,7 @@ const RULES = [
     message:
       "`text-muted-foreground/<50` is below WCAG AA on most surfaces. Use `text-muted-foreground` directly.",
     test: (line) =>
-      /text-muted-foreground\/(?:[0-4]?\d)\b/.test(line),
+      /text-muted-foreground\/(?:[0-4]?\d)(?!\d)/.test(line),
   },
 ];
 
