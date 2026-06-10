@@ -123,10 +123,36 @@ const kpis = [
   },
 ] as const;
 
+type Range = "4W" | "12W" | "YTD";
+
+type CrosshairCtx = {
+  index: number | null;
+  setIndex: (i: number | null) => void;
+  length: number;
+};
+const CrosshairContext = createContext<CrosshairCtx>({
+  index: null,
+  setIndex: () => {},
+  length: 0,
+});
+
 function Admin() {
   const totalPending = queues.reduce((s, q) => s + q.count, 0);
   const slas = queues.filter((q) => q.count > 5).length;
-  const [range, setRange] = useState<"4W" | "12W" | "YTD">("12W");
+  const [range, setRange] = useState<Range>("12W");
+  const [loading, setLoading] = useState(false);
+  const [index, setIndex] = useState<number | null>(null);
+
+  // Length of currently-displayed series (all kpis use same window length)
+  const length = sliceSeries(usersSeries, range).length;
+
+  // Simulate fetch latency on range switch + reset crosshair
+  useEffect(() => {
+    setLoading(true);
+    setIndex(null);
+    const t = setTimeout(() => setLoading(false), 380);
+    return () => clearTimeout(t);
+  }, [range]);
 
   return (
     <MobileFrame>
@@ -155,39 +181,43 @@ function Admin() {
       </header>
 
       <div className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
-        {/* Growth section */}
-        <section className="space-y-2.5">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
-              Growth
-            </h2>
-            <div className="flex gap-1 rounded-full bg-secondary p-0.5">
-              {(["4W", "12W", "YTD"] as const).map((r) => (
-                <button
-                  key={r}
-                  onClick={() => setRange(r)}
-                  className={`text-[10px] font-semibold px-2 h-6 rounded-full transition ${
-                    range === r
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {r}
-                </button>
-              ))}
+        <CrosshairContext.Provider value={{ index, setIndex, length }}>
+          <section className="space-y-2.5">
+            <div className="flex items-center justify-between px-1">
+              <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
+                Growth
+              </h2>
+              <div className="flex gap-1 rounded-full bg-secondary p-0.5">
+                {(["4W", "12W", "YTD"] as const).map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => setRange(r)}
+                    className={`text-[10px] font-semibold px-2 h-6 rounded-full transition ${
+                      range === r
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            {kpis.map((k) => (
-              <KpiCard key={k.label} {...k} range={range} />
-            ))}
-          </div>
+            <div className="grid grid-cols-2 gap-2">
+              {kpis.map((k) =>
+                loading ? (
+                  <KpiSkeleton key={k.label} />
+                ) : (
+                  <KpiCard key={k.label} {...k} range={range} />
+                ),
+              )}
+            </div>
 
-          <TrendCard range={range} />
-        </section>
+            {loading ? <TrendSkeleton /> : <TrendCard range={range} />}
+          </section>
+        </CrosshairContext.Provider>
 
-        {/* Queues */}
         <section className="space-y-2.5">
           <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-semibold px-1">
             Queues
@@ -232,10 +262,15 @@ function Stat({ k, v }: { k: string; v: string }) {
   );
 }
 
-function sliceSeries(s: readonly number[], range: "4W" | "12W" | "YTD") {
+function sliceSeries(s: readonly number[], range: Range) {
   if (range === "4W") return s.slice(-4);
   if (range === "12W") return s.slice(-12);
-  return s; // YTD: full
+  return s;
+}
+
+function formatValue(label: string, n: number) {
+  if (label.includes("AUM")) return `$${(n / 1000).toFixed(2)}M`;
+  return n.toLocaleString();
 }
 
 function KpiCard({
@@ -255,9 +290,12 @@ function KpiCard({
   series: readonly number[];
   tone: string;
   fill: string;
-  range: "4W" | "12W" | "YTD";
+  range: Range;
 }) {
   const data = sliceSeries(series, range);
+  const { index } = useContext(CrosshairContext);
+  const hovered = index !== null && index < data.length ? data[index] : null;
+
   return (
     <article className="rounded-2xl bg-card border border-border p-3 shadow-card">
       <div className="flex items-center gap-1.5">
@@ -266,7 +304,9 @@ function KpiCard({
           {label}
         </p>
       </div>
-      <p className="mt-1 text-lg font-bold text-navy">{value}</p>
+      <p className="mt-1 text-lg font-bold text-navy tabular-nums">
+        {hovered !== null ? formatValue(label, hovered) : value}
+      </p>
       <div className="flex items-center justify-between gap-1">
         <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-agro">
           <ArrowUpRight size={10} />
@@ -279,33 +319,75 @@ function KpiCard({
 }
 
 function Sparkline({ values, stroke }: { values: readonly number[]; stroke: string }) {
+  const { index } = useContext(CrosshairContext);
+  const w = 70;
+  const h = 22;
   const path = useMemo(() => {
-    if (values.length === 0) return { line: "", area: "" };
-    const w = 70;
-    const h = 22;
+    if (values.length === 0) return { line: "", area: "", pts: [] as [number, number][] };
     const min = Math.min(...values);
     const max = Math.max(...values);
     const range = max - min || 1;
     const step = w / Math.max(1, values.length - 1);
-    const pts = values.map((v, i) => [i * step, h - ((v - min) / range) * h]);
+    const pts = values.map((v, i) => [i * step, h - ((v - min) / range) * h] as [number, number]);
     const line = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
     const area = `${line} L${w},${h} L0,${h} Z`;
-    return { line, area };
+    return { line, area, pts };
   }, [values]);
 
+  const dot = index !== null && index < path.pts.length ? path.pts[index] : null;
+
   return (
-    <svg width="70" height="22" viewBox="0 0 70 22" className="overflow-visible">
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
       <path d={path.area} fill={stroke} opacity="0.15" />
       <path d={path.line} fill="none" stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      {dot && (
+        <circle cx={dot[0]} cy={dot[1]} r="2.2" fill={stroke} stroke="white" strokeWidth="1" />
+      )}
     </svg>
   );
 }
 
-function TrendCard({ range }: { range: "4W" | "12W" | "YTD" }) {
+function KpiSkeleton() {
+  return (
+    <article className="rounded-2xl bg-card border border-border p-3 shadow-card">
+      <div className="h-3 w-16 rounded bg-secondary animate-pulse" />
+      <div className="mt-2 h-5 w-20 rounded bg-secondary animate-pulse" />
+      <div className="mt-2 flex items-center justify-between">
+        <div className="h-2.5 w-10 rounded bg-secondary animate-pulse" />
+        <div className="h-5 w-[70px] rounded bg-secondary animate-pulse" />
+      </div>
+    </article>
+  );
+}
+
+function TrendSkeleton() {
+  return (
+    <article className="rounded-2xl bg-card border border-border p-4 shadow-card">
+      <div className="flex items-start justify-between">
+        <div className="space-y-1.5">
+          <div className="h-3.5 w-40 rounded bg-secondary animate-pulse" />
+          <div className="h-2.5 w-28 rounded bg-secondary animate-pulse" />
+        </div>
+        <div className="space-y-1">
+          <div className="h-2.5 w-12 rounded bg-secondary animate-pulse" />
+          <div className="h-2.5 w-12 rounded bg-secondary animate-pulse" />
+        </div>
+      </div>
+      <div className="mt-3 h-32 rounded-xl bg-secondary animate-pulse" />
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <div className="h-10 rounded-xl bg-secondary animate-pulse" />
+        <div className="h-10 rounded-xl bg-secondary animate-pulse" />
+      </div>
+    </article>
+  );
+}
+
+function TrendCard({ range }: { range: Range }) {
   const users = sliceSeries(usersSeries, range);
   const tx = sliceSeries(txSeries, range);
   const maxU = Math.max(...users);
   const maxT = Math.max(...tx);
+  const { index } = useContext(CrosshairContext);
 
   return (
     <article className="rounded-2xl bg-card border border-border p-4 shadow-card">
@@ -313,12 +395,22 @@ function TrendCard({ range }: { range: "4W" | "12W" | "YTD" }) {
         <div>
           <p className="text-sm font-semibold text-navy">Users vs Transactions</p>
           <p className="text-[11px] text-muted-foreground">
-            Weekly active growth · {range}
+            {index !== null
+              ? `Week ${index + 1} of ${users.length}`
+              : `Weekly active growth · ${range}`}
           </p>
         </div>
         <div className="flex flex-col gap-1 text-[10px]">
-          <Legend color="oklch(0.55 0.18 295)" label="Users" />
-          <Legend color="oklch(0.62 0.16 150)" label="Tx" />
+          <Legend
+            color="oklch(0.55 0.18 295)"
+            label="Users"
+            value={index !== null ? users[index]?.toLocaleString() : undefined}
+          />
+          <Legend
+            color="oklch(0.62 0.16 150)"
+            label="Tx"
+            value={index !== null ? tx[index]?.toLocaleString() : undefined}
+          />
         </div>
       </div>
 
@@ -334,11 +426,12 @@ function TrendCard({ range }: { range: "4W" | "12W" | "YTD" }) {
   );
 }
 
-function Legend({ color, label }: { color: string; label: string }) {
+function Legend({ color, label, value }: { color: string; label: string; value?: string }) {
   return (
-    <span className="inline-flex items-center gap-1 text-muted-foreground">
+    <span className="inline-flex items-center gap-1 text-muted-foreground tabular-nums">
       <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
       {label}
+      {value ? <span className="font-semibold text-navy ml-0.5">{value}</span> : null}
     </span>
   );
 }
@@ -358,24 +451,53 @@ function DualAreaChart({ users, tx }: { users: readonly number[]; tx: readonly n
   const w = 320;
   const h = 120;
   const pad = 4;
+  const { index, setIndex } = useContext(CrosshairContext);
+  const svgRef = useRef<SVGSVGElement | null>(null);
 
   const build = (vals: readonly number[]) => {
     const min = Math.min(...vals);
     const max = Math.max(...vals);
     const range = max - min || 1;
     const step = (w - pad * 2) / Math.max(1, vals.length - 1);
-    const pts = vals.map((v, i) => [pad + i * step, h - pad - ((v - min) / range) * (h - pad * 2)]);
-    const line = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+    const pts = vals.map(
+      (v, i) => [pad + i * step, h - pad - ((v - min) / range) * (h - pad * 2)] as [number, number],
+    );
+    const line = pts
+      .map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`)
+      .join(" ");
     const area = `${line} L${w - pad},${h - pad} L${pad},${h - pad} Z`;
-    return { line, area };
+    return { line, area, pts };
   };
 
   const u = build(users);
   const t = build(tx);
+  const n = users.length;
+  const step = (w - pad * 2) / Math.max(1, n - 1);
+
+  const handleMove = (clientX: number) => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    const ratio = (clientX - rect.left) / rect.width;
+    const xInVb = ratio * w - pad;
+    const i = Math.round(xInVb / step);
+    setIndex(Math.max(0, Math.min(n - 1, i)));
+  };
+
+  const cx = index !== null ? pad + index * step : null;
+  const tipX = cx !== null ? Math.max(40, Math.min(w - 40, cx)) : 0;
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-32">
-      {/* grid */}
+    <svg
+      ref={svgRef}
+      viewBox={`0 0 ${w} ${h}`}
+      className="w-full h-32 touch-none select-none"
+      onMouseMove={(e) => handleMove(e.clientX)}
+      onMouseLeave={() => setIndex(null)}
+      onTouchStart={(e) => handleMove(e.touches[0].clientX)}
+      onTouchMove={(e) => handleMove(e.touches[0].clientX)}
+      onTouchEnd={() => setIndex(null)}
+    >
       {[0.25, 0.5, 0.75].map((g) => (
         <line
           key={g}
@@ -390,8 +512,49 @@ function DualAreaChart({ users, tx }: { users: readonly number[]; tx: readonly n
       ))}
       <path d={u.area} fill="oklch(0.55 0.18 295)" opacity="0.18" />
       <path d={t.area} fill="oklch(0.62 0.16 150)" opacity="0.18" />
-      <path d={u.line} fill="none" stroke="oklch(0.55 0.18 295)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      <path d={t.line} fill="none" stroke="oklch(0.62 0.16 150)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d={u.line}
+        fill="none"
+        stroke="oklch(0.55 0.18 295)"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d={t.line}
+        fill="none"
+        stroke="oklch(0.62 0.16 150)"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {cx !== null && index !== null && (
+        <g>
+          <line
+            x1={cx}
+            x2={cx}
+            y1={pad}
+            y2={h - pad}
+            stroke="currentColor"
+            className="text-muted-foreground"
+            strokeWidth="0.8"
+            strokeDasharray="2 2"
+          />
+          <circle cx={u.pts[index][0]} cy={u.pts[index][1]} r="3" fill="oklch(0.55 0.18 295)" stroke="white" strokeWidth="1.2" />
+          <circle cx={t.pts[index][0]} cy={t.pts[index][1]} r="3" fill="oklch(0.62 0.16 150)" stroke="white" strokeWidth="1.2" />
+          <g transform={`translate(${tipX - 36}, 2)`}>
+            <rect width="72" height="18" rx="4" className="fill-card stroke-border" strokeWidth="0.5" />
+            <text x="36" y="12" textAnchor="middle" className="fill-foreground" fontSize="9" fontWeight="600">
+              Wk {index + 1} / {n}
+            </text>
+          </g>
+        </g>
+      )}
+
+      {/* invisible hit areas for keyboard-less precision on touch (improves edge hits) */}
+      <rect x="0" y="0" width={w} height={h} fill="transparent" />
     </svg>
   );
 }
+
