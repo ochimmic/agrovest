@@ -71,8 +71,21 @@ function FarmVest() {
       acc[h.category] = (acc[h.category] ?? 0) + h.invested;
       return acc;
     }, {});
-    return { count: holdings.length, invested, plots, projected, byCat };
+
+    // Aggregate on-chain / off-chain status across holdings (worst-case wins).
+    const rank = { failed: 2, pending: 1, anchored: 0, active: 0 } as const;
+    let chain: "anchored" | "pending" | "failed" = "anchored";
+    let custody: "active" | "pending" | "failed" = "active";
+    let updatedAt = new Date().toISOString();
+    for (const h of holdings) {
+      const s = deriveStatus(h.id, h.purchasedAt);
+      if (rank[s.chain] > rank[chain]) chain = s.chain;
+      if (rank[s.custody] > rank[custody]) custody = s.custody;
+      if (new Date(s.updatedAt) < new Date(updatedAt)) updatedAt = s.updatedAt;
+    }
+    return { count: holdings.length, invested, plots, projected, byCat, chain, custody, updatedAt };
   }, [holdings]);
+
 
   const series = useMemo(() => {
     const days = ranges.find((r) => r.id === range)!.days;
