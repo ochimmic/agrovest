@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/shell/AppShell";
 import { farmAssets } from "@/lib/mock-data";
-import { useState } from "react";
-import { Search } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Search, Sprout, TrendingUp, Wallet, PieChart, ArrowUpRight } from "lucide-react";
+import { useAppState } from "@/lib/store";
 
 export const Route = createFileRoute("/invest/farmvest/")({ component: FarmVest });
 
