@@ -354,7 +354,7 @@ function MiniMetric({ label, value, tone }: { label: string; value: string; tone
   );
 }
 
-function DualAreaChart({ users, tx }: { users: number[]; tx: number[] }) {
+function DualAreaChart({ users, tx }: { users: readonly number[]; tx: readonly number[] }) {
   const w = 320;
   const h = 120;
   const pad = 4;
