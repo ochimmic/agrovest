@@ -426,7 +426,7 @@ function DocBtn({
 }) {
   const toneCls =
     tone === "primary"
-      ? "bg-navy text-white hover:bg-navy/90"
+      ? "bg-primary text-primary-foreground hover:opacity-90"
       : tone === "success"
       ? "bg-agro-soft text-agro"
       : "bg-card text-navy hover:bg-background border border-border";
