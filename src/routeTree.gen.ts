@@ -319,14 +319,14 @@ const InvestPropertyIdRoute = InvestPropertyIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const InvestFarmvestIdRoute = InvestFarmvestIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => InvestFarmvestRoute,
+  id: '/invest/farmvest/$id',
+  path: '/invest/farmvest/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const InvestCheckoutIdRoute = InvestCheckoutIdRouteImport.update({
-  id: '/checkout/$id',
-  path: '/checkout/$id',
-  getParentRoute: () => InvestRoute,
+  id: '/invest/checkout/$id',
+  path: '/invest/checkout/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -695,6 +695,8 @@ export interface RootRouteChildren {
   WalletSecurityRoute: typeof WalletSecurityRoute
   WalletSwapRoute: typeof WalletSwapRoute
   InvestIndexRoute: typeof InvestIndexRoute
+  InvestCheckoutIdRoute: typeof InvestCheckoutIdRoute
+  InvestFarmvestIdRoute: typeof InvestFarmvestIdRoute
   InvestPropertyIdRoute: typeof InvestPropertyIdRoute
   InvestSuccessIdRoute: typeof InvestSuccessIdRoute
   InvestFarmvestIndexRoute: typeof InvestFarmvestIndexRoute
@@ -1062,17 +1064,17 @@ declare module '@tanstack/react-router' {
     }
     '/invest/farmvest/$id': {
       id: '/invest/farmvest/$id'
-      path: '/$id'
+      path: '/invest/farmvest/$id'
       fullPath: '/invest/farmvest/$id'
       preLoaderRoute: typeof InvestFarmvestIdRouteImport
-      parentRoute: typeof InvestFarmvestRoute
+      parentRoute: typeof rootRouteImport
     }
     '/invest/checkout/$id': {
       id: '/invest/checkout/$id'
-      path: '/checkout/$id'
+      path: '/invest/checkout/$id'
       fullPath: '/invest/checkout/$id'
       preLoaderRoute: typeof InvestCheckoutIdRouteImport
-      parentRoute: typeof InvestRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -1205,6 +1207,8 @@ const rootRouteChildren: RootRouteChildren = {
   WalletSecurityRoute: WalletSecurityRoute,
   WalletSwapRoute: WalletSwapRoute,
   InvestIndexRoute: InvestIndexRoute,
+  InvestCheckoutIdRoute: InvestCheckoutIdRoute,
+  InvestFarmvestIdRoute: InvestFarmvestIdRoute,
   InvestPropertyIdRoute: InvestPropertyIdRoute,
   InvestSuccessIdRoute: InvestSuccessIdRoute,
   InvestFarmvestIndexRoute: InvestFarmvestIndexRoute,
