@@ -206,24 +206,19 @@ function HoldingDetail() {
 
         {/* On-chain / Off-chain status */}
         <section className="rounded-3xl border border-border bg-card p-4">
-          <h2 className="text-sm font-semibold text-navy">Status</h2>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <StatusCard
-              title="On-chain"
-              status="Anchored"
-              detail={txHash}
-              tone="agro"
-              icon={<Link2 size={14} />}
-            />
-            <StatusCard
-              title="Off-chain"
-              status="Custody active"
-              detail="Vault: Lagos Custodian"
-              tone="navy"
-              icon={<ShieldCheck size={14} />}
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-navy">Status</h2>
+          </div>
+          <div className="mt-3">
+            <StatusStrip
+              chain={status.chain}
+              custody={status.custody}
+              updatedAt={status.updatedAt}
+              detail={{ chain: txHash, custody: "Vault: Lagos Custodian" }}
             />
           </div>
         </section>
+
 
         {/* Timeline */}
         <section className="rounded-3xl border border-border bg-card p-4">
