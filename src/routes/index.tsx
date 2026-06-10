@@ -21,7 +21,7 @@ function Splash() {
     const t = setTimeout(() => {
       const { user, role } = getState();
       nav({ to: user && role ? "/home" : "/welcome", replace: true });
-    }, 1400);
+    }, 2200);
     return () => clearTimeout(t);
   }, [nav]);
 
@@ -31,9 +31,9 @@ function Splash() {
         <div className="scale-150">
           <Logo size={44} tone="light" />
         </div>
-        <p className="text-white/70 text-xs tracking-[0.2em] uppercase">Real-world assets · Investment-grade</p>
-        <div className="mt-6 h-1 w-24 overflow-hidden rounded-full bg-white/15">
-          <div className="h-full w-1/2 animate-[shimmer_1.4s_linear_infinite] bg-gradient-to-r from-transparent via-white/80 to-transparent" />
+        <p className="text-white/70 text-xs tracking-[0.2em] uppercase">Privacy. Investment. Technology.</p>
+        <div className="mt-6 h-1 w-40 overflow-hidden rounded-full bg-white/15">
+          <div className="h-full rounded-full bg-white/90 animate-[splash-load_2.2s_cubic-bezier(0.4,0,0.2,1)_forwards]" />
         </div>
       </div>
     </div>
