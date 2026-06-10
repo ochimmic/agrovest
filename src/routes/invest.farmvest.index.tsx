@@ -92,7 +92,7 @@ function FarmVest() {
         </p>
 
         {/* Portfolio dashboard */}
-        <section className="mt-4 rounded-3xl bg-gradient-to-br from-navy to-[oklch(0.22_0.07_268)] text-white p-4 shadow-card">
+        <section className="mt-4 rounded-3xl bg-gradient-to-br from-[oklch(0.24_0.06_268)] to-[oklch(0.16_0.05_275)] text-white p-4 shadow-card">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] uppercase tracking-wide text-white/60">FarmVest portfolio</p>
