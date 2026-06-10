@@ -11,7 +11,7 @@ const tag: Record<string, string> = {
   kyc: "bg-violet-soft text-violet",
   verified: "bg-agro-soft text-agro",
   pending: "bg-warn/15 text-warn",
-  completed: "bg-navy text-white",
+  completed: "bg-primary text-primary-foreground",
 };
 
 function Broker() {
