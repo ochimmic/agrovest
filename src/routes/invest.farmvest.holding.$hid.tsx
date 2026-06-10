@@ -180,7 +180,14 @@ function HoldingDetail() {
           />
           <Action label="Swap" icon={<RefreshCw size={16} />} onClick={() => nav({ to: "/wallet/swap" })} />
           <Action label="Txns" icon={<Receipt size={16} />} onClick={() => nav({ to: "/wallet/history" })} />
-          <Action label="Docs" icon={<FileText size={16} />} onClick={() => download("Documents bundle")} />
+          <Action
+            label="Docs"
+            icon={<FileText size={16} />}
+            onClick={() => {
+              const el = document.getElementById("docs-section");
+              el?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          />
         </div>
 
         {/* Breakdown */}
