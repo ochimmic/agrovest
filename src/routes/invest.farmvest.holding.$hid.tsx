@@ -213,9 +213,9 @@ function HoldingDetail() {
           </div>
           <div className="mt-3">
             <StatusStrip
-              chain={status.chain}
-              custody={status.custody}
-              updatedAt={status.updatedAt}
+              chain={chainState.chain}
+              custody={chainState.custody}
+              updatedAt={chainState.updatedAt}
               detail={{ chain: txHash, custody: "Vault: Lagos Custodian" }}
             />
           </div>
