@@ -162,6 +162,18 @@ function FarmVest() {
               icon={<FileText size={16} />}
             />
           </div>
+
+          {/* Aggregated status */}
+          {dash.count > 0 && (
+            <div className="mt-4">
+              <StatusStrip
+                chain={dash.chain}
+                custody={dash.custody}
+                updatedAt={dash.updatedAt}
+                variant="dark"
+              />
+            </div>
+          )}
         </section>
 
         {dash.count > 0 && (
