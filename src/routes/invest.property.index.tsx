@@ -41,7 +41,7 @@ function Properties() {
               key={c}
               onClick={() => setCat(c)}
               className={`shrink-0 h-9 rounded-full px-3.5 text-xs font-medium transition ${
-                cat === c ? "bg-navy text-white" : "bg-secondary text-secondary-foreground"
+                cat === c ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
               }`}
             >
               {c}
