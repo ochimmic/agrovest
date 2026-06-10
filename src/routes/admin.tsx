@@ -278,7 +278,7 @@ function KpiCard({
   );
 }
 
-function Sparkline({ values, stroke }: { values: number[]; stroke: string }) {
+function Sparkline({ values, stroke }: { values: readonly number[]; stroke: string }) {
   const path = useMemo(() => {
     if (values.length === 0) return { line: "", area: "" };
     const w = 70;
