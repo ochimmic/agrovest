@@ -1,14 +1,33 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { z } from "zod";
 import { CheckCircle2, FileText, Home } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
-import { farmAssets } from "@/lib/mock-data";
+import { farmAssets, properties } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/invest/success/$id")({ component: Success });
+const search = z.object({
+  kind: z.enum(["farm", "property"]).default("farm"),
+});
+
+export const Route = createFileRoute("/invest/success/$id")({
+  validateSearch: search,
+  component: Success,
+});
 
 function Success() {
   const { id } = Route.useParams();
-  const asset = farmAssets.find((a) => a.id === id) ?? farmAssets[0];
+  const { kind } = Route.useSearch();
+  const name =
+    kind === "property"
+      ? properties.find((p) => p.id === id)?.title ?? "your asset"
+      : farmAssets.find((a) => a.id === id)?.name ?? "your investment";
+
+  const label = kind === "property" ? "Purchase confirmed" : "Investment confirmed";
+  const sub =
+    kind === "property"
+      ? "Funds are in escrow. Vendor will reach out within 24 hours to coordinate handover."
+      : "Your purchase is being reviewed. Documents will be issued within 24 hours.";
+
   return (
     <MobileFrame>
       <div className="flex-1 flex flex-col items-center justify-center px-6 text-center animate-in-up">
@@ -18,10 +37,9 @@ function Success() {
             <CheckCircle2 size={36} strokeWidth={2.4} />
           </span>
         </div>
-        <h1 className="mt-6 text-2xl font-semibold text-navy">Investment confirmed</h1>
+        <h1 className="mt-6 text-2xl font-semibold text-navy">{label}</h1>
         <p className="mt-2 text-sm text-muted-foreground max-w-[280px]">
-          Your purchase of <span className="font-medium text-navy">{asset.name}</span> is being reviewed.
-          Documents will be issued within 24 hours.
+          Your <span className="font-medium text-navy">{name}</span> {kind === "property" ? "order" : "investment"} is locked in. {sub}
         </p>
         <div className="mt-6 w-full space-y-2">
           <AgroButton size="xl" asChild>
