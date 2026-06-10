@@ -4,7 +4,7 @@ import { farmAssets } from "@/lib/mock-data";
 import { useState } from "react";
 import { Search } from "lucide-react";
 
-export const Route = createFileRoute("/invest/farmvest")({ component: FarmVest });
+export const Route = createFileRoute("/invest/farmvest/")({ component: FarmVest });
 
 const cats = [
   { id: "all", label: "All" },
