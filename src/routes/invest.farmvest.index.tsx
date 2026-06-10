@@ -127,7 +127,7 @@ function FarmVest() {
                   key={r.id}
                   onClick={() => setRange(r.id)}
                   className={`flex-1 rounded-lg py-1.5 text-[11px] font-medium transition ${
-                    range === r.id ? "bg-white text-navy" : "bg-white/5 text-white/70"
+                    range === r.id ? "bg-white text-[oklch(0.27_0.07_268)]" : "bg-white/5 text-white/70"
                   }`}
                 >
                   {r.id}

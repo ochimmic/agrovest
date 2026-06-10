@@ -170,7 +170,7 @@ function MarketCard({ m }: { m: Pair }) {
           <p className="text-[10px] text-muted-foreground">{m.name}</p>
         </div>
         <svg width={w} height={h} className="overflow-visible">
-          <polyline fill="none" stroke={up ? "hsl(var(--agro))" : "#ef4444"} strokeWidth="1.5" points={pts} />
+          <polyline fill="none" stroke={up ? "var(--color-agro)" : "#ef4444"} strokeWidth="1.5" points={pts} />
         </svg>
       </div>
       <div className="mt-2 flex items-end justify-between">
