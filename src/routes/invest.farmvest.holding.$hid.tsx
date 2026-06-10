@@ -57,14 +57,98 @@ function HoldingDetail() {
     { label: "Harvest cycle close", date: "Scheduled · Q+4", done: false, icon: <Sprout size={14} /> },
   ];
 
-  const docs = [
-    { id: "rcpt", title: "Custody Receipt", status: "Issued", date: holding.purchasedAt },
-    { id: "ctr", title: "Asset Contract", status: "Signed", date: holding.purchasedAt },
-    { id: "ins", title: "Insurance Cover Note", status: "Pending", date: "—" },
-  ];
+  type DocStatus = "Issued" | "Signed" | "Pending" | "Failed";
+  type DocAction = "download" | "issue" | "verify" | null;
+  type Doc = {
+    id: string;
+    title: string;
+    status: DocStatus;
+    date: string;
+    verification: "unverified" | "pending" | "verified" | "failed";
+    pending: DocAction;
+  };
 
-  function download(name: string) {
-    toast.success(`${name} download started`);
+  const [docs, setDocs] = useState<Doc[]>([
+    { id: "rcpt", title: "Custody Receipt", status: "Issued", date: holding.purchasedAt, verification: "verified", pending: null },
+    { id: "ctr", title: "Asset Contract", status: "Signed", date: holding.purchasedAt, verification: "unverified", pending: null },
+    { id: "ins", title: "Insurance Cover Note", status: "Pending", date: "—", verification: "unverified", pending: null },
+  ]);
+
+  function patch(id: string, p: Partial<Doc>) {
+    setDocs((cur) => cur.map((d) => (d.id === id ? { ...d, ...p } : d)));
+  }
+
+  function runAction(
+    d: Doc,
+    action: Exclude<DocAction, null>,
+    fn: () => Promise<{ ok: boolean; msg: string; patch?: Partial<Doc> }>,
+  ) {
+    patch(d.id, { pending: action });
+    fn().then((res) => {
+      patch(d.id, { pending: null, ...(res.patch ?? {}) });
+      if (res.ok) toast.success(res.msg);
+      else toast.error(res.msg);
+    });
+  }
+
+  function fakeAsync(ms = 900, failRate = 0): Promise<void> {
+    return new Promise((resolve, reject) =>
+      setTimeout(() => (Math.random() < failRate ? reject(new Error("fail")) : resolve()), ms),
+    );
+  }
+
+  function onDownload(d: Doc) {
+    if (d.status === "Pending") {
+      toast.error("Document not yet available");
+      return;
+    }
+    runAction(d, "download", async () => {
+      try {
+        await fakeAsync(700, 0.08);
+        return { ok: true, msg: `${d.title} downloaded` };
+      } catch {
+        return { ok: false, msg: `${d.title} download failed` };
+      }
+    });
+  }
+
+  function onIssue(d: Doc) {
+    runAction(d, "issue", async () => {
+      try {
+        await fakeAsync(1100, 0.1);
+        return {
+          ok: true,
+          msg: `${d.title} issued`,
+          patch: {
+            status: "Issued" as DocStatus,
+            date: new Date().toISOString(),
+            verification: "unverified" as const,
+          },
+        };
+      } catch {
+        return {
+          ok: false,
+          msg: `Issuance failed for ${d.title}`,
+          patch: { status: "Failed" as DocStatus },
+        };
+      }
+    });
+  }
+
+  function onVerify(d: Doc) {
+    patch(d.id, { verification: "pending" });
+    runAction(d, "verify", async () => {
+      try {
+        await fakeAsync(1400, 0.2);
+        return { ok: true, msg: `${d.title} verified`, patch: { verification: "verified" as const } };
+      } catch {
+        return {
+          ok: false,
+          msg: `Verification failed for ${d.title}`,
+          patch: { verification: "failed" as const },
+        };
+      }
+    });
   }
 
   return (
