@@ -35,7 +35,7 @@ function Invest() {
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-violet-soft text-violet">
               <Building2 size={18} />
             </span>
-            <p className="mt-3 text-sm font-semibold text-navy">Property Store</p>
+            <p className="mt-3 text-sm font-semibold text-navy">Buy Assets</p>
             <p className="text-[11px] text-muted-foreground">Real estate · Auto · Home</p>
           </Link>
         </div>
