@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
+import { StatusStrip, deriveStatus } from "@/components/farmvest/StatusStrip";
 import { useAppState } from "@/lib/store";
 import { farmAssets } from "@/lib/mock-data";
 import {
