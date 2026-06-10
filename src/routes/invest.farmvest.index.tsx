@@ -187,6 +187,7 @@ function FarmVest() {
             <div className="mt-2 space-y-2">
               {holdings.slice(0, 4).map((h) => {
                 const asset = farmAssets.find((a) => a.id === h.assetId);
+                const s = deriveStatus(h.id, h.purchasedAt);
                 return (
                   <Link
                     key={h.id}
@@ -205,6 +206,10 @@ function FarmVest() {
                         {h.units} {h.unit}
                         {h.units > 1 ? "s" : ""} · {asset?.expectedYield ?? "—"}
                       </p>
+                      <div className="mt-1 flex flex-wrap items-center gap-1">
+                        <StatusBadge kind="chain" status={s.chain} compact />
+                        <StatusBadge kind="custody" status={s.custody} compact />
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold text-navy">
