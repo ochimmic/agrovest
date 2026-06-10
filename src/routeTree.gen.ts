@@ -62,6 +62,7 @@ import { Route as InvestSuccessIdRouteImport } from './routes/invest.success.$id
 import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
 import { Route as InvestFarmvestIdRouteImport } from './routes/invest.farmvest.$id'
 import { Route as InvestCheckoutIdRouteImport } from './routes/invest.checkout.$id'
+import { Route as InvestFarmvestHoldingHidRouteImport } from './routes/invest.farmvest.holding.$hid'
 
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
@@ -328,6 +329,12 @@ const InvestCheckoutIdRoute = InvestCheckoutIdRouteImport.update({
   path: '/invest/checkout/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvestFarmvestHoldingHidRoute =
+  InvestFarmvestHoldingHidRouteImport.update({
+    id: '/invest/farmvest/holding/$hid',
+    path: '/invest/farmvest/holding/$hid',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -383,6 +390,7 @@ export interface FileRoutesByFullPath {
   '/services/mp/$id': typeof ServicesMpIdRoute
   '/invest/farmvest/': typeof InvestFarmvestIndexRoute
   '/invest/property/': typeof InvestPropertyIndexRoute
+  '/invest/farmvest/holding/$hid': typeof InvestFarmvestHoldingHidRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -438,6 +446,7 @@ export interface FileRoutesByTo {
   '/services/mp/$id': typeof ServicesMpIdRoute
   '/invest/farmvest': typeof InvestFarmvestIndexRoute
   '/invest/property': typeof InvestPropertyIndexRoute
+  '/invest/farmvest/holding/$hid': typeof InvestFarmvestHoldingHidRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -494,6 +503,7 @@ export interface FileRoutesById {
   '/services/mp/$id': typeof ServicesMpIdRoute
   '/invest/farmvest/': typeof InvestFarmvestIndexRoute
   '/invest/property/': typeof InvestPropertyIndexRoute
+  '/invest/farmvest/holding/$hid': typeof InvestFarmvestHoldingHidRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -551,6 +561,7 @@ export interface FileRouteTypes {
     | '/services/mp/$id'
     | '/invest/farmvest/'
     | '/invest/property/'
+    | '/invest/farmvest/holding/$hid'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -606,6 +617,7 @@ export interface FileRouteTypes {
     | '/services/mp/$id'
     | '/invest/farmvest'
     | '/invest/property'
+    | '/invest/farmvest/holding/$hid'
   id:
     | '__root__'
     | '/'
@@ -661,6 +673,7 @@ export interface FileRouteTypes {
     | '/services/mp/$id'
     | '/invest/farmvest/'
     | '/invest/property/'
+    | '/invest/farmvest/holding/$hid'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -701,6 +714,7 @@ export interface RootRouteChildren {
   InvestSuccessIdRoute: typeof InvestSuccessIdRoute
   InvestFarmvestIndexRoute: typeof InvestFarmvestIndexRoute
   InvestPropertyIndexRoute: typeof InvestPropertyIndexRoute
+  InvestFarmvestHoldingHidRoute: typeof InvestFarmvestHoldingHidRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1076,6 +1090,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvestCheckoutIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invest/farmvest/holding/$hid': {
+      id: '/invest/farmvest/holding/$hid'
+      path: '/invest/farmvest/holding/$hid'
+      fullPath: '/invest/farmvest/holding/$hid'
+      preLoaderRoute: typeof InvestFarmvestHoldingHidRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1213,6 +1234,7 @@ const rootRouteChildren: RootRouteChildren = {
   InvestSuccessIdRoute: InvestSuccessIdRoute,
   InvestFarmvestIndexRoute: InvestFarmvestIndexRoute,
   InvestPropertyIndexRoute: InvestPropertyIndexRoute,
+  InvestFarmvestHoldingHidRoute: InvestFarmvestHoldingHidRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
