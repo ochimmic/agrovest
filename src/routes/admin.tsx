@@ -359,7 +359,7 @@ function DualAreaChart({ users, tx }: { users: readonly number[]; tx: readonly n
   const h = 120;
   const pad = 4;
 
-  const build = (vals: number[]) => {
+  const build = (vals: readonly number[]) => {
     const min = Math.min(...vals);
     const max = Math.max(...vals);
     const range = max - min || 1;
