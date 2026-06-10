@@ -16,6 +16,7 @@ function Home() {
   const kyc = useAppState((s) => s.kyc);
   const holdings = useAppState((s) => s.holdings);
   const wallet = useAppState((s) => s.wallet);
+  const txs = useAppState((s) => s.txs);
 
   const portfolioValue = holdings.reduce((sum, h) => sum + h.invested, 0);
   const first = user?.name?.split(" ")[0] ?? "Investor";
