@@ -378,3 +378,66 @@ function StatusCard({
     </div>
   );
 }
+
+function StatusChip({ status }: { status: "Issued" | "Signed" | "Pending" | "Failed" }) {
+  const map: Record<string, string> = {
+    Issued: "bg-agro-soft text-agro",
+    Signed: "bg-violet-soft text-violet",
+    Pending: "bg-secondary text-muted-foreground",
+    Failed: "bg-destructive/10 text-destructive",
+  };
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${map[status]}`}>
+      {status === "Failed" && <AlertTriangle size={10} />}
+      {status}
+    </span>
+  );
+}
+
+function VerifyChip({ v }: { v: "unverified" | "pending" | "verified" | "failed" }) {
+  if (v === "unverified") return null;
+  const cfg = {
+    pending: { cls: "bg-secondary text-muted-foreground", icon: <Loader2 size={10} className="animate-spin" />, label: "Verifying" },
+    verified: { cls: "bg-agro-soft text-agro", icon: <BadgeCheck size={10} />, label: "Verified" },
+    failed: { cls: "bg-destructive/10 text-destructive", icon: <AlertTriangle size={10} />, label: "Verify failed" },
+  }[v];
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${cfg.cls}`}>
+      {cfg.icon}
+      {cfg.label}
+    </span>
+  );
+}
+
+function DocBtn({
+  label,
+  icon,
+  onClick,
+  disabled,
+  loading,
+  tone = "ghost",
+}: {
+  label: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+  loading?: boolean;
+  tone?: "ghost" | "primary" | "success";
+}) {
+  const toneCls =
+    tone === "primary"
+      ? "bg-navy text-white hover:bg-navy/90"
+      : tone === "success"
+      ? "bg-agro-soft text-agro"
+      : "bg-card text-navy hover:bg-background border border-border";
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex items-center justify-center gap-1 rounded-xl py-2 text-[11px] font-medium transition disabled:opacity-40 disabled:pointer-events-none ${toneCls}`}
+    >
+      {loading ? <Loader2 size={13} className="animate-spin" /> : icon}
+      {loading ? "…" : label}
+    </button>
+  );
+}
