@@ -254,15 +254,9 @@ function HoldingDetail() {
           </ol>
         </section>
 
-        {/* Documents */}
-        <section className="rounded-3xl border border-border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-navy">Documents</h2>
-            <button
-              onClick={() => toast.success("New custody receipt requested")}
-              className="text-[11px] text-agro font-medium"
-            >
-        {/* Documents */}
+        </section>
+
+
         <section id="docs-section" className="rounded-3xl border border-border bg-card p-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-navy">Documents</h2>
