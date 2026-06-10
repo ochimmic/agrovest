@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ShieldCheck, ArrowRight, Sprout, LineChart, Wallet, GraduationCap,
   AlertTriangle, FileText, Headphones, Sparkles, Lock,
+  Activity, ShoppingBag, Building2, Gift, ArrowDownLeft, ArrowUpRight, RefreshCw,
 } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
