@@ -61,7 +61,7 @@ function Detail() {
                 key={u}
                 onClick={() => setUnit(u)}
                 className={`rounded-xl py-2.5 text-xs font-medium capitalize transition ${
-                  unit === u ? "bg-navy text-white" : "bg-secondary text-secondary-foreground"
+                  unit === u ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
                 }`}
               >
                 {u}
