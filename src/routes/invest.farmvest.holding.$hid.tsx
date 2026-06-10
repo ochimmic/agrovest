@@ -48,6 +48,7 @@ function HoldingDetail() {
   const netPrincipal = holding.invested - platformFee;
   const projectedYr = Math.round(holding.invested * 0.105);
   const txHash = `0x${holding.id.replace(/[^a-f0-9]/gi, "").padEnd(8, "a").slice(0, 8)}…${holding.id.slice(-4)}`;
+  const chainState = deriveStatus(holding.id, holding.purchasedAt);
 
   const timeline = [
     { label: "Investment confirmed", date: holding.purchasedAt, done: true, icon: <CheckCircle2 size={14} /> },
