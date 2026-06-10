@@ -4,7 +4,7 @@ import { ShieldCheck, Plus, Search } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { properties } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/invest/property")({ component: Properties });
+export const Route = createFileRoute("/invest/property/")({ component: Properties });
 
 const cats = ["All", "Real Estate", "Automobile", "Household"] as const;
 

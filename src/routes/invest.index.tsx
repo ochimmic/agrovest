@@ -3,7 +3,7 @@ import { Sprout, Building2, Sparkles, ArrowRight } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { farmAssets } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/invest")({ component: Invest });
+export const Route = createFileRoute("/invest/")({ component: Invest });
 
 function Invest() {
   return (

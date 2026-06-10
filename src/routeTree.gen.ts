@@ -24,7 +24,6 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as KycRouteImport } from './routes/kyc'
-import { Route as InvestRouteImport } from './routes/invest'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as ExploreRouteImport } from './routes/explore'
@@ -32,6 +31,7 @@ import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as BrokerRouteImport } from './routes/broker'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InvestIndexRouteImport } from './routes/invest.index'
 import { Route as WalletSwapRouteImport } from './routes/wallet.swap'
 import { Route as WalletSecurityRouteImport } from './routes/wallet.security'
 import { Route as WalletIntroRouteImport } from './routes/wallet.intro'
@@ -47,8 +47,6 @@ import { Route as SupportDisputeRouteImport } from './routes/support.dispute'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
 import { Route as ServicesMpRouteImport } from './routes/services.mp'
 import { Route as PrichatIdRouteImport } from './routes/prichat.$id'
-import { Route as InvestPropertyRouteImport } from './routes/invest.property'
-import { Route as InvestFarmvestRouteImport } from './routes/invest.farmvest'
 import { Route as BrokerRewardsRouteImport } from './routes/broker.rewards'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
@@ -57,6 +55,8 @@ import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminDisputesRouteImport } from './routes/admin.disputes'
 import { Route as AdminConsultantsRouteImport } from './routes/admin.consultants'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
+import { Route as InvestPropertyIndexRouteImport } from './routes/invest.property.index'
+import { Route as InvestFarmvestIndexRouteImport } from './routes/invest.farmvest.index'
 import { Route as ServicesMpIdRouteImport } from './routes/services.mp.$id'
 import { Route as InvestSuccessIdRouteImport } from './routes/invest.success.$id'
 import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
@@ -138,11 +138,6 @@ const KycRoute = KycRouteImport.update({
   path: '/kyc',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InvestRoute = InvestRouteImport.update({
-  id: '/invest',
-  path: '/invest',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
@@ -176,6 +171,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestIndexRoute = InvestIndexRouteImport.update({
+  id: '/invest/',
+  path: '/invest/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WalletSwapRoute = WalletSwapRouteImport.update({
@@ -253,16 +253,6 @@ const PrichatIdRoute = PrichatIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => PrichatRoute,
 } as any)
-const InvestPropertyRoute = InvestPropertyRouteImport.update({
-  id: '/property',
-  path: '/property',
-  getParentRoute: () => InvestRoute,
-} as any)
-const InvestFarmvestRoute = InvestFarmvestRouteImport.update({
-  id: '/farmvest',
-  path: '/farmvest',
-  getParentRoute: () => InvestRoute,
-} as any)
 const BrokerRewardsRoute = BrokerRewardsRouteImport.update({
   id: '/rewards',
   path: '/rewards',
@@ -303,20 +293,30 @@ const AdminAuditRoute = AdminAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => AdminRoute,
 } as any)
+const InvestPropertyIndexRoute = InvestPropertyIndexRouteImport.update({
+  id: '/invest/property/',
+  path: '/invest/property/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestFarmvestIndexRoute = InvestFarmvestIndexRouteImport.update({
+  id: '/invest/farmvest/',
+  path: '/invest/farmvest/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesMpIdRoute = ServicesMpIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => ServicesMpRoute,
 } as any)
 const InvestSuccessIdRoute = InvestSuccessIdRouteImport.update({
-  id: '/success/$id',
-  path: '/success/$id',
-  getParentRoute: () => InvestRoute,
+  id: '/invest/success/$id',
+  path: '/invest/success/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const InvestPropertyIdRoute = InvestPropertyIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => InvestPropertyRoute,
+  id: '/invest/property/$id',
+  path: '/invest/property/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const InvestFarmvestIdRoute = InvestFarmvestIdRouteImport.update({
   id: '/$id',
@@ -337,7 +337,6 @@ export interface FileRoutesByFullPath {
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
-  '/invest': typeof InvestRouteWithChildren
   '/kyc': typeof KycRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
@@ -361,8 +360,6 @@ export interface FileRoutesByFullPath {
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
-  '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
-  '/invest/property': typeof InvestPropertyRouteWithChildren
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
@@ -378,11 +375,14 @@ export interface FileRoutesByFullPath {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/wallet/swap': typeof WalletSwapRoute
+  '/invest/': typeof InvestIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/invest/success/$id': typeof InvestSuccessIdRoute
   '/services/mp/$id': typeof ServicesMpIdRoute
+  '/invest/farmvest/': typeof InvestFarmvestIndexRoute
+  '/invest/property/': typeof InvestPropertyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -392,7 +392,6 @@ export interface FileRoutesByTo {
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
-  '/invest': typeof InvestRouteWithChildren
   '/kyc': typeof KycRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
@@ -416,8 +415,6 @@ export interface FileRoutesByTo {
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
-  '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
-  '/invest/property': typeof InvestPropertyRouteWithChildren
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
@@ -433,11 +430,14 @@ export interface FileRoutesByTo {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/wallet/swap': typeof WalletSwapRoute
+  '/invest': typeof InvestIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/invest/success/$id': typeof InvestSuccessIdRoute
   '/services/mp/$id': typeof ServicesMpIdRoute
+  '/invest/farmvest': typeof InvestFarmvestIndexRoute
+  '/invest/property': typeof InvestPropertyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -448,7 +448,6 @@ export interface FileRoutesById {
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
   '/home': typeof HomeRoute
-  '/invest': typeof InvestRouteWithChildren
   '/kyc': typeof KycRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
@@ -472,8 +471,6 @@ export interface FileRoutesById {
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
-  '/invest/farmvest': typeof InvestFarmvestRouteWithChildren
-  '/invest/property': typeof InvestPropertyRouteWithChildren
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
@@ -489,11 +486,14 @@ export interface FileRoutesById {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/wallet/swap': typeof WalletSwapRoute
+  '/invest/': typeof InvestIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/invest/success/$id': typeof InvestSuccessIdRoute
   '/services/mp/$id': typeof ServicesMpIdRoute
+  '/invest/farmvest/': typeof InvestFarmvestIndexRoute
+  '/invest/property/': typeof InvestPropertyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -505,7 +505,6 @@ export interface FileRouteTypes {
     | '/explore'
     | '/forgot'
     | '/home'
-    | '/invest'
     | '/kyc'
     | '/legal'
     | '/login'
@@ -529,8 +528,6 @@ export interface FileRouteTypes {
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
-    | '/invest/farmvest'
-    | '/invest/property'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
@@ -546,11 +543,14 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/wallet/swap'
+    | '/invest/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/invest/success/$id'
     | '/services/mp/$id'
+    | '/invest/farmvest/'
+    | '/invest/property/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -560,7 +560,6 @@ export interface FileRouteTypes {
     | '/explore'
     | '/forgot'
     | '/home'
-    | '/invest'
     | '/kyc'
     | '/legal'
     | '/login'
@@ -584,8 +583,6 @@ export interface FileRouteTypes {
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
-    | '/invest/farmvest'
-    | '/invest/property'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
@@ -601,11 +598,14 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/wallet/swap'
+    | '/invest'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/invest/success/$id'
     | '/services/mp/$id'
+    | '/invest/farmvest'
+    | '/invest/property'
   id:
     | '__root__'
     | '/'
@@ -615,7 +615,6 @@ export interface FileRouteTypes {
     | '/explore'
     | '/forgot'
     | '/home'
-    | '/invest'
     | '/kyc'
     | '/legal'
     | '/login'
@@ -639,8 +638,6 @@ export interface FileRouteTypes {
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
-    | '/invest/farmvest'
-    | '/invest/property'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
@@ -656,11 +653,14 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/wallet/swap'
+    | '/invest/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/invest/success/$id'
     | '/services/mp/$id'
+    | '/invest/farmvest/'
+    | '/invest/property/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -671,7 +671,6 @@ export interface RootRouteChildren {
   ExploreRoute: typeof ExploreRoute
   ForgotRoute: typeof ForgotRoute
   HomeRoute: typeof HomeRoute
-  InvestRoute: typeof InvestRouteWithChildren
   KycRoute: typeof KycRoute
   LegalRoute: typeof LegalRoute
   LoginRoute: typeof LoginRoute
@@ -695,6 +694,11 @@ export interface RootRouteChildren {
   WalletIntroRoute: typeof WalletIntroRoute
   WalletSecurityRoute: typeof WalletSecurityRoute
   WalletSwapRoute: typeof WalletSwapRoute
+  InvestIndexRoute: typeof InvestIndexRoute
+  InvestPropertyIdRoute: typeof InvestPropertyIdRoute
+  InvestSuccessIdRoute: typeof InvestSuccessIdRoute
+  InvestFarmvestIndexRoute: typeof InvestFarmvestIndexRoute
+  InvestPropertyIndexRoute: typeof InvestPropertyIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -804,13 +808,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KycRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/invest': {
-      id: '/invest'
-      path: '/invest'
-      fullPath: '/invest'
-      preLoaderRoute: typeof InvestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/home': {
       id: '/home'
       path: '/home'
@@ -858,6 +855,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invest/': {
+      id: '/invest/'
+      path: '/invest'
+      fullPath: '/invest/'
+      preLoaderRoute: typeof InvestIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wallet/swap': {
@@ -965,20 +969,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrichatIdRouteImport
       parentRoute: typeof PrichatRoute
     }
-    '/invest/property': {
-      id: '/invest/property'
-      path: '/property'
-      fullPath: '/invest/property'
-      preLoaderRoute: typeof InvestPropertyRouteImport
-      parentRoute: typeof InvestRoute
-    }
-    '/invest/farmvest': {
-      id: '/invest/farmvest'
-      path: '/farmvest'
-      fullPath: '/invest/farmvest'
-      preLoaderRoute: typeof InvestFarmvestRouteImport
-      parentRoute: typeof InvestRoute
-    }
     '/broker/rewards': {
       id: '/broker/rewards'
       path: '/rewards'
@@ -1035,6 +1025,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuditRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/invest/property/': {
+      id: '/invest/property/'
+      path: '/invest/property'
+      fullPath: '/invest/property/'
+      preLoaderRoute: typeof InvestPropertyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invest/farmvest/': {
+      id: '/invest/farmvest/'
+      path: '/invest/farmvest'
+      fullPath: '/invest/farmvest/'
+      preLoaderRoute: typeof InvestFarmvestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/mp/$id': {
       id: '/services/mp/$id'
       path: '/$id'
@@ -1044,17 +1048,17 @@ declare module '@tanstack/react-router' {
     }
     '/invest/success/$id': {
       id: '/invest/success/$id'
-      path: '/success/$id'
+      path: '/invest/success/$id'
       fullPath: '/invest/success/$id'
       preLoaderRoute: typeof InvestSuccessIdRouteImport
-      parentRoute: typeof InvestRoute
+      parentRoute: typeof rootRouteImport
     }
     '/invest/property/$id': {
       id: '/invest/property/$id'
-      path: '/$id'
+      path: '/invest/property/$id'
       fullPath: '/invest/property/$id'
       preLoaderRoute: typeof InvestPropertyIdRouteImport
-      parentRoute: typeof InvestPropertyRoute
+      parentRoute: typeof rootRouteImport
     }
     '/invest/farmvest/$id': {
       id: '/invest/farmvest/$id'
@@ -1105,47 +1109,6 @@ const BrokerRouteChildren: BrokerRouteChildren = {
 
 const BrokerRouteWithChildren =
   BrokerRoute._addFileChildren(BrokerRouteChildren)
-
-interface InvestFarmvestRouteChildren {
-  InvestFarmvestIdRoute: typeof InvestFarmvestIdRoute
-}
-
-const InvestFarmvestRouteChildren: InvestFarmvestRouteChildren = {
-  InvestFarmvestIdRoute: InvestFarmvestIdRoute,
-}
-
-const InvestFarmvestRouteWithChildren = InvestFarmvestRoute._addFileChildren(
-  InvestFarmvestRouteChildren,
-)
-
-interface InvestPropertyRouteChildren {
-  InvestPropertyIdRoute: typeof InvestPropertyIdRoute
-}
-
-const InvestPropertyRouteChildren: InvestPropertyRouteChildren = {
-  InvestPropertyIdRoute: InvestPropertyIdRoute,
-}
-
-const InvestPropertyRouteWithChildren = InvestPropertyRoute._addFileChildren(
-  InvestPropertyRouteChildren,
-)
-
-interface InvestRouteChildren {
-  InvestFarmvestRoute: typeof InvestFarmvestRouteWithChildren
-  InvestPropertyRoute: typeof InvestPropertyRouteWithChildren
-  InvestCheckoutIdRoute: typeof InvestCheckoutIdRoute
-  InvestSuccessIdRoute: typeof InvestSuccessIdRoute
-}
-
-const InvestRouteChildren: InvestRouteChildren = {
-  InvestFarmvestRoute: InvestFarmvestRouteWithChildren,
-  InvestPropertyRoute: InvestPropertyRouteWithChildren,
-  InvestCheckoutIdRoute: InvestCheckoutIdRoute,
-  InvestSuccessIdRoute: InvestSuccessIdRoute,
-}
-
-const InvestRouteWithChildren =
-  InvestRoute._addFileChildren(InvestRouteChildren)
 
 interface PrichatRouteChildren {
   PrichatIdRoute: typeof PrichatIdRoute
@@ -1218,7 +1181,6 @@ const rootRouteChildren: RootRouteChildren = {
   ExploreRoute: ExploreRoute,
   ForgotRoute: ForgotRoute,
   HomeRoute: HomeRoute,
-  InvestRoute: InvestRouteWithChildren,
   KycRoute: KycRoute,
   LegalRoute: LegalRoute,
   LoginRoute: LoginRoute,
@@ -1242,7 +1204,22 @@ const rootRouteChildren: RootRouteChildren = {
   WalletIntroRoute: WalletIntroRoute,
   WalletSecurityRoute: WalletSecurityRoute,
   WalletSwapRoute: WalletSwapRoute,
+  InvestIndexRoute: InvestIndexRoute,
+  InvestPropertyIdRoute: InvestPropertyIdRoute,
+  InvestSuccessIdRoute: InvestSuccessIdRoute,
+  InvestFarmvestIndexRoute: InvestFarmvestIndexRoute,
+  InvestPropertyIndexRoute: InvestPropertyIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
