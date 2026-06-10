@@ -89,7 +89,7 @@ function Home() {
           <h2 className="mb-2 text-sm font-semibold text-navy">Modules</h2>
           <div className="grid grid-cols-2 gap-3">
             <Tile icon={Sprout} label="FarmVest" sub="Palm · Cocoa · Latex" to="/invest/farmvest" tone="agro" />
-            <Tile icon={LineChart} label="Property Store" sub="Verified vendors" to="/invest/property" tone="violet" />
+            <Tile icon={LineChart} label="Buy Assets" sub="Verified vendors" to="/invest/property" tone="violet" />
             <Tile icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" to="/vault" tone="navy" />
             <Tile icon={FileText} label="Documents" sub="Receipts & contracts" to="/documents" tone="soft" />
           </div>
