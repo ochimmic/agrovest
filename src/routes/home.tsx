@@ -264,3 +264,37 @@ function Tile({
     </Link>
   );
 }
+
+function activityMeta(type: string, meta?: string) {
+  const m = (meta ?? "").toLowerCase();
+  if (type === "invest" && m.includes("propert")) {
+    return { Icon: Building2, title: "Asset purchased", subtitle: "Buy Assets", bg: "bg-violet-soft", fg: "text-violet" };
+  }
+  if (type === "invest") {
+    return { Icon: Sprout, title: "Investment bought", subtitle: "FarmVest", bg: "bg-agro-soft", fg: "text-agro" };
+  }
+  if (type === "swap") {
+    return { Icon: RefreshCw, title: "Token swap", subtitle: "Wallet", bg: "bg-violet-soft", fg: "text-violet" };
+  }
+  if (type === "receive") {
+    return { Icon: ArrowDownLeft, title: "Received", subtitle: "Wallet", bg: "bg-agro-soft", fg: "text-agro" };
+  }
+  if (type === "send") {
+    return { Icon: ArrowUpRight, title: "Sent", subtitle: "Wallet", bg: "bg-secondary", fg: "text-navy" };
+  }
+  if (type === "reward") {
+    return { Icon: Gift, title: "Reward earned", subtitle: "Broker", bg: "bg-violet-soft", fg: "text-violet" };
+  }
+  return { Icon: ShoppingBag, title: "Product purchased", subtitle: "Order", bg: "bg-secondary", fg: "text-navy" };
+}
+
+function timeAgo(iso: string) {
+  const s = Math.max(1, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+}
