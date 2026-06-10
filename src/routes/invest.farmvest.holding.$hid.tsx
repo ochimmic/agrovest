@@ -254,7 +254,8 @@ function HoldingDetail() {
           </ol>
         </section>
 
-        </section>
+        {/* Documents */}
+
 
 
         <section id="docs-section" className="rounded-3xl border border-border bg-card p-4">
