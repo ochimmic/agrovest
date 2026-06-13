@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import {
   Shield,
@@ -137,6 +137,19 @@ const CrosshairContext = createContext<CrosshairCtx>({
 });
 
 function Admin() {
+  const navigate = useNavigate();
+  // Auto-redirect to the wide desktop console on large viewports
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const go = () => {
+      if (mq.matches) navigate({ to: "/admin/desktop", replace: true });
+    };
+    go();
+    mq.addEventListener("change", go);
+    return () => mq.removeEventListener("change", go);
+  }, [navigate]);
+
   const totalPending = queues.reduce((s, q) => s + q.count, 0);
   const slas = queues.filter((q) => q.count > 5).length;
   const [range, setRange] = useState<Range>("12W");
