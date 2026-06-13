@@ -17,9 +17,11 @@ function PriChat() {
       <div className="px-4 pt-3 space-y-4">
         <div>
           <h1 className="text-2xl font-semibold text-navy">PriChat</h1>
-          <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-            <Lock size={11} className="text-violet" /> Privacy-first · auto-deletes in 24h
-          </p>
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+            <PrivateBadge size="xs" />
+            <AutoDeleteBadge size="xs" />
+            <AgroBadge tone="neutral" size="xs">End-to-end</AgroBadge>
+          </div>
         </div>
         <div className="flex items-center gap-2 rounded-2xl border border-border bg-card h-11 px-3">
           <Search size={16} className="text-muted-foreground" />
