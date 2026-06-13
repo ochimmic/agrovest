@@ -53,6 +53,7 @@ import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
 import { Route as AdminPartnersRouteImport } from './routes/admin.partners'
 import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminDisputesRouteImport } from './routes/admin.disputes'
+import { Route as AdminDesktopRouteImport } from './routes/admin.desktop'
 import { Route as AdminConsultantsRouteImport } from './routes/admin.consultants'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as InvestPropertyIndexRouteImport } from './routes/invest.property.index'
@@ -284,6 +285,11 @@ const AdminDisputesRoute = AdminDisputesRouteImport.update({
   path: '/disputes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminDesktopRoute = AdminDesktopRouteImport.update({
+  id: '/desktop',
+  path: '/desktop',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminConsultantsRoute = AdminConsultantsRouteImport.update({
   id: '/consultants',
   path: '/consultants',
@@ -361,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/consultants': typeof AdminConsultantsRoute
+  '/admin/desktop': typeof AdminDesktopRoute
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
@@ -417,6 +424,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/consultants': typeof AdminConsultantsRoute
+  '/admin/desktop': typeof AdminDesktopRoute
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
@@ -474,6 +482,7 @@ export interface FileRoutesById {
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/consultants': typeof AdminConsultantsRoute
+  '/admin/desktop': typeof AdminDesktopRoute
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
@@ -532,6 +541,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/admin/audit'
     | '/admin/consultants'
+    | '/admin/desktop'
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
@@ -588,6 +598,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/admin/audit'
     | '/admin/consultants'
+    | '/admin/desktop'
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
@@ -644,6 +655,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/admin/audit'
     | '/admin/consultants'
+    | '/admin/desktop'
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
@@ -1027,6 +1039,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDisputesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/desktop': {
+      id: '/admin/desktop'
+      path: '/desktop'
+      fullPath: '/admin/desktop'
+      preLoaderRoute: typeof AdminDesktopRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/consultants': {
       id: '/admin/consultants'
       path: '/consultants'
@@ -1103,6 +1122,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminAuditRoute: typeof AdminAuditRoute
   AdminConsultantsRoute: typeof AdminConsultantsRoute
+  AdminDesktopRoute: typeof AdminDesktopRoute
   AdminDisputesRoute: typeof AdminDisputesRoute
   AdminKycRoute: typeof AdminKycRoute
   AdminPartnersRoute: typeof AdminPartnersRoute
@@ -1113,6 +1133,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAuditRoute: AdminAuditRoute,
   AdminConsultantsRoute: AdminConsultantsRoute,
+  AdminDesktopRoute: AdminDesktopRoute,
   AdminDisputesRoute: AdminDisputesRoute,
   AdminKycRoute: AdminKycRoute,
   AdminPartnersRoute: AdminPartnersRoute,
