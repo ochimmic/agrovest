@@ -5,6 +5,7 @@ import { AppShell } from "@/components/shell/AppShell";
 import { AgroButton } from "@/components/ui/agro-button";
 import { useAppState, setState, addTx } from "@/lib/store";
 import { toast } from "sonner";
+import { BscBadge, NonCustodialBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/vault")({ component: Vault });
 
