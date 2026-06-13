@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Star, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Star } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { consultants } from "@/lib/mock-data";
+import { CertifiedBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/services/mp")({ component: MP });
 
