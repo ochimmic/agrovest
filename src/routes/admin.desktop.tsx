@@ -274,7 +274,8 @@ function Overview({ onJump }: { onJump: (s: Section) => void }) {
 
   return (
     <div className="space-y-6">
-      {/* KPI grid */}
+      <AlertsBanner onJump={onJump} />
+
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {kpis.map((k) => (
           <KpiCard key={k.label} {...k} />
@@ -282,12 +283,18 @@ function Overview({ onJump }: { onJump: (s: Section) => void }) {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <Panel title="Users vs Transactions" subtitle="Last 12 weeks" className="xl:col-span-2">
+        <Panel title="Users vs Transactions" subtitle="Last 12 weeks" className="xl:col-span-2" right={<RangeChips />}>
           <DualAreaChart users={usersSeries} tx={txSeries} />
           <div className="mt-3 flex items-center gap-4 text-[11px] text-muted-foreground">
             <Legend swatch="bg-violet" label="Users" />
             <Legend swatch="bg-agro" label="Transactions" />
             <span className="ml-auto">Peak users: 2,475 · Peak tx: 685</span>
+          </div>
+          <div className="mt-4 grid grid-cols-4 gap-3 pt-3 border-t border-border">
+            <MiniStat label="DAU" value="2,184" delta="+4.2%" up />
+            <MiniStat label="WAU" value="6,471" delta="+6.8%" up />
+            <MiniStat label="Sessions / user" value="3.8" delta="+0.4" up />
+            <MiniStat label="Avg session" value="6m 12s" delta="-12s" up={false} />
           </div>
         </Panel>
 
@@ -319,14 +326,251 @@ function Overview({ onJump }: { onJump: (s: Section) => void }) {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <Panel title="Recent activity" subtitle="Live audit feed" className="xl:col-span-2">
+        <Panel title="Treasury & wallets" subtitle="Multi-sig custody balances"><TreasuryPanel /></Panel>
+        <Panel title="Conversion funnel" subtitle="Visitor → invested · 30d"><FunnelPanel /></Panel>
+        <Panel title="System status" subtitle="Uptime & service health"><SystemStatus /></Panel>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        <Panel title="Geographic distribution" subtitle="Active users by country"><GeoPanel /></Panel>
+        <Panel title="Top brokers" subtitle="By referred volume (30d)"><BrokerLeaderboard /></Panel>
+        <Panel title="Portfolio mix" subtitle="AUM by asset category"><PortfolioMix /></Panel>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        <Panel title="Recent activity" subtitle="Live audit feed" className="xl:col-span-2"
+          right={<button className="text-[11px] text-violet font-semibold hover:underline" onClick={() => onJump("audit")}>View all</button>}>
           <RecentActivity />
         </Panel>
-        <Panel title="Top investments" subtitle="By AUM (7d)">
-          <TopInvestments />
-        </Panel>
+        <Panel title="Top investments" subtitle="By AUM (7d)"><TopInvestments /></Panel>
       </div>
     </div>
+  );
+}
+
+function RangeChips() {
+  const [v, setV] = useState("12W");
+  return (
+    <div className="inline-flex items-center rounded-full bg-secondary border border-border p-0.5 text-[10px] font-semibold">
+      {["4W", "12W", "YTD"].map((x) => (
+        <button key={x} onClick={() => setV(x)}
+          className={`px-2.5 h-6 rounded-full transition ${v === x ? "bg-violet text-white" : "text-muted-foreground"}`}>
+          {x}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function MiniStat({ label, value, delta, up }: { label: string; value: string; delta: string; up: boolean }) {
+  return (
+    <div>
+      <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{label}</p>
+      <p className="mt-0.5 text-sm font-semibold text-navy">{value}</p>
+      <p className={`text-[10px] font-semibold ${up ? "text-agro" : "text-destructive"}`}>{delta}</p>
+    </div>
+  );
+}
+
+function AlertsBanner({ onJump }: { onJump: (s: Section) => void }) {
+  return (
+    <div className="rounded-2xl border border-warn/30 bg-warn/10 p-3 flex items-center gap-3">
+      <span className="h-9 w-9 rounded-xl bg-warn/20 text-warn flex items-center justify-center shrink-0">
+        <AlertTriangle size={16} />
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-navy">3 SLA breaches need attention</p>
+        <p className="text-[11px] text-muted-foreground">
+          KYC review (24 pending · oldest 2d 4h) · Broker rewards (12 pending · director approval)
+        </p>
+      </div>
+      <button onClick={() => onJump("kyc")} className="rounded-lg bg-primary text-primary-foreground text-[11px] font-semibold px-3 h-8">Open KYC</button>
+      <button onClick={() => onJump("rewards")} className="rounded-lg bg-secondary text-secondary-foreground text-[11px] font-semibold px-3 h-8">Open rewards</button>
+    </div>
+  );
+}
+
+const treasury = [
+  { label: "Operations · cUSD", value: "$4.21M", chain: "Celo · 3/5 multi-sig", pct: 92, tone: "agro" as const },
+  { label: "Yield reserve · cUSD", value: "$1.86M", chain: "Celo · 3/5 multi-sig", pct: 78, tone: "violet" as const },
+  { label: "Broker payouts · cUSD", value: "$420k", chain: "Celo · 2/3 multi-sig", pct: 45, tone: "violet" as const },
+  { label: "CLYST treasury", value: "12.4M CLYST", chain: "Celo · timelock", pct: 64, tone: "agro" as const },
+];
+function TreasuryPanel() {
+  return (
+    <ul className="space-y-3">
+      {treasury.map((t) => (
+        <li key={t.label}>
+          <div className="flex items-center justify-between">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-navy truncate">{t.label}</p>
+              <p className="text-[10px] text-muted-foreground">{t.chain}</p>
+            </div>
+            <p className="text-sm font-semibold text-navy tabular-nums">{t.value}</p>
+          </div>
+          <div className="mt-1.5 h-1.5 rounded-full bg-secondary overflow-hidden">
+            <div className={`h-full rounded-full ${t.tone === "agro" ? "bg-agro" : "bg-violet"}`} style={{ width: `${t.pct}%` }} />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const funnel = [
+  { label: "Visitors", value: 184_220, pct: 100 },
+  { label: "Sign-ups", value: 28_410, pct: 15.4 },
+  { label: "KYC submitted", value: 14_902, pct: 8.1 },
+  { label: "KYC approved", value: 12_487, pct: 6.8 },
+  { label: "First invest", value: 3_942, pct: 2.1 },
+];
+function FunnelPanel() {
+  return (
+    <ul className="space-y-2">
+      {funnel.map((f, i) => (
+        <li key={f.label}>
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="font-semibold text-navy">{f.label}</span>
+            <span className="text-muted-foreground tabular-nums">
+              {f.value.toLocaleString()} <span className="text-navy font-semibold ml-1">{f.pct}%</span>
+            </span>
+          </div>
+          <div className="mt-1 h-2 rounded-full bg-secondary overflow-hidden">
+            <div className="h-full rounded-full bg-gradient-to-r from-violet to-agro"
+              style={{ width: `${Math.max(6, (f.pct / funnel[0].pct) * 100)}%`, opacity: 1 - i * 0.1 }} />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const services = [
+  { label: "API gateway", state: "ok", value: "99.98%" },
+  { label: "Auth · KYC", state: "ok", value: "99.95%" },
+  { label: "Custody node (Celo)", state: "ok", value: "99.99%" },
+  { label: "Document signer", state: "warn", value: "98.2%" },
+  { label: "Notifications", state: "ok", value: "99.91%" },
+  { label: "Marketplace orders", state: "ok", value: "99.87%" },
+];
+function SystemStatus() {
+  return (
+    <ul className="space-y-2">
+      {services.map((s) => (
+        <li key={s.label} className="flex items-center gap-3 rounded-xl border border-border bg-secondary/40 px-3 h-10">
+          <span className={`h-2 w-2 rounded-full ${s.state === "ok" ? "bg-agro shadow-[0_0_0_3px_oklch(0.62_0.16_150_/_0.18)]" : "bg-warn shadow-[0_0_0_3px_oklch(0.78_0.16_70_/_0.22)]"}`} />
+          <span className="text-xs font-semibold text-navy flex-1">{s.label}</span>
+          <span className="text-[11px] text-muted-foreground tabular-nums">{s.value}</span>
+        </li>
+      ))}
+      <li className="text-[10px] text-muted-foreground pt-1">Last incident: 11d ago · MTTR 14m</li>
+    </ul>
+  );
+}
+
+const geo = [
+  { country: "Nigeria", code: "NG", users: 5_842, pct: 46.8 },
+  { country: "Kenya", code: "KE", users: 2_148, pct: 17.2 },
+  { country: "Ghana", code: "GH", users: 1_530, pct: 12.3 },
+  { country: "South Africa", code: "ZA", users: 1_098, pct: 8.8 },
+  { country: "Egypt", code: "EG", users: 742, pct: 5.9 },
+  { country: "Other", code: "—", users: 1_127, pct: 9.0 },
+];
+function GeoPanel() {
+  return (
+    <ul className="space-y-2">
+      {geo.map((g) => (
+        <li key={g.country} className="flex items-center gap-3">
+          <span className="h-7 w-9 rounded-md bg-secondary border border-border text-[10px] font-bold text-navy flex items-center justify-center">{g.code}</span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="font-semibold text-navy truncate">{g.country}</span>
+              <span className="text-muted-foreground tabular-nums">{g.users.toLocaleString()} · {g.pct}%</span>
+            </div>
+            <div className="mt-1 h-1.5 rounded-full bg-secondary overflow-hidden">
+              <div className="h-full bg-violet rounded-full" style={{ width: `${Math.min(100, g.pct * 2)}%` }} />
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const brokers = [
+  { name: "Tunde Adebayo", code: "BR-1042", vol: "$284k", refs: 38, tier: "Gold" },
+  { name: "Adaeze Okeke", code: "BR-0911", vol: "$212k", refs: 27, tier: "Gold" },
+  { name: "Samuel Mensah", code: "BR-0784", vol: "$168k", refs: 22, tier: "Silver" },
+  { name: "Grace Wanjiku", code: "BR-1188", vol: "$142k", refs: 19, tier: "Silver" },
+  { name: "Ibrahim Sani", code: "BR-1245", vol: "$98k", refs: 14, tier: "Bronze" },
+];
+function BrokerLeaderboard() {
+  const tierTone = (t: string) =>
+    t === "Gold" ? "bg-warn/15 text-warn" :
+    t === "Silver" ? "bg-secondary text-secondary-foreground" :
+    "bg-agro-soft text-agro";
+  return (
+    <ul className="space-y-2">
+      {brokers.map((b, i) => (
+        <li key={b.code} className="flex items-center gap-3 rounded-xl bg-secondary/40 border border-border p-2.5">
+          <span className="h-7 w-7 rounded-lg bg-navy text-white text-[11px] font-bold flex items-center justify-center">{i + 1}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-navy truncate">{b.name}</p>
+            <p className="text-[10px] text-muted-foreground">{b.code} · {b.refs} refs</p>
+          </div>
+          <span className={`text-[10px] font-semibold rounded-full px-2 py-0.5 ${tierTone(b.tier)}`}>{b.tier}</span>
+          <p className="text-xs font-semibold text-navy w-16 text-right tabular-nums">{b.vol}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const mix = [
+  { label: "Palm", pct: 38, value: "$3.20M", color: "oklch(0.62 0.16 150)" },
+  { label: "Cocoa", pct: 22, value: "$1.85M", color: "oklch(0.55 0.14 50)" },
+  { label: "Latex", pct: 16, value: "$1.35M", color: "oklch(0.62 0.18 285)" },
+  { label: "Property", pct: 18, value: "$1.52M", color: "oklch(0.62 0.12 240)" },
+  { label: "Other", pct: 6, value: "$0.50M", color: "oklch(0.70 0.02 260)" },
+];
+function PortfolioMix() {
+  return (
+    <div className="flex items-center gap-5">
+      <DonutChart data={mix} />
+      <ul className="flex-1 space-y-1.5">
+        {mix.map((m) => (
+          <li key={m.label} className="flex items-center gap-2 text-[11px]">
+            <span className="h-2.5 w-2.5 rounded-sm" style={{ background: m.color }} />
+            <span className="font-semibold text-navy flex-1">{m.label}</span>
+            <span className="text-muted-foreground tabular-nums">{m.value}</span>
+            <span className="text-navy font-semibold w-9 text-right tabular-nums">{m.pct}%</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function DonutChart({ data }: { data: { label: string; pct: number; color: string }[] }) {
+  const r = 42;
+  const c = 2 * Math.PI * r;
+  let offset = 0;
+  return (
+    <svg width={120} height={120} viewBox="0 0 120 120" className="shrink-0">
+      <circle cx={60} cy={60} r={r} fill="none" stroke="oklch(0.94 0.005 260)" strokeWidth={14} />
+      {data.map((d) => {
+        const len = (d.pct / 100) * c;
+        const el = (
+          <circle key={d.label} cx={60} cy={60} r={r} fill="none" stroke={d.color} strokeWidth={14}
+            strokeDasharray={`${len} ${c - len}`} strokeDashoffset={-offset}
+            transform="rotate(-90 60 60)" />
+        );
+        offset += len;
+        return el;
+      })}
+      <text x="60" y="58" textAnchor="middle" className="fill-[oklch(0.22_0.06_270)] font-semibold" style={{ fontSize: 14 }}>$8.42M</text>
+      <text x="60" y="74" textAnchor="middle" className="fill-[oklch(0.55_0.02_260)]" style={{ fontSize: 9 }}>Total AUM</text>
+    </svg>
   );
 }
 
