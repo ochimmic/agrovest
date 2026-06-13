@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Lock, Search, Plus, Timer } from "lucide-react";
+import { Search, Plus, Timer } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
+import { PrivateBadge, AutoDeleteBadge, AgroBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/prichat")({ component: PriChat });
 
