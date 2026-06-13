@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
-export const Route = createFileRoute("/admin")({ component: Admin });
+export const Route = createFileRoute("/admin/")({ component: Admin });
 
 const queues = [
   {
