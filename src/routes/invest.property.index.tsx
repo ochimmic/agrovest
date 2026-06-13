@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ShieldCheck, Plus, Search } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { properties } from "@/lib/mock-data";
+import { VendorVerifiedBadge, AgroBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/invest/property/")({ component: Properties });
 
