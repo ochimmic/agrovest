@@ -53,6 +53,11 @@ function Home() {
               <span className="rounded-full bg-agro/15 px-2 py-0.5 text-agro font-medium">+0.0%</span>
               <span className="text-white/60">Wallet: {wallet ? `${wallet.clyst} $CLYST` : "Not set up"}</span>
             </div>
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <BscBadge size="xs" />
+              <NonCustodialBadge size="xs" />
+              <CustodyBackedBadge size="xs" />
+            </div>
             <div className="mt-5 grid grid-cols-2 gap-2">
               <Link
                 to="/invest/farmvest"
