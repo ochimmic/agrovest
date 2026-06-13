@@ -7,6 +7,9 @@ import {
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
 import { farmAssets } from "@/lib/mock-data";
+import {
+  BscBadge, NonCustodialBadge, CustodyBackedBadge, RiskBadge, AgroBadge,
+} from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/home")({ component: Home });
 
