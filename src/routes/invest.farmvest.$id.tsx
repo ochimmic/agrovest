@@ -6,6 +6,10 @@ import { AgroButton } from "@/components/ui/agro-button";
 import { farmAssets, priceFor } from "@/lib/mock-data";
 import { getState } from "@/lib/store";
 import { toast } from "sonner";
+import {
+  CustodyBackedBadge, OnChainBadge, BscBadge, ProjectedBadge,
+  NotAdviceBadge, RiskBadge,
+} from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/invest/farmvest/$id")({ component: Detail });
 
