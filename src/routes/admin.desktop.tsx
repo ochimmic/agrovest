@@ -160,20 +160,20 @@ function Sidebar({
   }, []);
 
   return (
-    <aside className="w-64 shrink-0 bg-gradient-to-b from-navy to-[oklch(0.20_0.05_268)] text-white flex flex-col">
-      <div className="px-5 h-16 flex items-center gap-2 border-b border-white/10">
-        <span className="h-9 w-9 rounded-xl bg-violet/30 border border-white/15 flex items-center justify-center">
-          <Shield size={16} />
+    <aside className="w-64 shrink-0 bg-[oklch(0.16_0.04_265)] text-white flex flex-col border-r border-white/10">
+      <div className="px-5 h-16 flex items-center gap-2.5 border-b border-white/10">
+        <span className="h-9 w-9 rounded-xl bg-violet/40 border border-white/20 flex items-center justify-center shadow-[0_0_0_1px_oklch(1_0_0_/_0.05)_inset]">
+          <Shield size={16} className="text-white" />
         </span>
         <div className="min-w-0">
-          <p className="text-[10px] uppercase tracking-widest text-white/60">AgroVest</p>
-          <p className="text-sm font-semibold leading-tight">Admin console</p>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-white/70 font-semibold">AgroVest</p>
+          <p className="text-sm font-semibold leading-tight text-white">Admin console</p>
         </div>
       </div>
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5">
         {Object.entries(groups).map(([gname, items]) => (
           <div key={gname}>
-            <p className="px-2 text-[10px] uppercase tracking-widest text-white/40 font-semibold mb-1.5">
+            <p className="px-2 text-[10px] uppercase tracking-[0.18em] text-white/55 font-semibold mb-1.5">
               {gname}
             </p>
             <ul className="space-y-0.5">
@@ -184,16 +184,21 @@ function Sidebar({
                   <li key={id}>
                     <button
                       onClick={() => setSection(id)}
-                      className={`w-full group flex items-center gap-2.5 px-2.5 h-9 rounded-xl text-sm transition ${
+                      className={`w-full group flex items-center gap-2.5 px-2.5 h-9 rounded-xl text-sm font-medium transition relative ${
                         active
-                          ? "bg-white/10 text-white shadow-[inset_0_0_0_1px_oklch(1_0_0_/_0.08)]"
-                          : "text-white/70 hover:text-white hover:bg-white/5"
+                          ? "bg-white/12 text-white shadow-[inset_0_0_0_1px_oklch(1_0_0_/_0.12)]"
+                          : "text-white/85 hover:text-white hover:bg-white/8"
                       }`}
                     >
-                      <I size={15} className={active ? "text-violet" : "text-white/60"} />
+                      {active && (
+                        <span className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-full bg-violet" />
+                      )}
+                      <I size={15} className={active ? "text-violet" : "text-white/80"} />
                       <span className="flex-1 text-left">{label}</span>
                       {count > 0 && (
-                        <span className="rounded-full bg-violet/90 text-white text-[10px] px-1.5 py-0.5 font-semibold">
+                        <span className={`rounded-full text-[10px] px-1.5 py-0.5 font-semibold ${
+                          active ? "bg-violet text-white" : "bg-white/15 text-white"
+                        }`}>
                           {count}
                         </span>
                       )}
@@ -208,16 +213,16 @@ function Sidebar({
       <div className="border-t border-white/10 p-3">
         <Link
           to="/profile"
-          className="flex items-center gap-2.5 rounded-xl px-2 h-11 hover:bg-white/5 transition"
+          className="flex items-center gap-2.5 rounded-xl px-2 h-11 hover:bg-white/8 transition"
         >
-          <div className="h-8 w-8 rounded-full bg-violet text-white text-xs font-semibold flex items-center justify-center">
+          <div className="h-8 w-8 rounded-full bg-violet text-white text-xs font-semibold flex items-center justify-center ring-1 ring-white/20">
             OP
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold truncate">Operations</p>
-            <p className="text-[10px] text-white/50 truncate">ops@agrovest.io</p>
+            <p className="text-xs font-semibold truncate text-white">Operations</p>
+            <p className="text-[10px] text-white/65 truncate">ops@agrovest.io</p>
           </div>
-          <ChevronDown size={14} className="text-white/50" />
+          <ChevronDown size={14} className="text-white/65" />
         </Link>
       </div>
     </aside>
