@@ -60,6 +60,10 @@ function Vault() {
               <span className="text-xs uppercase tracking-widest text-white/60">AssetVault · Balance</span>
               <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200">Stable · cUSD</span>
             </div>
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <BscBadge size="xs" />
+              <NonCustodialBadge size="xs" />
+            </div>
             <p className="mt-3 text-[34px] font-semibold tabular leading-none">
               ${cusd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               <span className="text-white/60 text-base ml-1">cUSD</span>
