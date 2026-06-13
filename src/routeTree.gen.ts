@@ -30,9 +30,9 @@ import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as BrokerRouteImport } from './routes/broker'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as WalletSwapRouteImport } from './routes/wallet.swap'
 import { Route as WalletSecurityRouteImport } from './routes/wallet.security'
 import { Route as WalletIntroRouteImport } from './routes/wallet.intro'
@@ -171,11 +171,6 @@ const BrokerRoute = BrokerRouteImport.update({
   path: '/broker',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -184,6 +179,11 @@ const IndexRoute = IndexRouteImport.update({
 const InvestIndexRoute = InvestIndexRouteImport.update({
   id: '/invest/',
   path: '/invest/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WalletSwapRoute = WalletSwapRouteImport.update({
@@ -267,44 +267,44 @@ const BrokerRewardsRoute = BrokerRewardsRouteImport.update({
   getParentRoute: () => BrokerRoute,
 } as any)
 const AdminVendorsRoute = AdminVendorsRouteImport.update({
-  id: '/vendors',
-  path: '/vendors',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/vendors',
+  path: '/admin/vendors',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRewardsRoute = AdminRewardsRouteImport.update({
-  id: '/rewards',
-  path: '/rewards',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/rewards',
+  path: '/admin/rewards',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPartnersRoute = AdminPartnersRouteImport.update({
-  id: '/partners',
-  path: '/partners',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/partners',
+  path: '/admin/partners',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminKycRoute = AdminKycRouteImport.update({
-  id: '/kyc',
-  path: '/kyc',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/kyc',
+  path: '/admin/kyc',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminDisputesRoute = AdminDisputesRouteImport.update({
-  id: '/disputes',
-  path: '/disputes',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/disputes',
+  path: '/admin/disputes',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminDesktopRoute = AdminDesktopRouteImport.update({
-  id: '/desktop',
-  path: '/desktop',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/desktop',
+  path: '/admin/desktop',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminConsultantsRoute = AdminConsultantsRouteImport.update({
-  id: '/consultants',
-  path: '/consultants',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/consultants',
+  path: '/admin/consultants',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAuditRoute = AdminAuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const InvestPropertyIndexRoute = InvestPropertyIndexRouteImport.update({
   id: '/invest/property/',
@@ -350,7 +350,6 @@ const InvestFarmvestHoldingHidRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
   '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
@@ -396,6 +395,7 @@ export interface FileRoutesByFullPath {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/wallet/swap': typeof WalletSwapRoute
+  '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
@@ -408,7 +408,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
   '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
@@ -454,6 +453,7 @@ export interface FileRoutesByTo {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/wallet/swap': typeof WalletSwapRoute
+  '/admin': typeof AdminIndexRoute
   '/invest': typeof InvestIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
@@ -467,7 +467,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
   '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
@@ -513,6 +512,7 @@ export interface FileRoutesById {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/wallet/swap': typeof WalletSwapRoute
+  '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
@@ -527,7 +527,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/admin'
     | '/broker'
     | '/desktop'
     | '/documents'
@@ -573,6 +572,7 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/wallet/swap'
+    | '/admin/'
     | '/invest/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
@@ -585,7 +585,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/broker'
     | '/desktop'
     | '/documents'
@@ -631,6 +630,7 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/wallet/swap'
+    | '/admin'
     | '/invest'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
@@ -643,7 +643,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/admin'
     | '/broker'
     | '/desktop'
     | '/documents'
@@ -689,6 +688,7 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/wallet/swap'
+    | '/admin/'
     | '/invest/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
@@ -702,7 +702,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
   BrokerRoute: typeof BrokerRouteWithChildren
   DesktopRoute: typeof DesktopRoute
   DocumentsRoute: typeof DocumentsRoute
@@ -724,6 +723,14 @@ export interface RootRouteChildren {
   VaultRoute: typeof VaultRoute
   VendorRoute: typeof VendorRouteWithChildren
   WelcomeRoute: typeof WelcomeRoute
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminConsultantsRoute: typeof AdminConsultantsRoute
+  AdminDesktopRoute: typeof AdminDesktopRoute
+  AdminDisputesRoute: typeof AdminDisputesRoute
+  AdminKycRoute: typeof AdminKycRoute
+  AdminPartnersRoute: typeof AdminPartnersRoute
+  AdminRewardsRoute: typeof AdminRewardsRoute
+  AdminVendorsRoute: typeof AdminVendorsRoute
   SignupRoleRoute: typeof SignupRoleRoute
   WalletConfirmRoute: typeof WalletConfirmRoute
   WalletCreateRoute: typeof WalletCreateRoute
@@ -732,6 +739,7 @@ export interface RootRouteChildren {
   WalletIntroRoute: typeof WalletIntroRoute
   WalletSecurityRoute: typeof WalletSecurityRoute
   WalletSwapRoute: typeof WalletSwapRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   InvestIndexRoute: typeof InvestIndexRoute
   InvestCheckoutIdRoute: typeof InvestCheckoutIdRoute
   InvestFarmvestIdRoute: typeof InvestFarmvestIdRoute
@@ -891,13 +899,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrokerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -910,6 +911,13 @@ declare module '@tanstack/react-router' {
       path: '/invest'
       fullPath: '/invest/'
       preLoaderRoute: typeof InvestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wallet/swap': {
@@ -1026,59 +1034,59 @@ declare module '@tanstack/react-router' {
     }
     '/admin/vendors': {
       id: '/admin/vendors'
-      path: '/vendors'
+      path: '/admin/vendors'
       fullPath: '/admin/vendors'
       preLoaderRoute: typeof AdminVendorsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/rewards': {
       id: '/admin/rewards'
-      path: '/rewards'
+      path: '/admin/rewards'
       fullPath: '/admin/rewards'
       preLoaderRoute: typeof AdminRewardsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/partners': {
       id: '/admin/partners'
-      path: '/partners'
+      path: '/admin/partners'
       fullPath: '/admin/partners'
       preLoaderRoute: typeof AdminPartnersRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/kyc': {
       id: '/admin/kyc'
-      path: '/kyc'
+      path: '/admin/kyc'
       fullPath: '/admin/kyc'
       preLoaderRoute: typeof AdminKycRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/disputes': {
       id: '/admin/disputes'
-      path: '/disputes'
+      path: '/admin/disputes'
       fullPath: '/admin/disputes'
       preLoaderRoute: typeof AdminDisputesRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/desktop': {
       id: '/admin/desktop'
-      path: '/desktop'
+      path: '/admin/desktop'
       fullPath: '/admin/desktop'
       preLoaderRoute: typeof AdminDesktopRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/consultants': {
       id: '/admin/consultants'
-      path: '/consultants'
+      path: '/admin/consultants'
       fullPath: '/admin/consultants'
       preLoaderRoute: typeof AdminConsultantsRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/audit': {
       id: '/admin/audit'
-      path: '/audit'
+      path: '/admin/audit'
       fullPath: '/admin/audit'
       preLoaderRoute: typeof AdminAuditRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/invest/property/': {
       id: '/invest/property/'
@@ -1138,30 +1146,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface AdminRouteChildren {
-  AdminAuditRoute: typeof AdminAuditRoute
-  AdminConsultantsRoute: typeof AdminConsultantsRoute
-  AdminDesktopRoute: typeof AdminDesktopRoute
-  AdminDisputesRoute: typeof AdminDisputesRoute
-  AdminKycRoute: typeof AdminKycRoute
-  AdminPartnersRoute: typeof AdminPartnersRoute
-  AdminRewardsRoute: typeof AdminRewardsRoute
-  AdminVendorsRoute: typeof AdminVendorsRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminAuditRoute: AdminAuditRoute,
-  AdminConsultantsRoute: AdminConsultantsRoute,
-  AdminDesktopRoute: AdminDesktopRoute,
-  AdminDisputesRoute: AdminDisputesRoute,
-  AdminKycRoute: AdminKycRoute,
-  AdminPartnersRoute: AdminPartnersRoute,
-  AdminRewardsRoute: AdminRewardsRoute,
-  AdminVendorsRoute: AdminVendorsRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface BrokerRouteChildren {
   BrokerRewardsRoute: typeof BrokerRewardsRoute
@@ -1239,7 +1223,6 @@ const VendorRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRouteWithChildren,
   BrokerRoute: BrokerRouteWithChildren,
   DesktopRoute: DesktopRoute,
   DocumentsRoute: DocumentsRoute,
@@ -1261,6 +1244,14 @@ const rootRouteChildren: RootRouteChildren = {
   VaultRoute: VaultRoute,
   VendorRoute: VendorRouteWithChildren,
   WelcomeRoute: WelcomeRoute,
+  AdminAuditRoute: AdminAuditRoute,
+  AdminConsultantsRoute: AdminConsultantsRoute,
+  AdminDesktopRoute: AdminDesktopRoute,
+  AdminDisputesRoute: AdminDisputesRoute,
+  AdminKycRoute: AdminKycRoute,
+  AdminPartnersRoute: AdminPartnersRoute,
+  AdminRewardsRoute: AdminRewardsRoute,
+  AdminVendorsRoute: AdminVendorsRoute,
   SignupRoleRoute: SignupRoleRoute,
   WalletConfirmRoute: WalletConfirmRoute,
   WalletCreateRoute: WalletCreateRoute,
@@ -1269,6 +1260,7 @@ const rootRouteChildren: RootRouteChildren = {
   WalletIntroRoute: WalletIntroRoute,
   WalletSecurityRoute: WalletSecurityRoute,
   WalletSwapRoute: WalletSwapRoute,
+  AdminIndexRoute: AdminIndexRoute,
   InvestIndexRoute: InvestIndexRoute,
   InvestCheckoutIdRoute: InvestCheckoutIdRoute,
   InvestFarmvestIdRoute: InvestFarmvestIdRoute,
