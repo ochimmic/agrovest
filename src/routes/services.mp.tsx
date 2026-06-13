@@ -22,11 +22,7 @@ function MP() {
                 <p className="font-semibold text-navy">{c.name}</p>
                 <p className="text-[11px] text-muted-foreground">{c.role}</p>
               </div>
-              {c.certified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-agro-soft px-2 py-0.5 text-[10px] font-medium text-agro">
-                  <ShieldCheck size={10} /> Certified
-                </span>
-              )}
+              {c.certified && <CertifiedBadge size="xs" />}
             </div>
             <div className="mt-3 flex justify-between text-xs">
               <span className="flex items-center gap-1 text-warn"><Star size={12} fill="currentColor" /> {c.rating}</span>
