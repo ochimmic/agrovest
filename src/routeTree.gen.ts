@@ -28,6 +28,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as BrokerRouteImport } from './routes/broker'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -158,6 +159,11 @@ const ExploreRoute = ExploreRouteImport.update({
 const DocumentsRoute = DocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DesktopRoute = DesktopRouteImport.update({
+  id: '/desktop',
+  path: '/desktop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrokerRoute = BrokerRouteImport.update({
@@ -346,6 +352,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
+  '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
@@ -403,6 +410,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
+  '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
@@ -461,6 +469,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
+  '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
@@ -520,6 +529,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/broker'
+    | '/desktop'
     | '/documents'
     | '/explore'
     | '/forgot'
@@ -577,6 +587,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/broker'
+    | '/desktop'
     | '/documents'
     | '/explore'
     | '/forgot'
@@ -634,6 +645,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/broker'
+    | '/desktop'
     | '/documents'
     | '/explore'
     | '/forgot'
@@ -692,6 +704,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   BrokerRoute: typeof BrokerRouteWithChildren
+  DesktopRoute: typeof DesktopRoute
   DocumentsRoute: typeof DocumentsRoute
   ExploreRoute: typeof ExploreRoute
   ForgotRoute: typeof ForgotRoute
@@ -862,6 +875,13 @@ declare module '@tanstack/react-router' {
       path: '/documents'
       fullPath: '/documents'
       preLoaderRoute: typeof DocumentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/desktop': {
+      id: '/desktop'
+      path: '/desktop'
+      fullPath: '/desktop'
+      preLoaderRoute: typeof DesktopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/broker': {
@@ -1221,6 +1241,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   BrokerRoute: BrokerRouteWithChildren,
+  DesktopRoute: DesktopRoute,
   DocumentsRoute: DocumentsRoute,
   ExploreRoute: ExploreRoute,
   ForgotRoute: ForgotRoute,
