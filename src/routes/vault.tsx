@@ -5,6 +5,7 @@ import { AppShell } from "@/components/shell/AppShell";
 import { AgroButton } from "@/components/ui/agro-button";
 import { useAppState, setState, addTx } from "@/lib/store";
 import { toast } from "sonner";
+import { BscBadge, NonCustodialBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/vault")({ component: Vault });
 
@@ -59,6 +60,10 @@ function Vault() {
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase tracking-widest text-white/60">AssetVault · Balance</span>
               <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200">Stable · cUSD</span>
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <BscBadge size="xs" />
+              <NonCustodialBadge size="xs" />
             </div>
             <p className="mt-3 text-[34px] font-semibold tabular leading-none">
               ${cusd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

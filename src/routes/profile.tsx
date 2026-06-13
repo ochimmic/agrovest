@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState, reset } from "@/lib/store";
+import { RoleBadge, KycBadge, NonCustodialBadge, BscBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/profile")({ component: Profile });
 
@@ -25,9 +26,11 @@ function Profile() {
             <div className="flex-1">
               <p className="text-lg font-semibold">{user?.name ?? "Guest"}</p>
               <p className="text-xs text-white/70">{user?.email ?? "not signed in"}</p>
-              <div className="mt-1 flex gap-1.5">
-                <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] capitalize">{role ?? "explorer"}</span>
-                <span className="rounded-full bg-agro/30 text-agro px-2 py-0.5 text-[10px] capitalize">KYC {kyc}</span>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                <RoleBadge role={role ?? "explorer"} />
+                <KycBadge status={kyc} />
+                <NonCustodialBadge />
+                <BscBadge />
               </div>
             </div>
           </div>

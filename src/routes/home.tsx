@@ -7,6 +7,9 @@ import {
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
 import { farmAssets } from "@/lib/mock-data";
+import {
+  BscBadge, NonCustodialBadge, CustodyBackedBadge, RiskBadge, AgroBadge,
+} from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/home")({ component: Home });
 
@@ -49,6 +52,11 @@ function Home() {
             <div className="mt-1 flex items-center gap-2 text-xs">
               <span className="rounded-full bg-agro/15 px-2 py-0.5 text-agro font-medium">+0.0%</span>
               <span className="text-white/60">Wallet: {wallet ? `${wallet.clyst} $CLYST` : "Not set up"}</span>
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <BscBadge size="xs" />
+              <NonCustodialBadge size="xs" />
+              <CustodyBackedBadge size="xs" />
             </div>
             <div className="mt-5 grid grid-cols-2 gap-2">
               <Link
@@ -178,15 +186,14 @@ function Home() {
                 className="min-w-[230px] rounded-3xl border border-border bg-card overflow-hidden shadow-card"
               >
                 <div className={`h-28 bg-gradient-to-br ${a.cover} relative`}>
-                  <span className="absolute bottom-2 left-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-medium text-[oklch(0.27_0.07_268)]">
-                    {a.risk}
-                  </span>
+                  <span className="absolute top-2 left-2"><CustodyBackedBadge size="xs" /></span>
+                  <span className="absolute bottom-2 left-2"><RiskBadge level={a.risk} /></span>
                 </div>
                 <div className="p-3">
                   <p className="text-sm font-semibold text-navy line-clamp-1">{a.name}</p>
                   <p className="text-[11px] text-muted-foreground">{a.location}</p>
                   <div className="mt-2 flex items-center justify-between text-[11px]">
-                    <span className="text-agro font-semibold">{a.expectedYield}</span>
+                    <AgroBadge tone="agro" size="xs">{a.expectedYield}</AgroBadge>
                     <span className="text-muted-foreground">${a.pricePerPlot}/plot</span>
                   </div>
                 </div>

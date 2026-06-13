@@ -6,6 +6,10 @@ import { AgroButton } from "@/components/ui/agro-button";
 import { farmAssets, priceFor } from "@/lib/mock-data";
 import { getState } from "@/lib/store";
 import { toast } from "sonner";
+import {
+  CustodyBackedBadge, OnChainBadge, BscBadge, ProjectedBadge,
+  NotAdviceBadge, RiskBadge,
+} from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/invest/farmvest/$id")({ component: Detail });
 
@@ -41,10 +45,20 @@ function Detail() {
         <div className="absolute bottom-3 left-4 right-4 text-white">
           <p className="text-xs opacity-80">{asset.location}</p>
           <h1 className="mt-0.5 text-2xl font-semibold tracking-tight">{asset.name}</h1>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <CustodyBackedBadge size="xs" />
+            <OnChainBadge size="xs" />
+            <BscBadge size="xs" />
+            <ProjectedBadge size="xs" />
+          </div>
         </div>
       </div>
 
       <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
+        <div className="flex items-center justify-between gap-2">
+          <NotAdviceBadge size="xs" />
+          <RiskBadge level={asset.risk} />
+        </div>
         <div className="grid grid-cols-3 gap-2 text-center">
           <Pill k="Yield" v={asset.expectedYield} icon={<TrendingUp size={12} />} />
           <Pill k="Appreciation" v={asset.appreciation} />

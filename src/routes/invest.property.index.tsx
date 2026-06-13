@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ShieldCheck, Plus, Search } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { properties } from "@/lib/mock-data";
+import { VendorVerifiedBadge, AgroBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/invest/property/")({ component: Properties });
 
@@ -59,13 +60,9 @@ function Properties() {
             >
               <div className="h-32 bg-gradient-to-br from-navy/80 to-violet/80 relative">
                 {p.verified && (
-                  <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-agro">
-                    <ShieldCheck size={11} /> Verified
-                  </span>
+                  <span className="absolute top-2 left-2"><VendorVerifiedBadge size="xs" /></span>
                 )}
-                <span className="absolute top-2 right-2 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-medium text-navy">
-                  {p.category}
-                </span>
+                <span className="absolute top-2 right-2"><AgroBadge tone="neutral" size="xs">{p.category}</AgroBadge></span>
               </div>
               <div className="p-4">
                 <p className="font-semibold text-navy">{p.title}</p>
