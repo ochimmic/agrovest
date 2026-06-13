@@ -578,20 +578,22 @@ function DonutChart({ data }: { data: { label: string; pct: number; color: strin
 /* Reusable                                                   */
 /* ---------------------------------------------------------- */
 function Panel({
-  title, subtitle, children, className = "",
+  title, subtitle, children, className = "", right,
 }: {
   title: string;
   subtitle?: string;
   children: ReactNode;
   className?: string;
+  right?: ReactNode;
 }) {
   return (
     <section className={`rounded-2xl bg-card border border-border shadow-card p-4 ${className}`}>
-      <div className="flex items-end justify-between mb-3">
-        <div>
-          <h3 className="text-sm font-semibold text-navy">{title}</h3>
+      <div className="flex items-end justify-between mb-3 gap-3">
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-navy truncate">{title}</h3>
           {subtitle && <p className="text-[11px] text-muted-foreground">{subtitle}</p>}
         </div>
+        {right && <div className="shrink-0">{right}</div>}
       </div>
       {children}
     </section>
