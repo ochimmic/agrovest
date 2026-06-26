@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Send, Lock, Flag, Upload, CheckCircle2, AlertTriangle, Copy } from "lucide-react";
+import { ArrowLeft, Send, Lock, Flag, Upload, CheckCircle2, AlertTriangle, Copy, Phone, MessageCircle } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { AgroBadge } from "@/components/ui/agro-badge";
