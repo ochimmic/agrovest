@@ -15,7 +15,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useAppState } from "@/lib/store";
-import { buildYieldSeries, yieldPctForYear } from "@/lib/yield-schedule";
+import { buildYieldSeries } from "@/lib/yield-schedule";
 
 export const Route = createFileRoute("/invest/farmvest/")({ component: FarmVest });
 
