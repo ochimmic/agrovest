@@ -1,12 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
-import { ArrowLeft, Check, Lock } from "lucide-react";
+import { ArrowLeft, Check, Lock, Wallet, Building2 } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { farmAssets, priceFor } from "@/lib/mock-data";
 import { addHolding, addTx } from "@/lib/store";
 import { Money } from "@/components/ui/money";
+import { createOrder } from "@/lib/farmremit";
+import { NGN_PER_USD } from "@/lib/fx";
 import { toast } from "sonner";
 
 
@@ -20,6 +22,8 @@ export const Route = createFileRoute("/invest/checkout/$id")({
   component: Checkout,
 });
 
+type Method = "wallet" | "bank";
+
 function Checkout() {
   const { id } = Route.useParams();
   const { unit, qty } = Route.useSearch();
@@ -27,18 +31,37 @@ function Checkout() {
   const asset = farmAssets.find((a) => a.id === id) ?? farmAssets[0];
   const p = priceFor(unit, qty);
   const [paying, setPaying] = useState(false);
+  const [method, setMethod] = useState<Method>("wallet");
 
   function pay() {
     setPaying(true);
-    setTimeout(() => {
-      addHolding({
-        assetId: asset.id, name: asset.name, category: asset.category,
-        units: qty, unit, invested: p.final,
-      });
-      addTx({ type: "invest", amount: p.final, token: "USD", status: "confirmed", meta: asset.name });
-      toast.success("Investment confirmed");
-      nav({ to: "/invest/success/$id", params: { id: asset.id } });
-    }, 1500);
+    if (method === "wallet") {
+      setTimeout(() => {
+        addHolding({
+          assetId: asset.id, name: asset.name, category: asset.category,
+          units: qty, unit, invested: p.final,
+        });
+        addTx({ type: "invest", amount: p.final, token: "USD", status: "confirmed", meta: asset.name });
+        toast.success("Investment confirmed");
+        nav({ to: "/invest/success/$id", params: { id: asset.id } });
+      }, 1200);
+      return;
+    }
+    // Bank transfer → open a GoPay order tied to this investment.
+    const order = createOrder({
+      amountUsd: p.final,
+      rate: NGN_PER_USD,
+      purpose: {
+        kind: "investment",
+        assetId: asset.id,
+        assetName: asset.name,
+        category: asset.category,
+        unit,
+        qty,
+      },
+    });
+    toast.success(`Bank transfer order ${order.reference} opened in GoPay`);
+    nav({ to: "/prichat/$id", params: { id: order.id } });
   }
 
   return (
@@ -71,8 +94,20 @@ function Checkout() {
         <div className="rounded-3xl border border-border bg-card p-4">
           <h2 className="text-sm font-semibold text-navy">Pay with</h2>
           <div className="mt-3 space-y-2">
-            <PayOption label="$CLYST Wallet" sub="On Binance Smart Chain" active />
-            <PayOption label="Card / Bank transfer" sub="Connect to fiat ramp" />
+            <PayOption
+              icon={<Wallet size={16} />}
+              label="cUSD / $CLYST Wallet"
+              sub="Instant settlement from your AssetVault"
+              active={method === "wallet"}
+              onClick={() => setMethod("wallet")}
+            />
+            <PayOption
+              icon={<Building2 size={16} />}
+              label="Bank transfer (GoPay)"
+              sub="Pay NGN to AgroVest · admin confirms receipt, then cUSD funds your investment"
+              active={method === "bank"}
+              onClick={() => setMethod("bank")}
+            />
           </div>
         </div>
 
@@ -84,7 +119,11 @@ function Checkout() {
 
       <div className="border-t border-border p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <AgroButton size="xl" onClick={pay} disabled={paying}>
-          {paying ? "Confirming…" : `Confirm & pay $${p.final.toLocaleString()} · ≈ ₦${(p.final * 1550).toLocaleString()}`}
+          {paying
+            ? "Confirming…"
+            : method === "wallet"
+              ? `Confirm & pay $${p.final.toLocaleString()} · ≈ ₦${(p.final * NGN_PER_USD).toLocaleString()}`
+              : `Open bank transfer · ₦${(p.final * NGN_PER_USD).toLocaleString()}`}
         </AgroButton>
 
       </div>
@@ -101,16 +140,32 @@ function RowM({ k, usd, bold, accent, muted }: { k: string; usd: number; bold?: 
   );
 }
 
-function PayOption({ label, sub, active }: { label: string; sub: string; active?: boolean }) {
+function PayOption({
+  icon, label, sub, active, onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  sub: string;
+  active?: boolean;
+  onClick?: () => void;
+}) {
   return (
-    <div className={`flex items-center gap-3 rounded-2xl border p-3 ${active ? "border-violet bg-violet-soft/30" : "border-border"}`}>
-      <span className={`h-9 w-9 rounded-xl ${active ? "bg-violet text-white" : "bg-secondary text-muted-foreground"} flex items-center justify-center`}>
-        {active ? <Check size={16} /> : null}
+    <button
+      type="button"
+      onClick={onClick}
+      className={`w-full text-left flex items-center gap-3 rounded-2xl border p-3 transition ${
+        active ? "border-violet bg-violet-soft/30" : "border-border hover:border-violet/40"
+      }`}
+    >
+      <span className={`h-9 w-9 rounded-xl flex items-center justify-center ${
+        active ? "bg-violet text-white" : "bg-secondary text-muted-foreground"
+      }`}>
+        {active ? <Check size={16} /> : icon}
       </span>
       <div className="flex-1">
         <p className="text-sm font-medium text-navy">{label}</p>
         <p className="text-[11px] text-muted-foreground">{sub}</p>
       </div>
-    </div>
+    </button>
   );
 }
