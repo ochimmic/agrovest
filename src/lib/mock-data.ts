@@ -8,17 +8,19 @@ export type FarmAsset = {
   expectedYield: string;
   appreciation: string;
   risk: "Low" | "Moderate" | "Conservative";
-  status: "Active" | "Reserved" | "Funding";
-  cover: string; // gradient class
+  status: "Active" | "Reserved" | "Funding" | "Coming soon";
+  cover: string;
   description: string;
+  comingSoon?: boolean;
+  launchEta?: string;
 };
 
 export const farmAssets: FarmAsset[] = [
   {
     id: "fv-palm-01",
-    name: "Cross River Palm Estate",
+    name: "Abeokuta Palm Estate",
     category: "palm",
-    location: "Cross River, Nigeria",
+    location: "Abeokuta, Ogun State, Nigeria",
     unitsAvailable: 412,
     pricePerPlot: 1000,
     expectedYield: "9–12% / yr",
@@ -27,7 +29,7 @@ export const farmAssets: FarmAsset[] = [
     status: "Active",
     cover: "from-emerald-500/80 to-emerald-700",
     description:
-      "Mature oil palm plantation with established harvest cycles. Yields backed by long-term off-take contracts with regional millers.",
+      "AgroVest's flagship oil-palm plantation in Abeokuta. Mature harvest cycles backed by long-term off-take contracts with regional millers. Investors receive a Custody Receipt and on-asset Contract.",
   },
   {
     id: "fv-cocoa-01",
@@ -39,10 +41,12 @@ export const farmAssets: FarmAsset[] = [
     expectedYield: "10–14% / yr",
     appreciation: "+22% / 3yr",
     risk: "Moderate",
-    status: "Active",
+    status: "Coming soon",
     cover: "from-amber-700 to-amber-900",
     description:
-      "Premium cocoa belt with global export demand. Investors receive custody receipt and on-asset contract.",
+      "Premium cocoa belt with global export demand. Launching next cycle — join the notify list to be first in line when units open.",
+    comingSoon: true,
+    launchEta: "Q1 2027",
   },
   {
     id: "fv-latex-01",
@@ -54,10 +58,12 @@ export const farmAssets: FarmAsset[] = [
     expectedYield: "8–11% / yr",
     appreciation: "+15% / 3yr",
     risk: "Low",
-    status: "Funding",
+    status: "Coming soon",
     cover: "from-teal-500 to-emerald-700",
     description:
-      "Natural rubber tapping reserve with industrial-grade output, supported by long-cycle commodity contracts.",
+      "Natural rubber tapping reserve with industrial-grade output. Opening to investors in the next funding window.",
+    comingSoon: true,
+    launchEta: "Q2 2027",
   },
 ];
 
@@ -74,19 +80,33 @@ export const consultants = [
 ];
 
 export const documents = [
-  { id: "d1", title: "Custody Receipt — Cross River Palm", status: "Issued" as const, date: "2025-08-12" },
-  { id: "d2", title: "Asset Contract — Cross River Palm", status: "Signed" as const, date: "2025-08-12" },
+  { id: "d1", title: "Custody Receipt — Abeokuta Palm", status: "Issued" as const, date: "2025-08-12" },
+  { id: "d2", title: "Asset Contract — Abeokuta Palm", status: "Signed" as const, date: "2025-08-12" },
   { id: "d3", title: "Custody Receipt — Ondo Cocoa", status: "Pending" as const, date: "2025-09-02" },
 ];
 
-// Unit math per brief: 1 plot = $1,000; 6 plots = 1 acre ($5,880 after discount); 15 plots = 1 hectare ($14,700).
+// Fee structure (locked):
+//   Platform fee   = 3% of base
+//   Escrow reserve = 20% of base (held in escrow, released on milestones)
+//   Network fee    = 0.5% on bundle units (acre / hectare) only
+// 1 plot = $1,000; 6 plots = 1 acre ($5,880 after discount); 15 plots = 1 hectare ($14,700).
+export const FEES = { platformPct: 0.03, escrowReservePct: 0.2, networkPct: 0.005 } as const;
+
 export function priceFor(unit: "plot" | "acre" | "hectare", qty: number) {
   const base = unit === "plot" ? 1000 * qty : unit === "acre" ? 6000 * qty : 15000 * qty;
-  const platformFee = Math.round(base * 0.02);
-  const networkFee = unit === "plot" ? 0 : Math.round(base * 0.005);
+  const platformFee = Math.round(base * FEES.platformPct);
+  const networkFee = unit === "plot" ? 0 : Math.round(base * FEES.networkPct);
+  const escrowReserve = Math.round(base * FEES.escrowReservePct);
   const subtotal = base + platformFee + networkFee;
   const discount =
     unit === "acre" ? subtotal - 5880 * qty : unit === "hectare" ? subtotal - 14700 * qty : 0;
   const final = subtotal - Math.max(discount, 0);
-  return { base, platformFee, networkFee, subtotal, discount: Math.max(discount, 0), final };
+  return { base, platformFee, networkFee, escrowReserve, subtotal, discount: Math.max(discount, 0), final };
+}
+
+export function propertyFees(price: number) {
+  const platformFee = Math.round(price * FEES.platformPct);
+  const escrowReserve = Math.round(price * FEES.escrowReservePct);
+  const total = price + platformFee;
+  return { price, platformFee, escrowReserve, total };
 }
