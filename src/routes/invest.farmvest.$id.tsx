@@ -1,15 +1,17 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, ShieldCheck, FileText, TrendingUp } from "lucide-react";
+import { ArrowLeft, ShieldCheck, FileText, TrendingUp, BellRing, Timer } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { farmAssets, priceFor } from "@/lib/mock-data";
 import { getState } from "@/lib/store";
 import { toast } from "sonner";
+import { Money } from "@/components/ui/money";
 import {
   CustodyBackedBadge, OnChainBadge, BscBadge, ProjectedBadge,
-  NotAdviceBadge, RiskBadge,
+  NotAdviceBadge, RiskBadge, ComingSoonBadge, EscrowReserveBadge,
 } from "@/components/ui/agro-badge";
+
 
 export const Route = createFileRoute("/invest/farmvest/$id")({ component: Detail });
 
