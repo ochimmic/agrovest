@@ -49,6 +49,15 @@ function OrderRoom() {
   const order = useFarmRemit((s) => s.orders.find((o) => o.id === id));
   const [msg, setMsg] = useState("");
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.hash !== "#one-time-account") return;
+    const t = window.setTimeout(() => {
+      document.getElementById("one-time-account")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 80);
+    return () => window.clearTimeout(t);
+  }, [id, order?.id]);
+
   if (!order) {
     return (
       <MobileFrame>
@@ -328,6 +337,7 @@ function ExpiringAccountCard({ ngn, account, settled }: { ngn: number; account: 
 
   return (
     <section
+      id="one-time-account"
       className={`rounded-3xl border bg-card p-4 space-y-3 ${
         expired ? "border-destructive/40" : urgent ? "border-warn/40" : "border-violet/30"
       }`}

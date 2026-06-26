@@ -89,6 +89,7 @@ function GoPay() {
               key={o.id}
               to="/prichat/$id"
               params={{ id: o.id }}
+              hash="one-time-account"
               className="flex items-center gap-3 rounded-2xl bg-card border border-border p-3"
             >
               <span className="h-11 w-11 rounded-full grid place-items-center text-white bg-agro">
@@ -136,9 +137,13 @@ function GoPay() {
           onCreate={(amount) => {
             const o = createOrder({ amountUsd: amount, rate: NGN_PER_USD });
             setShowNew(false);
-            // Navigate to the Order Room (one-time account + tracker) immediately.
-            void nav({ to: "/prichat/$id", params: { id: o.id } }).then(() => {
-              toast.success(`Order ${o.reference} opened — transfer to the one-time account below.`);
+            // Navigate directly to the Order Room's one-time account section.
+            void nav({
+              to: "/prichat/$id",
+              params: { id: o.id },
+              hash: "one-time-account",
+            }).then(() => {
+              toast.success(`Order ${o.reference} opened — use the one-time account below.`);
             });
           }}
         />
