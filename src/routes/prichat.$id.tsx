@@ -138,25 +138,8 @@ function OrderRoom() {
           })}
         </ol>
 
-        {/* Legacy status stepper */}
-        <ol className="rounded-3xl border border-border bg-card p-3">
-          {stages.map((st, i) => {
-            const done = i < stepIdx || order.status === "confirmed";
-            const active = i === stepIdx && order.status !== "confirmed";
-            return (
-              <li key={st} className="flex items-center gap-3 py-1.5">
-                <span className={`h-7 w-7 rounded-full grid place-items-center text-[11px] font-semibold ${
-                  done ? "bg-agro text-white" : active ? "bg-violet text-white" : "bg-secondary text-muted-foreground"
-                }`}>
-                  {done ? <CheckCircle2 size={14} /> : i + 1}
-                </span>
-                <span className={`text-sm ${active ? "text-navy font-semibold" : "text-muted-foreground"}`}>
-                  {statusLabel[st]}
-                </span>
-              </li>
-            );
-          })}
-        </ol>
+
+
 
         {/* Settlement card */}
         <section className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
