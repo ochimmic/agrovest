@@ -174,6 +174,41 @@ function Detail() {
           </p>
         </section>
 
+        <section className="rounded-3xl border border-border bg-card p-4">
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-navy">
+            <TrendingUp size={14} className="text-agro" /> Yield schedule
+          </h2>
+          <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
+            Yield starts in Year 3 at 20% and steps up by 10% each year until Year 6.
+            From Year 6 onward, 50% per year continues indefinitely. Year 3 yield is
+            accrued but <span className="font-medium text-navy">locked</span> — withdrawals
+            begin <span className="font-medium text-navy">Year 4</span> (Y3 unlocks with the
+            Y4 distribution).
+          </p>
+          <div className="mt-3 grid grid-cols-5 gap-1.5 text-center">
+            {[
+              { y: "Y1–2", pct: "0%", tone: "muted" },
+              { y: "Y3", pct: "20%", tone: "warn" },
+              { y: "Y4", pct: "30%", tone: "agro" },
+              { y: "Y5", pct: "40%", tone: "agro" },
+              { y: "Y6+", pct: "50%", tone: "agro" },
+            ].map((s) => {
+              const toneCls =
+                s.tone === "agro"
+                  ? "bg-agro-soft text-agro"
+                  : s.tone === "warn"
+                    ? "bg-warn/15 text-warn"
+                    : "bg-secondary text-muted-foreground";
+              return (
+                <div key={s.y} className={`rounded-xl px-1 py-2 ${toneCls}`}>
+                  <p className="text-[10px] font-medium opacity-80">{s.y}</p>
+                  <p className="mt-0.5 text-xs font-semibold">{s.pct}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
         <section className="rounded-3xl bg-violet-soft/50 border border-violet/20 p-4">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-navy">
             <ShieldCheck size={14} className="text-violet" /> Investment timeline

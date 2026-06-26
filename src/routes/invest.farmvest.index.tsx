@@ -15,6 +15,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useAppState } from "@/lib/store";
+import { buildYieldSeries } from "@/lib/yield-schedule";
 
 export const Route = createFileRoute("/invest/farmvest/")({ component: FarmVest });
 
@@ -26,37 +27,15 @@ const cats = [
 ] as const;
 
 const ranges = [
-  { id: "1M", days: 30 },
-  { id: "6M", days: 182 },
-  { id: "YTD", days: ytdDays() },
-  { id: "1Y", days: 365 },
+  { id: "3Y", years: 3 },
+  { id: "6Y", years: 6 },
+  { id: "10Y", years: 10 },
 ] as const;
-
-function ytdDays() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  return Math.max(1, Math.round((+now - +start) / 86400000));
-}
-
-// Deterministic pseudo-random walk for projected yield (so it doesn't jump per render)
-function genSeries(principal: number, days: number, apr = 0.105) {
-  const pts = Math.min(60, Math.max(12, Math.round(days / 6)));
-  const daily = apr / 365;
-  const arr: number[] = [];
-  let v = principal;
-  for (let i = 0; i < pts; i++) {
-    const drift = principal * daily * (days / pts);
-    const wobble = Math.sin(i * 1.7) * principal * 0.004 + Math.cos(i * 0.9) * principal * 0.003;
-    v += drift + wobble;
-    arr.push(v);
-  }
-  return arr;
-}
 
 function FarmVest() {
   const [cat, setCat] = useState<string>("all");
   const [q, setQ] = useState("");
-  const [range, setRange] = useState<(typeof ranges)[number]["id"]>("6M");
+  const [range, setRange] = useState<(typeof ranges)[number]["id"]>("6Y");
   const holdings = useAppState((s) => s.holdings);
 
   const dash = useMemo(() => {
@@ -65,7 +44,8 @@ function FarmVest() {
       const f = h.unit === "plot" ? 1 : h.unit === "acre" ? 6 : 15;
       return s + h.units * f;
     }, 0);
-    const projected = Math.round(invested * 0.105);
+    // Steady-state yield (Y6+ = 50% / yr)
+    const projected = Math.round(invested * 0.5);
     const byCat = holdings.reduce<Record<string, number>>((acc, h) => {
       acc[h.category] = (acc[h.category] ?? 0) + h.invested;
       return acc;
@@ -73,11 +53,11 @@ function FarmVest() {
     return { count: holdings.length, invested, plots, projected, byCat };
   }, [holdings]);
 
+  const years = ranges.find((r) => r.id === range)!.years;
   const series = useMemo(() => {
-    const days = ranges.find((r) => r.id === range)!.days;
     const principal = Math.max(dash.invested, 1000); // demo line if no holdings
-    return genSeries(principal, days);
-  }, [range, dash.invested]);
+    return buildYieldSeries(principal, years);
+  }, [years, dash.invested]);
 
   const list = farmAssets.filter(
     (a) => (cat === "all" || a.category === cat) && a.name.toLowerCase().includes(q.toLowerCase())
@@ -115,12 +95,27 @@ function FarmVest() {
           {/* Yield chart */}
           <div className="mt-4 rounded-2xl bg-white/10 p-3">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] text-white/70">Projected yield · {range}</p>
+              <p className="text-[11px] text-white/70">Projected value · {range}</p>
               <p className="text-[11px] font-medium text-emerald-300">
                 +${Math.max(0, Math.round(series[series.length - 1] - series[0])).toLocaleString()}
               </p>
             </div>
-            <YieldChart data={series} />
+            <YieldChart data={series} years={years} />
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-white/70">
+              <span className="inline-flex items-center gap-1">
+                <span className="h-1.5 w-3 rounded-full bg-white/35" /> Maturation (Y1–2)
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="h-1.5 w-3 rounded-full bg-amber-300/80" /> Y3 · 20% locked
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="h-1.5 w-3 rounded-full bg-emerald-300" /> Y4+ withdrawable
+              </span>
+            </div>
+            <p className="mt-2 text-[10px] text-white/60 leading-snug">
+              Yield: Y3 20% (locked) → Y4 30% → Y5 40% → Y6+ 50% per year. Withdrawals begin Year 4
+              (Y3 unlocks with the Y4 distribution).
+            </p>
             <div className="mt-2 flex gap-1.5">
               {ranges.map((r) => (
                 <button
@@ -135,6 +130,7 @@ function FarmVest() {
               ))}
             </div>
           </div>
+
 
           {/* Quick actions */}
           <div className="mt-4 grid grid-cols-4 gap-2">
@@ -343,7 +339,7 @@ function QuickAction({
 }
 
 
-function YieldChart({ data }: { data: number[] }) {
+function YieldChart({ data, years }: { data: number[]; years: number }) {
   const w = 300;
   const h = 90;
   const min = Math.min(...data);
@@ -353,16 +349,55 @@ function YieldChart({ data }: { data: number[] }) {
   const pts = data.map((v, i) => [i * step, h - ((v - min) / span) * (h - 8) - 4] as const);
   const path = pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
   const area = `${path} L${w},${h} L0,${h} Z`;
+  const yearX = (y: number) => (y / years) * w;
+  // Maturation band Y0–Y2, locked band Y2–Y3
+  const maturationW = Math.min(w, yearX(2));
+  const lockStart = Math.min(w, yearX(2));
+  const lockW = Math.max(0, Math.min(w, yearX(3)) - lockStart);
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="mt-2 h-20 w-full">
+    <svg viewBox={`0 0 ${w} ${h}`} className="mt-2 h-20 w-full" preserveAspectRatio="none">
       <defs>
         <linearGradient id="yg" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor="rgb(110 231 183)" stopOpacity="0.45" />
           <stop offset="100%" stopColor="rgb(110 231 183)" stopOpacity="0" />
         </linearGradient>
       </defs>
+      {maturationW > 0 && (
+        <rect x={0} y={0} width={maturationW} height={h} fill="rgba(255,255,255,0.06)" />
+      )}
+      {lockW > 0 && (
+        <rect x={lockStart} y={0} width={lockW} height={h} fill="rgba(252,211,77,0.12)" />
+      )}
+      {/* Year gridlines */}
+      {Array.from({ length: years - 1 }, (_, i) => i + 1).map((y) => (
+        <line
+          key={y}
+          x1={yearX(y)}
+          x2={yearX(y)}
+          y1={0}
+          y2={h}
+          stroke="rgba(255,255,255,0.08)"
+          strokeDasharray="2 3"
+        />
+      ))}
       <path d={area} fill="url(#yg)" />
       <path d={path} fill="none" stroke="rgb(110 231 183)" strokeWidth="2" strokeLinecap="round" />
+      {/* Year labels */}
+      {Array.from({ length: years + 1 }, (_, y) => y)
+        .filter((y) => y === 0 || y === 3 || y === years || y % Math.max(1, Math.round(years / 4)) === 0)
+        .map((y) => (
+          <text
+            key={`lbl-${y}`}
+            x={Math.min(w - 8, Math.max(8, yearX(y)))}
+            y={h - 2}
+            fontSize="8"
+            textAnchor="middle"
+            fill="rgba(255,255,255,0.55)"
+          >
+            Y{y}
+          </text>
+        ))}
     </svg>
   );
 }
+
