@@ -14,6 +14,36 @@ export const Route = createFileRoute("/prichat/$id")({ component: OrderRoom });
 
 const stages = ["awaiting_payment", "receipt_uploaded", "admin_review", "confirmed"] as const;
 
+const trackerSteps = [
+  {
+    key: "init",
+    title: "Bank Transfer via GoPay",
+    desc: "Order opened with AgroVest. Escrow initialized.",
+  },
+  {
+    key: "account",
+    title: "One-time account issued",
+    desc: "Unique AgroVest Bank NUBAN generated for this order.",
+  },
+  {
+    key: "paid",
+    title: "I've made the transfer",
+    desc: "You confirm payment was sent from your bank app.",
+  },
+  {
+    key: "confirmed",
+    title: "Admin confirms receipt",
+    desc: "AgroVest verifies funds and credits cUSD to your AssetVault.",
+  },
+] as const;
+
+function trackerIndex(status: string): number {
+  if (status === "confirmed") return 4;
+  if (status === "admin_review" || status === "receipt_uploaded") return 3;
+  if (status === "awaiting_payment") return 2;
+  return 1;
+}
+
 function OrderRoom() {
   const { id } = Route.useParams();
   const order = useFarmRemit((s) => s.orders.find((o) => o.id === id));
