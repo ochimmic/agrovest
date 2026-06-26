@@ -120,3 +120,16 @@ export const TierBadge = ({ tier }: { tier: string }) => (
 export const DocIssuedBadge = () => (
   <AgroBadge tone="agro" icon={FileCheck}>Issued</AgroBadge>
 );
+
+export const ComingSoonBadge = ({ size, eta }: { size?: "xs" | "sm" | "md"; eta?: string }) => (
+  <AgroBadge tone="warn" icon={Timer} size={size}>{eta ? `Coming ${eta}` : "Coming soon"}</AgroBadge>
+);
+
+export const EscrowReserveBadge = ({ size }: { size?: "xs" | "sm" | "md" }) => (
+  <AgroBadge tone="violet" icon={ShieldCheck} size={size}>Escrow reserve</AgroBadge>
+);
+
+export const FarmRemitBadge = ({ size }: { size?: "xs" | "sm" | "md" }) => (
+  <AgroBadge tone="agro" icon={Coins} size={size}>FarmRemit P2P</AgroBadge>
+);
+
