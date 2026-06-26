@@ -123,20 +123,44 @@ function OrderRoom() {
         {/* Action by status */}
         {order.status === "awaiting_payment" && (
           <section className="rounded-3xl border border-violet/20 bg-violet-soft/40 p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-navy">Confirm your transfer</h3>
+            <h3 className="text-sm font-semibold text-navy">Done with the transfer?</h3>
             <p className="text-xs text-muted-foreground">
-              Send <b>₦{ngn.toLocaleString()}</b> to AgroVest with reference <b>{order.reference}</b>.
-              Upload your receipt below — AgroVest admin verifies it before crediting cUSD to your AssetVault.
+              After sending <b>₦{ngn.toLocaleString()}</b> to the one-time AgroVest Bank
+              account above, tap below. AgroVest admin will verify the receipt and credit
+              cUSD to your AssetVault.
             </p>
+            <button
+              onClick={() => {
+                uploadReceipt(order.id, "mock://receipt.pdf");
+                toast.success("Marked as paid — awaiting AgroVest admin confirmation");
+              }}
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-violet text-white py-3 text-sm font-semibold"
+            >
+              <CheckCircle2 size={16} /> I've made the transfer
+            </button>
             <button
               onClick={() => {
                 uploadReceipt(order.id, "mock://receipt.pdf");
                 toast.success("Receipt uploaded — awaiting AgroVest confirmation");
               }}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-violet text-white py-3 text-sm font-medium"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl border border-violet/30 bg-card py-2.5 text-xs font-medium text-navy"
             >
-              <Upload size={14} /> Upload payment receipt
+              <Upload size={13} /> Upload payment receipt (optional)
             </button>
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <a
+                href="tel:+2348000000000"
+                className="flex items-center justify-center gap-1.5 rounded-2xl bg-secondary py-2.5 text-xs font-medium text-navy"
+              >
+                <Phone size={13} /> Call admin
+              </a>
+              <button
+                onClick={() => document.getElementById("gopay-chat-input")?.focus()}
+                className="flex items-center justify-center gap-1.5 rounded-2xl bg-secondary py-2.5 text-xs font-medium text-navy"
+              >
+                <MessageCircle size={13} /> Chat admin
+              </button>
+            </div>
           </section>
         )}
 
