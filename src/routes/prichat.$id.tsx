@@ -85,10 +85,32 @@ function OrderRoom() {
           <Row k="Amount" v={`$${order.amountUsd.toLocaleString()} cUSD`} bold />
           <Row k="In Naira" v={`₦${ngn.toLocaleString()}`} />
           <Row k="Rate" v={`₦${order.rate}/USD`} />
-          <Row k="Pay to" v={order.bank ?? "—"} copy />
           {order.reference && <Row k="Reference" v={order.reference} copy />}
           {order.purpose && <Row k="Funds" v={order.purpose.assetName} />}
         </section>
+
+        {/* One-time AgroVest Bank account */}
+        {order.virtualAccount && (
+          <section className="rounded-3xl border border-violet/30 bg-card p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-navy">One-time account number</h3>
+              <AgroBadge tone="violet" size="xs">Single use</AgroBadge>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Transfer <b>₦{ngn.toLocaleString()}</b> to this AgroVest Bank account.
+              It's unique to this order and closes after settlement or expiry.
+            </p>
+            <div className="rounded-2xl bg-secondary p-3 space-y-2">
+              <Row k="Bank" v={order.virtualAccount.bank} />
+              <Row k="Account number" v={order.virtualAccount.accountNumber} bold copy />
+              <Row k="Account name" v={order.virtualAccount.accountName} />
+              <Row
+                k="Expires"
+                v={new Date(order.virtualAccount.expiresAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              />
+            </div>
+          </section>
+        )}
 
         {/* Action by status */}
         {order.status === "awaiting_payment" && (
