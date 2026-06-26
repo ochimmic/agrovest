@@ -159,9 +159,19 @@ function Detail() {
             <FileText size={14} className="text-violet" /> Documents you'll receive
           </h2>
           <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-            <li>• Custody Receipt (asset proof)</li>
-            <li>• Asset Contract (terms & ownership)</li>
+            <li>• Contract of Sale</li>
+            <li>• Deed of Assignment</li>
+            <li>• Survey Plan</li>
+            <li>• Right of Occupancy (RofO)</li>
           </ul>
+          <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+            <span className="font-medium text-navy">Contract of Sale</span> and{" "}
+            <span className="font-medium text-navy">Deed of Assignment</span> are issued within{" "}
+            <span className="font-medium text-navy">48 hours</span>.{" "}
+            <span className="font-medium text-navy">Survey Plan</span> and{" "}
+            <span className="font-medium text-navy">RofO</span> are under government review with a{" "}
+            <span className="font-medium text-navy">3–12 month</span> timeline.
+          </p>
         </section>
 
         <section className="rounded-3xl bg-violet-soft/50 border border-violet/20 p-4">
