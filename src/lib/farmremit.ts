@@ -36,13 +36,21 @@ export type InvestmentPurpose = {
   qty: number;
 };
 
+export type VirtualAccount = {
+  bank: string;            // AgroVest Bank (settlement partner)
+  accountNumber: string;   // One-time 10-digit NUBAN, unique per order
+  accountName: string;     // Beneficiary name shown to the payer
+  expiresAt: string;       // ISO; account closes after this
+};
+
 export type FRorder = {
   id: string;
   side: OrderSide;
   amountUsd: number;
   rate: number; // NGN per USD agreed
   peer: string; // always "AgroVest"
-  bank?: string; // AgroVest settlement bank
+  bank?: string; // legacy display string (kept for back-compat)
+  virtualAccount?: VirtualAccount; // one-time account number for this order
   reference?: string;
   receiptUrl?: string;
   status: OrderStatus;
