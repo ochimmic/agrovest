@@ -51,9 +51,17 @@ function OrderRoom() {
           </p>
         </div>
         <AgroBadge tone={statusTone[order.status]} size="xs">{statusLabel[order.status]}</AgroBadge>
+        <a
+          href="tel:+2348000000000"
+          className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-agro"
+          aria-label="Call AgroVest admin"
+        >
+          <Phone size={14} />
+        </a>
         <button
           onClick={() => { advance(order.id, "disputed", "User opened a dispute."); toast.warning("Dispute opened. AgroVest review queued."); }}
           className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-warn"
+          aria-label="Open dispute"
         >
           <Flag size={14} />
         </button>
