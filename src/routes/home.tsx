@@ -49,6 +49,8 @@ function Home() {
             <p className="mt-2 text-[34px] font-semibold tracking-tight tabular">
               ${portfolioValue.toLocaleString()}<span className="text-white/40 text-lg">.00</span>
             </p>
+            <p className="text-[11px] text-white/70 tabular">≈ ₦{(portfolioValue * 1550).toLocaleString()}</p>
+
             <div className="mt-1 flex items-center gap-2 text-xs">
               <span className="rounded-full bg-agro/15 px-2 py-0.5 text-agro font-medium">+0.0%</span>
               <span className="text-white/60">Wallet: {wallet ? `${wallet.clyst} $CLYST` : "Not set up"}</span>

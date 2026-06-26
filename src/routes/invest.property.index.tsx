@@ -4,6 +4,8 @@ import { ShieldCheck, Plus, Search } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { properties } from "@/lib/mock-data";
 import { VendorVerifiedBadge, AgroBadge } from "@/components/ui/agro-badge";
+import { Money } from "@/components/ui/money";
+
 
 export const Route = createFileRoute("/invest/property/")({ component: Properties });
 
@@ -67,10 +69,13 @@ function Properties() {
               <div className="p-4">
                 <p className="font-semibold text-navy">{p.title}</p>
                 <p className="text-[11px] text-muted-foreground">{p.location} · {p.vendor}</p>
-                <p className="mt-1 text-sm font-semibold text-violet">${p.price.toLocaleString()}</p>
+                <div className="mt-1.5">
+                  <Money usd={p.price} size="md" emphasis="violet" layout="inline" />
+                </div>
               </div>
             </Link>
           ))}
+
           {list.length === 0 && (
             <p className="rounded-2xl border border-dashed border-border bg-card p-6 text-center text-xs text-muted-foreground">
               No assets match your filters.
