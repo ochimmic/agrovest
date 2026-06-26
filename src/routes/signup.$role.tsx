@@ -9,7 +9,6 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/signup/$role")({ component: Signup });
 
 const requirements: Record<Role, string[]> = {
-  explorer: ["Name", "Email or phone", "Password", "Country", "Accept Terms & Privacy"],
   investor: [
     "Full legal name", "Email / phone", "Password", "Country & nationality",
     "Date of birth", "Government ID", "Face verification", "Address",
@@ -29,7 +28,6 @@ const requirements: Record<Role, string[]> = {
 };
 
 const labels: Record<Role, { title: string; sub: string }> = {
-  explorer: { title: "Create an Explorer account", sub: "Browse and learn — upgrade anytime." },
   investor: { title: "Create an Investor account", sub: "Verified investors gain access to FarmVest." },
   vendor: { title: "Apply as a Vendor", sub: "Only verified vendors appear active on AgroVest." },
   broker: { title: "Join as a Broker", sub: "Refer leads and earn commission plus reward perks." },
@@ -44,18 +42,17 @@ function Signup() {
   const [pw, setPw] = useState("");
   const [accept, setAccept] = useState(false);
 
-  const req = requirements[role] ?? requirements.explorer;
-  const meta = labels[role] ?? labels.explorer;
+  const req = requirements[role] ?? requirements.investor;
+  const meta = labels[role] ?? labels.investor;
 
   function submit() {
     if (!name || !email || !pw || !accept) {
       toast.error("Please complete all required fields and accept the terms.");
       return;
     }
-    setState({ user: { name, email, country }, role, kyc: role === "explorer" ? "none" : "pending" });
+    setState({ user: { name, email, country }, role, kyc: "pending" });
     toast.success(`Welcome, ${name.split(" ")[0]}!`);
-    if (role === "explorer") nav({ to: "/home" });
-    else nav({ to: "/kyc" });
+    nav({ to: "/kyc" });
   }
 
   return (
@@ -109,7 +106,7 @@ function Signup() {
 
       <div className="px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 border-t border-border bg-background">
         <AgroButton size="xl" onClick={submit}>
-          {role === "explorer" ? "Create account" : "Continue to verification"}
+          Continue to verification
         </AgroButton>
       </div>
     </MobileFrame>

@@ -4,7 +4,7 @@
 
 import { useSyncExternalStore } from "react";
 
-export type Role = "explorer" | "investor" | "vendor" | "broker";
+export type Role = "investor" | "vendor" | "broker";
 export type KycStatus = "none" | "pending" | "review" | "approved" | "rejected" | "more_info";
 
 export type Holding = {
