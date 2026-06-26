@@ -48,13 +48,20 @@ function Detail() {
           <p className="text-xs opacity-80">{asset.location}</p>
           <h1 className="mt-0.5 text-2xl font-semibold tracking-tight">{asset.name}</h1>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <CustodyBackedBadge size="xs" />
-            <OnChainBadge size="xs" />
-            <BscBadge size="xs" />
-            <ProjectedBadge size="xs" />
+            {asset.comingSoon ? (
+              <ComingSoonBadge size="xs" eta={asset.launchEta} />
+            ) : (
+              <>
+                <CustodyBackedBadge size="xs" />
+                <OnChainBadge size="xs" />
+                <BscBadge size="xs" />
+                <ProjectedBadge size="xs" />
+              </>
+            )}
           </div>
         </div>
       </div>
+
 
       <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
         <div className="flex items-center justify-between gap-2">
