@@ -10,6 +10,7 @@ export type FarmAsset = {
   risk: "Low" | "Moderate" | "Conservative";
   status: "Active" | "Reserved" | "Funding" | "Coming soon";
   cover: string;
+  image?: string;
   description: string;
   comingSoon?: boolean;
   launchEta?: string;
