@@ -1,45 +1,227 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Send, Lock, Flag, Video } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { ArrowLeft, Send, Lock, Flag, Upload, CheckCircle2, AlertTriangle, Copy } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
+import { AgroButton } from "@/components/ui/agro-button";
+import { AgroBadge } from "@/components/ui/agro-badge";
+import {
+  useFarmRemit, advance, uploadReceipt, sendMessage,
+  statusLabel, statusTone,
+} from "@/lib/farmremit";
+import { toast } from "sonner";
 
-export const Route = createFileRoute("/prichat/$id")({ component: Room });
+export const Route = createFileRoute("/prichat/$id")({ component: OrderRoom });
 
-function Room() {
+const stages = ["awaiting_payment", "receipt_uploaded", "admin_review", "confirmed"] as const;
+
+function OrderRoom() {
+  const { id } = Route.useParams();
+  const nav = useNavigate();
+  const order = useFarmRemit((s) => s.orders.find((o) => o.id === id));
   const [msg, setMsg] = useState("");
-  const [msgs, setMsgs] = useState([
-    { id: 1, who: "them", t: "Welcome to PriChat. End-to-end encrypted." },
-    { id: 2, who: "me", t: "Thanks. Looking at the Cocoa belt asset." },
-    { id: 3, who: "them", t: "Sending the contract preview now." },
-  ]);
+
+  if (!order) {
+    return (
+      <MobileFrame>
+        <div className="flex-1 grid place-items-center text-sm text-muted-foreground p-6">
+          Order not found.
+        </div>
+      </MobileFrame>
+    );
+  }
+
+  const stepIdx = Math.max(0, stages.indexOf(order.status as any));
+  const ngn = order.amountUsd * order.rate;
+
   function send() {
     if (!msg.trim()) return;
-    setMsgs([...msgs, { id: Date.now(), who: "me", t: msg }]);
+    sendMessage(order!.id, msg);
     setMsg("");
   }
+
   return (
     <MobileFrame>
       <header className="flex items-center gap-3 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 border-b border-border">
         <Link to="/prichat" className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center"><ArrowLeft size={18} /></Link>
-        <span className="h-10 w-10 rounded-full gradient-violet text-white flex items-center justify-center font-semibold">A</span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-navy truncate">AgroVest Support</p>
-          <p className="text-[11px] text-violet flex items-center gap-1"><Lock size={10} /> Auto-deletes in 23h</p>
+          <p className="text-sm font-semibold text-navy truncate">
+            {order.side === "buy" ? "Buy" : "Sell"} ${order.amountUsd.toLocaleString()} cUSD
+          </p>
+          <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+            <Lock size={10} /> {order.peer} · {order.id.replace("fr_", "#")}
+          </p>
         </div>
-        <button className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-violet"><Video size={16} /></button>
-        <button className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center text-warn"><Flag size={16} /></button>
+        <AgroBadge tone={statusTone[order.status]} size="xs">{statusLabel[order.status]}</AgroBadge>
+        <button
+          onClick={() => { advance(order.id, "disputed", "Buyer opened a dispute."); toast.warning("Dispute opened. AgroVest review queued."); }}
+          className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-warn"
+        >
+          <Flag size={14} />
+        </button>
       </header>
-      <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-2">
-        {msgs.map((m) => (
-          <div key={m.id} className={`max-w-[78%] rounded-2xl px-3.5 py-2 text-sm ${
-            m.who === "me" ? "ml-auto gradient-violet text-white rounded-br-md" : "bg-card border border-border text-navy rounded-bl-md"
-          }`}>{m.t}</div>
-        ))}
+
+      <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
+        {/* Stepper */}
+        <ol className="rounded-3xl border border-border bg-card p-3">
+          {stages.map((st, i) => {
+            const done = i < stepIdx || order.status === "confirmed";
+            const active = i === stepIdx && order.status !== "confirmed";
+            return (
+              <li key={st} className="flex items-center gap-3 py-1.5">
+                <span className={`h-7 w-7 rounded-full grid place-items-center text-[11px] font-semibold ${
+                  done ? "bg-agro text-white" : active ? "bg-violet text-white" : "bg-secondary text-muted-foreground"
+                }`}>
+                  {done ? <CheckCircle2 size={14} /> : i + 1}
+                </span>
+                <span className={`text-sm ${active ? "text-navy font-semibold" : "text-muted-foreground"}`}>
+                  {statusLabel[st]}
+                </span>
+              </li>
+            );
+          })}
+        </ol>
+
+        {/* Settlement card */}
+        <section className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
+          <Row k="Amount" v={`$${order.amountUsd.toLocaleString()} cUSD`} bold />
+          <Row k="In Naira" v={`₦${ngn.toLocaleString()}`} />
+          <Row k="Rate" v={`₦${order.rate}/USD`} />
+          <Row k={order.side === "buy" ? "Pay to" : "Receive at"} v={order.bank ?? "—"} copy />
+          {order.reference && <Row k="Reference" v={order.reference} copy />}
+        </section>
+
+        {/* Action by status */}
+        {order.status === "awaiting_payment" && order.side === "buy" && (
+          <section className="rounded-3xl border border-violet/20 bg-violet-soft/40 p-4 space-y-3">
+            <h3 className="text-sm font-semibold text-navy">Confirm your transfer</h3>
+            <p className="text-xs text-muted-foreground">
+              Send <b>₦{ngn.toLocaleString()}</b> to the seller's bank with reference <b>{order.reference}</b>.
+              Upload your receipt below — AgroVest verifies before releasing cUSD.
+            </p>
+            <button
+              onClick={() => {
+                uploadReceipt(order.id, "mock://receipt.pdf");
+                toast.success("Receipt uploaded — under review");
+              }}
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-violet text-white py-3 text-sm font-medium"
+            >
+              <Upload size={14} /> Upload payment receipt
+            </button>
+          </section>
+        )}
+
+        {order.status === "awaiting_payment" && order.side === "sell" && (
+          <section className="rounded-3xl border border-violet/20 bg-violet-soft/40 p-4 space-y-3">
+            <h3 className="text-sm font-semibold text-navy">Awaiting buyer payment</h3>
+            <p className="text-xs text-muted-foreground">
+              Your cUSD is locked in escrow. Once the buyer uploads a payment receipt, AgroVest verifies and
+              releases NGN to your payout bank.
+            </p>
+            <AgroButton
+              size="md"
+              onClick={() => advance(order.id, "admin_review", "Seller flagged payment received.")}
+            >
+              I've received the funds — confirm
+            </AgroButton>
+          </section>
+        )}
+
+        {order.status === "admin_review" && (
+          <section className="rounded-3xl border border-border bg-card p-4 space-y-3">
+            <h3 className="text-sm font-semibold text-navy">AgroVest is verifying</h3>
+            <p className="text-xs text-muted-foreground">
+              Typical review takes 5–30 minutes during banking hours. You'll get a notification the moment it
+              settles.
+            </p>
+            <AgroButton
+              size="md"
+              onClick={() => {
+                advance(order.id, "confirmed", `Settled · ${order.side === "buy" ? `${order.amountUsd} cUSD released to your AssetVault` : `₦${ngn.toLocaleString()} sent to your payout bank`}.`);
+                toast.success("Order settled");
+              }}
+            >
+              Simulate admin approval
+            </AgroButton>
+          </section>
+        )}
+
+        {order.status === "confirmed" && (
+          <section className="rounded-3xl border border-agro/20 bg-agro-soft/40 p-4">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-navy">
+              <CheckCircle2 size={14} className="text-agro" /> Settled
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {order.side === "buy"
+                ? `${order.amountUsd} cUSD credited to your AssetVault.`
+                : `₦${ngn.toLocaleString()} sent to your payout bank.`}
+            </p>
+          </section>
+        )}
+
+        {order.status === "disputed" && (
+          <section className="rounded-3xl border border-destructive/30 bg-destructive/10 p-4">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-navy">
+              <AlertTriangle size={14} className="text-destructive" /> Dispute under review
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              AgroVest support will reach out in this thread. Funds remain in escrow until resolved.
+            </p>
+          </section>
+        )}
+
+        {/* Chat */}
+        <section>
+          <h3 className="mb-2 text-[11px] uppercase tracking-wide text-muted-foreground">Conversation</h3>
+          <div className="space-y-2">
+            {order.messages.map((m) => (
+              <div
+                key={m.id}
+                className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm ${
+                  m.who === "me"
+                    ? "ml-auto gradient-violet text-white rounded-br-md"
+                    : m.who === "system"
+                      ? "mx-auto bg-violet-soft text-navy text-xs text-center"
+                      : "bg-card border border-border text-navy rounded-bl-md"
+                }`}
+              >
+                {m.t}
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
+
       <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center gap-2">
-        <input value={msg} onChange={(e) => setMsg(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Type a message" className="flex-1 h-11 rounded-full border border-input bg-card px-4 text-sm outline-none focus:border-violet" />
-        <button onClick={send} className="h-11 w-11 rounded-full gradient-violet text-white flex items-center justify-center shadow-glow"><Send size={16} /></button>
+        <input
+          value={msg}
+          onChange={(e) => setMsg(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && send()}
+          placeholder={order.status === "confirmed" ? "Order closed — message peer" : "Message your peer"}
+          className="flex-1 h-11 rounded-full border border-input bg-card px-4 text-sm outline-none focus:border-violet"
+        />
+        <button onClick={send} className="h-11 w-11 rounded-full gradient-violet text-white flex items-center justify-center shadow-glow">
+          <Send size={16} />
+        </button>
       </div>
     </MobileFrame>
+  );
+}
+
+function Row({ k, v, bold, copy }: { k: string; v: string; bold?: boolean; copy?: boolean }) {
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-muted-foreground text-xs">{k}</span>
+      <div className="flex items-center gap-1.5">
+        <span className={`tabular text-right ${bold ? "font-semibold text-navy" : "text-navy text-sm"}`}>{v}</span>
+        {copy && (
+          <button
+            onClick={() => { navigator.clipboard?.writeText(v); toast.success("Copied"); }}
+            className="text-muted-foreground hover:text-violet"
+          >
+            <Copy size={12} />
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
