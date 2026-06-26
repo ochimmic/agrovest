@@ -51,7 +51,7 @@ function GoPay() {
             <span className="text-sm font-semibold uppercase tracking-wide">Buy cUSD</span>
           </div>
           <p className="mt-1 text-xs text-white/85">
-            Pay NGN to AgroVest's One-Time Account · receive cUSD after admin confirmation
+            Pay NGN to AgroVest's One-Time account number · receive cUSD after admin confirmation
           </p>
         </button>
 
@@ -176,7 +176,7 @@ function NewOrderSheet({
         </div>
 
         <p className="text-xs text-muted-foreground">
-          You'll pay NGN into AgroVest's One-Time Account. cUSD is credited to your
+          You'll pay NGN into AgroVest's One-Time account number. cUSD is credited to your
           AssetVault once an AgroVest admin confirms your receipt.
         </p>
 
