@@ -5,7 +5,7 @@ import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { AgroBadge } from "@/components/ui/agro-badge";
 import {
-  useFarmRemit, advance, uploadReceipt, sendMessage,
+  useFarmRemit, advance, uploadReceipt, sendMessage, recoverOrder,
   statusLabel, statusTone,
 } from "@/lib/farmremit";
 import { toast } from "sonner";
@@ -49,6 +49,13 @@ function OrderRoom() {
   const order = useFarmRemit((s) => s.orders.find((o) => o.id === id));
   const [msg, setMsg] = useState("");
 
+  // If the order id in the URL doesn't exist in our store (e.g. created in
+  // another session, or storage cleared), recover a placeholder so the user
+  // lands on a working Order Room instead of a dead end.
+  useEffect(() => {
+    if (!order && id) recoverOrder(id);
+  }, [order, id]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.location.hash !== "#one-time-account") return;
@@ -62,7 +69,7 @@ function OrderRoom() {
     return (
       <MobileFrame>
         <div className="flex-1 grid place-items-center text-sm text-muted-foreground p-6">
-          Order not found.
+          Restoring order…
         </div>
       </MobileFrame>
     );
