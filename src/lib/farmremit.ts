@@ -183,6 +183,38 @@ export function getOrder(id: string) {
   return s.orders.find((o) => o.id === id);
 }
 
+// Recover an order that exists in a URL but not in our store (e.g. created
+// in another browser/session, or storage cleared). Creates a placeholder
+// with the same id so the Order Room can render instead of dead-ending.
+export function recoverOrder(id: string, amountUsd = 500, rate = 1550): FRorder {
+  const existing = s.orders.find((o) => o.id === id);
+  if (existing) return existing;
+  const now = new Date().toISOString();
+  const order: FRorder = {
+    id,
+    side: "buy",
+    amountUsd,
+    rate,
+    peer: "AgroVest",
+    bank: `${AGROVEST_BANK_NAME} · ${AGROVEST_BENEFICIARY}`,
+    virtualAccount: makeVirtualAccount(id, now),
+    reference: `AGV-${id.slice(-4)}`,
+    status: "awaiting_payment",
+    createdAt: now,
+    updatedAt: now,
+    messages: [{
+      id: "m0",
+      who: "system",
+      t: "Order restored. A one-time AgroVest Bank account has been issued — transfer NGN to it, then upload the receipt.",
+      at: now,
+    }],
+  };
+  s = { orders: [order, ...s.orders] };
+  persist();
+  emit();
+  return order;
+}
+
 export function createOrder(input: {
   amountUsd: number;
   rate: number;
