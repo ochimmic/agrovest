@@ -189,7 +189,7 @@ function Home() {
               >
                 <div className={`h-28 bg-gradient-to-br ${a.cover} relative bg-cover bg-center`} style={a.image ? { backgroundImage: `url(${a.image})` } : undefined}>
                   <span className="absolute top-2 left-2"><CustodyBackedBadge size="xs" /></span>
-                  <span className="absolute bottom-2 left-2"><RiskBadge level={a.risk} /></span>
+                  
                 </div>
                 <div className="p-3">
                   <p className="text-sm font-semibold text-navy line-clamp-1">{a.name}</p>
