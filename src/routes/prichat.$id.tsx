@@ -306,7 +306,7 @@ function Row({ k, v, bold, copy }: { k: string; v: string; bold?: boolean; copy?
   );
 }
 
-type VAccount = { bank: string; accountNumber: string; accountName: string; expiresAt: number };
+type VAccount = { bank: string; accountNumber: string; accountName: string; expiresAt: string };
 
 function ExpiringAccountCard({ ngn, account, settled }: { ngn: number; account: VAccount; settled: boolean }) {
   const [now, setNow] = useState(() => Date.now());
