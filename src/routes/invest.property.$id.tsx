@@ -67,8 +67,8 @@ function PropertyDetail() {
         {step === "detail" ? (
           <>
             <div>
-              <p className="text-xl font-semibold text-violet">${p.price.toLocaleString()}</p>
-              <p className="text-xs text-muted-foreground">Listed by {p.vendor}</p>
+              <Money usd={p.price} size="xl" emphasis="violet" layout="inline" />
+              <p className="text-xs text-muted-foreground mt-1">Listed by {p.vendor}</p>
             </div>
             <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
               <div className="flex items-center gap-2 text-navy">
@@ -103,11 +103,20 @@ function PropertyDetail() {
             </div>
 
             <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
-              <Row k="Asset price" v={`$${p.price.toLocaleString()}`} />
-              <Row k="Platform fee (2%)" v={`$${platformFee.toLocaleString()}`} />
-              <Row k="Escrow fee" v={`$${networkFee.toLocaleString()}`} />
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-navy">Price breakdown</h3>
+                <EscrowReserveBadge size="xs" />
+              </div>
+              <RowM k="Asset price" usd={p.price} />
+              <RowM k="Platform fee (3%)" usd={platformFee} />
+              <RowM k="Escrow reserve (20%, held)" usd={escrowReserve} muted />
               <div className="border-t border-border my-1" />
-              <Row k="Total" v={`$${total.toLocaleString()}`} bold />
+              <RowM k="Total payable" usd={total} bold />
+              <p className="flex items-start gap-1.5 text-[10px] text-muted-foreground leading-relaxed">
+                <Info size={11} className="mt-0.5 shrink-0" />
+                The 20% escrow reserve is held by AgroVest from the vendor's payout and released only
+                after you confirm delivery. It protects your purchase — it's not an additional charge to you.
+              </p>
             </div>
 
             <div className="rounded-3xl border border-border bg-card p-4">
@@ -115,6 +124,7 @@ function PropertyDetail() {
               <div className="mt-3 space-y-2">
                 <PayOption label="$CLYST Wallet" sub="On Binance Smart Chain" active />
                 <PayOption label="Card / Bank transfer" sub="Connect to fiat ramp" />
+                <PayOption label="FarmRemit (NGN P2P)" sub="Pay in Naira via verified peers" />
               </div>
             </div>
 
@@ -129,14 +139,15 @@ function PropertyDetail() {
       <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))] border-t border-border">
         {step === "detail" ? (
           <AgroButton size="xl" onClick={start}>
-            Buy now · ${p.price.toLocaleString()}
+            Buy now · ${p.price.toLocaleString()} · ≈ ₦{(p.price * 1550).toLocaleString()}
           </AgroButton>
         ) : (
           <AgroButton size="xl" onClick={pay} disabled={paying}>
-            {paying ? "Confirming…" : `Confirm & pay $${total.toLocaleString()}`}
+            {paying ? "Confirming…" : `Confirm & pay $${total.toLocaleString()} · ≈ ₦${(total * 1550).toLocaleString()}`}
           </AgroButton>
         )}
       </div>
+
     </MobileFrame>
   );
 }
