@@ -315,7 +315,8 @@ function ExpiringAccountCard({ ngn, account, settled }: { ngn: number; account: 
     return () => clearInterval(t);
   }, []);
 
-  const totalMs = Math.max(0, account.expiresAt - now);
+  const expiresMs = new Date(account.expiresAt).getTime();
+  const totalMs = Math.max(0, expiresMs - now);
   const expired = totalMs <= 0 && !settled;
   const mins = Math.floor(totalMs / 60000);
   const secs = Math.floor((totalMs % 60000) / 1000);
