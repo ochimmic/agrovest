@@ -16,6 +16,8 @@ export type FarmAsset = {
   launchEta?: string;
 };
 
+import abeokutaPalmEstate from "@/assets/abeokuta-palm-estate.jpg.asset.json";
+
 export const farmAssets: FarmAsset[] = [
   {
     id: "fv-palm-01",
