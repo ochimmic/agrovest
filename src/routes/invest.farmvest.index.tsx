@@ -15,6 +15,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useAppState } from "@/lib/store";
+import { buildYieldSeries, yieldPctForYear } from "@/lib/yield-schedule";
 
 export const Route = createFileRoute("/invest/farmvest/")({ component: FarmVest });
 
@@ -26,37 +27,15 @@ const cats = [
 ] as const;
 
 const ranges = [
-  { id: "1M", days: 30 },
-  { id: "6M", days: 182 },
-  { id: "YTD", days: ytdDays() },
-  { id: "1Y", days: 365 },
+  { id: "3Y", years: 3 },
+  { id: "6Y", years: 6 },
+  { id: "10Y", years: 10 },
 ] as const;
-
-function ytdDays() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  return Math.max(1, Math.round((+now - +start) / 86400000));
-}
-
-// Deterministic pseudo-random walk for projected yield (so it doesn't jump per render)
-function genSeries(principal: number, days: number, apr = 0.105) {
-  const pts = Math.min(60, Math.max(12, Math.round(days / 6)));
-  const daily = apr / 365;
-  const arr: number[] = [];
-  let v = principal;
-  for (let i = 0; i < pts; i++) {
-    const drift = principal * daily * (days / pts);
-    const wobble = Math.sin(i * 1.7) * principal * 0.004 + Math.cos(i * 0.9) * principal * 0.003;
-    v += drift + wobble;
-    arr.push(v);
-  }
-  return arr;
-}
 
 function FarmVest() {
   const [cat, setCat] = useState<string>("all");
   const [q, setQ] = useState("");
-  const [range, setRange] = useState<(typeof ranges)[number]["id"]>("6M");
+  const [range, setRange] = useState<(typeof ranges)[number]["id"]>("6Y");
   const holdings = useAppState((s) => s.holdings);
 
   const dash = useMemo(() => {
@@ -65,7 +44,8 @@ function FarmVest() {
       const f = h.unit === "plot" ? 1 : h.unit === "acre" ? 6 : 15;
       return s + h.units * f;
     }, 0);
-    const projected = Math.round(invested * 0.105);
+    // Steady-state yield (Y6+ = 50% / yr)
+    const projected = Math.round(invested * 0.5);
     const byCat = holdings.reduce<Record<string, number>>((acc, h) => {
       acc[h.category] = (acc[h.category] ?? 0) + h.invested;
       return acc;
@@ -73,11 +53,11 @@ function FarmVest() {
     return { count: holdings.length, invested, plots, projected, byCat };
   }, [holdings]);
 
+  const years = ranges.find((r) => r.id === range)!.years;
   const series = useMemo(() => {
-    const days = ranges.find((r) => r.id === range)!.days;
     const principal = Math.max(dash.invested, 1000); // demo line if no holdings
-    return genSeries(principal, days);
-  }, [range, dash.invested]);
+    return buildYieldSeries(principal, years);
+  }, [years, dash.invested]);
 
   const list = farmAssets.filter(
     (a) => (cat === "all" || a.category === cat) && a.name.toLowerCase().includes(q.toLowerCase())
