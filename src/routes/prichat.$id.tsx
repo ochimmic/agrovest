@@ -52,10 +52,20 @@ function OrderRoom() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.location.hash !== "#one-time-account") return;
-    const t = window.setTimeout(() => {
-      document.getElementById("one-time-account")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 80);
-    return () => window.clearTimeout(t);
+    let cancelled = false;
+    const tryScroll = (attempt = 0) => {
+      if (cancelled) return;
+      const el = document.getElementById("one-time-account");
+      const scroller = el?.closest("main") as HTMLElement | null;
+      if (el && scroller) {
+        const top = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 8;
+        scroller.scrollTo({ top, behavior: "smooth" });
+      } else if (attempt < 12) {
+        window.setTimeout(() => tryScroll(attempt + 1), 80);
+      }
+    };
+    const t = window.setTimeout(() => tryScroll(), 120);
+    return () => { cancelled = true; window.clearTimeout(t); };
   }, [id, order?.id]);
 
   if (!order) {
