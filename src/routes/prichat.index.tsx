@@ -176,7 +176,7 @@ function NewOrderSheet({
         </div>
 
         <p className="text-xs text-muted-foreground">
-          You'll pay NGN into AgroVest's One-Time Account. cUSD is credited to your
+          You'll pay NGN into AgroVest's One-Time account number. cUSD is credited to your
           AssetVault once an AgroVest admin confirms your receipt.
         </p>
 
