@@ -51,7 +51,7 @@ function GoPay() {
             <span className="text-sm font-semibold uppercase tracking-wide">Buy cUSD</span>
           </div>
           <p className="mt-1 text-xs text-white/85">
-            Pay NGN to AgroVest's One-Time Account · receive cUSD after admin confirmation
+            Pay NGN to AgroVest's One-Time account number · receive cUSD after admin confirmation
           </p>
         </button>
 
