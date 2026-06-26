@@ -187,7 +187,7 @@ function Home() {
                 params={{ id: a.id }}
                 className="min-w-[230px] rounded-3xl border border-border bg-card overflow-hidden shadow-card"
               >
-                <div className={`h-28 bg-gradient-to-br ${a.cover} relative`}>
+                <div className={`h-28 bg-gradient-to-br ${a.cover} relative bg-cover bg-center`} style={a.image ? { backgroundImage: `url(${a.image})` } : undefined}>
                   <span className="absolute top-2 left-2"><CustodyBackedBadge size="xs" /></span>
                   <span className="absolute bottom-2 left-2"><RiskBadge level={a.risk} /></span>
                 </div>

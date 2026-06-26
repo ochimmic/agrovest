@@ -153,7 +153,8 @@ function HoldingDetail() {
 
   return (
     <MobileFrame>
-      <div className={`relative h-44 bg-gradient-to-br ${asset.cover}`}>
+      <div className={`relative h-44 bg-gradient-to-br ${asset.cover} bg-cover bg-center`} style={asset.image ? { backgroundImage: `url(${asset.image})` } : undefined}>
+        {asset.image && <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />}
         <Link
           to="/invest/farmvest"
           className="absolute left-3 top-[max(0.75rem,env(safe-area-inset-top))] flex h-10 w-10 items-center justify-center rounded-full glass text-navy"

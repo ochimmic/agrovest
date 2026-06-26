@@ -10,10 +10,13 @@ export type FarmAsset = {
   risk: "Low" | "Moderate" | "Conservative";
   status: "Active" | "Reserved" | "Funding" | "Coming soon";
   cover: string;
+  image?: string;
   description: string;
   comingSoon?: boolean;
   launchEta?: string;
 };
+
+import abeokutaPalmEstate from "@/assets/abeokuta-palm-estate.jpg.asset.json";
 
 export const farmAssets: FarmAsset[] = [
   {
@@ -28,6 +31,7 @@ export const farmAssets: FarmAsset[] = [
     risk: "Conservative",
     status: "Active",
     cover: "from-emerald-500/80 to-emerald-700",
+    image: abeokutaPalmEstate.url,
     description:
       "AgroVest's flagship oil-palm plantation in Abeokuta. Mature harvest cycles backed by long-term off-take contracts with regional millers. Investors receive a Custody Receipt and on-asset Contract.",
   },
