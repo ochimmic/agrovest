@@ -15,12 +15,14 @@ const cusdToClyst = (c: number) => c / CLYST_USD;
 const clystToCusd = (c: number) => c * CLYST_USD;
 
 type Pair = { sym: string; name: string; price: number; change: number; spark: number[] };
-const markets: Pair[] = [
+const internationalMarkets: Pair[] = [
   { sym: "CLYST", name: "Clyst", price: 0.42, change: 4.8, spark: [4,5,4,6,7,6,8,9,8,10,11,10,12] },
   { sym: "BNB", name: "BNB", price: 612.4, change: -1.2, spark: [10,11,10,9,10,9,8,9,8,7,8,7,8] },
   { sym: "BTC", name: "Bitcoin", price: 71240, change: 2.1, spark: [6,7,7,8,7,8,9,9,10,9,10,11,11] },
   { sym: "ETH", name: "Ethereum", price: 3820, change: 0.6, spark: [8,8,9,8,9,9,10,9,10,10,11,10,11] },
   { sym: "cUSD", name: "Clyst USD", price: 1.0, change: 0.0, spark: [9,9,10,9,10,9,10,10,9,10,9,10,10] },
+];
+const africanMarkets: Pair[] = [
   { sym: "WKC", name: "Wakanda Inu", price: 0.0008, change: 3.4, spark: [4,5,5,6,5,7,6,8,7,9,8,10,11] },
   { sym: "TKC", name: "Tanzania Krypto", price: 0.027, change: -2.1, spark: [11,10,11,10,9,10,9,8,9,8,9,8,7] },
   { sym: "HKM", name: "Hakuna Matata", price: 0.014, change: 5.6, spark: [3,4,4,5,6,5,7,8,8,9,10,11,12] },
@@ -127,18 +129,38 @@ function Vault() {
           </div>
         </section>
 
-        {/* Markets */}
+        {/* International Markets */}
         <section>
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-sm font-semibold text-navy">Markets</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-navy">International Markets</h2>
+              <span className="rounded-full bg-violet/15 px-2 py-0.5 text-[10px] font-medium text-violet">Global</span>
+            </div>
             <span className="text-[10px] text-muted-foreground">Informational</span>
           </div>
           <div className="flex gap-2 overflow-x-auto hide-scrollbar -mx-4 px-4">
-            {markets.map((m) => (
+            {internationalMarkets.map((m) => (
               <MarketCard key={m.sym} m={m} />
             ))}
           </div>
         </section>
+
+        {/* African Markets */}
+        <section>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-navy">African Markets</h2>
+              <span className="rounded-full bg-agro/15 px-2 py-0.5 text-[10px] font-medium text-agro">🌍 Africa</span>
+            </div>
+            <span className="text-[10px] text-muted-foreground">Informational</span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar -mx-4 px-4">
+            {africanMarkets.map((m) => (
+              <MarketCard key={m.sym} m={m} />
+            ))}
+          </div>
+        </section>
+
       </div>
 
       {topUp && (
