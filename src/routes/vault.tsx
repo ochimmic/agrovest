@@ -81,7 +81,7 @@ function Vault() {
             <div className="mt-3 flex items-center gap-2 flex-wrap">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px]">
                 <Zap size={11} className="text-amber-300" />
-                Spendable {clyst.toLocaleString()} $CLYST
+                {clyst.toLocaleString()} $CLYST
                 <span className="text-white/50">≈ ${spendableUsd.toFixed(2)}</span>
               </span>
               {auto.enabled && (
