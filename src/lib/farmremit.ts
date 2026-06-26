@@ -175,7 +175,8 @@ export function createOrder(input: {
     amountUsd: input.amountUsd,
     rate: input.rate,
     peer: "AgroVest",
-    bank: AGROVEST_BANK,
+    bank: `${AGROVEST_BANK_NAME} · ${AGROVEST_BENEFICIARY}`,
+    virtualAccount: makeVirtualAccount(id, now),
     reference: `AGV-${Math.floor(Math.random() * 9000) + 1000}`,
     status: "awaiting_payment",
     createdAt: now,
@@ -185,8 +186,8 @@ export function createOrder(input: {
       id: "m0",
       who: "system",
       t: input.purpose
-        ? `Order created to fund your ${input.purpose.assetName} investment. Transfer NGN to AgroVest, then upload the receipt.`
-        : "Order created. Transfer NGN to AgroVest's settlement account, then upload the receipt.",
+        ? `Order created to fund your ${input.purpose.assetName} investment. A one-time AgroVest Bank account has been issued — transfer NGN to it, then upload the receipt.`
+        : "Order created. A one-time AgroVest Bank account has been issued — transfer NGN to it, then upload the receipt.",
       at: now,
     }],
   };
