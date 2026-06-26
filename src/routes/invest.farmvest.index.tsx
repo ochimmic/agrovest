@@ -220,35 +220,58 @@ function FarmVest() {
         </div>
 
         <div className="mt-4 space-y-3">
-          {list.map((a) => (
-            <Link
-              key={a.id}
-              to="/invest/farmvest/$id"
-              params={{ id: a.id }}
-              className="block rounded-3xl border border-border bg-card overflow-hidden shadow-card"
-            >
-              <div className={`h-32 bg-gradient-to-br ${a.cover} relative`}>
-                <div className="absolute top-2 left-2 flex gap-1.5">
-                  <span className="rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-medium text-[oklch(0.27_0.07_268)]">
-                    {a.status}
-                  </span>
-                  <span className="rounded-full bg-agro/90 px-2 py-0.5 text-[10px] font-medium text-white">
-                    {a.risk}
-                  </span>
+          {list.map((a) => {
+            const cs = a.comingSoon;
+            const Card = (
+              <div className={`block rounded-3xl border border-border bg-card overflow-hidden shadow-card ${cs ? "opacity-95" : ""}`}>
+                <div className={`h-32 bg-gradient-to-br ${a.cover} relative`}>
+                  <div className="absolute top-2 left-2 flex gap-1.5">
+                    <span className="rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-medium text-[oklch(0.27_0.07_268)]">
+                      {a.status}
+                    </span>
+                    {!cs && (
+                      <span className="rounded-full bg-agro/90 px-2 py-0.5 text-[10px] font-medium text-white">
+                        {a.risk}
+                      </span>
+                    )}
+                  </div>
+                  {cs && (
+                    <div className="absolute inset-0 bg-[oklch(0.16_0.05_275)]/55 backdrop-blur-[1px] grid place-items-center">
+                      <span className="rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold text-[oklch(0.27_0.07_268)]">
+                        {a.launchEta ? `Coming ${a.launchEta}` : "Coming soon"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <p className="font-semibold text-navy">{a.name}</p>
+                  <p className="text-[11px] text-muted-foreground">{a.location}</p>
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px]">
+                    <Stat k="Yield" v={a.expectedYield} accent />
+                    <Stat k="Apprec." v={a.appreciation} />
+                    <Stat k="Plot" v={`$${a.pricePerPlot}`} />
+                  </div>
+                  {cs && (
+                    <button
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); import("sonner").then(({ toast }) => toast.success(`We'll notify you when ${a.name} opens.`)); }}
+                      className="mt-3 w-full rounded-2xl bg-violet text-white text-xs font-medium py-2.5"
+                    >
+                      Notify me when it launches
+                    </button>
+                  )}
                 </div>
               </div>
-              <div className="p-4">
-                <p className="font-semibold text-navy">{a.name}</p>
-                <p className="text-[11px] text-muted-foreground">{a.location}</p>
-                <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px]">
-                  <Stat k="Yield" v={a.expectedYield} accent />
-                  <Stat k="Apprec." v={a.appreciation} />
-                  <Stat k="Plot" v={`$${a.pricePerPlot}`} />
-                </div>
-              </div>
-            </Link>
-          ))}
+            );
+            return cs ? (
+              <div key={a.id}>{Card}</div>
+            ) : (
+              <Link key={a.id} to="/invest/farmvest/$id" params={{ id: a.id }}>
+                {Card}
+              </Link>
+            );
+          })}
         </div>
+
       </div>
     </AppShell>
   );
