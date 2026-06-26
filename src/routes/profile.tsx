@@ -27,7 +27,7 @@ function Profile() {
               <p className="text-lg font-semibold">{user?.name ?? "Guest"}</p>
               <p className="text-xs text-white/70">{user?.email ?? "not signed in"}</p>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
-                <RoleBadge role={role ?? "explorer"} />
+                <RoleBadge role={role ?? "investor"} />
                 <KycBadge status={kyc} />
                 <NonCustodialBadge />
                 <BscBadge />

@@ -1,11 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Compass, LineChart, Store, Handshake, Lock, ChevronRight } from "lucide-react";
+import { LineChart, Store, Handshake, Lock, ChevronRight } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 
 export const Route = createFileRoute("/role-select")({ component: RoleSelect });
 
 const roles = [
-  { id: "explorer", t: "Explorer", s: "Browse, learn, and preview assets before committing.", Icon: Compass, accent: "from-sky-400 to-violet" },
   { id: "investor", t: "Investor", s: "Invest in FarmVest & real-world assets with full custody docs.", Icon: LineChart, accent: "from-violet to-fuchsia-500" },
   { id: "vendor", t: "Vendor", s: "Apply to list verified assets or products on AgroVest.", Icon: Store, accent: "from-amber-400 to-rose-500" },
   { id: "broker", t: "Broker", s: "Refer deals and earn commission + land/car rewards.", Icon: Handshake, accent: "from-agro to-teal-500" },
