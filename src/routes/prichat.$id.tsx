@@ -407,6 +407,10 @@ function ExpiringAccountCard({ ngn, account, settled }: { ngn: number; account: 
         <Row k="Expires" v={expiresLabel} />
       </div>
 
+      {!expired && !settled && (
+        <CopyAccountButton value={account.accountNumber} />
+      )}
+
       {expired && (
         <button
           onClick={() => toast.success("Requested a fresh one-time account. AgroVest is generating it now.")}
