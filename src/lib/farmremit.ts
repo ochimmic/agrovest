@@ -62,60 +62,72 @@ export type FRorder = {
 
 const KEY = "agrovest_farmremit_v1";
 
-const AGROVEST_BANK = "Providus Bank • 5400123456 • AgroVest Ltd";
+const AGROVEST_BANK_NAME = "AgroVest Bank";
+const AGROVEST_BENEFICIARY = "AgroVest Ltd / Escrow";
+
+// Generate a unique one-time NUBAN-style account number (10 digits).
+// Deterministic when a seed string is provided so SSR/CSR + storage stay stable.
+function genAccountNumber(seedStr?: string) {
+  if (seedStr) {
+    let h = 0;
+    for (let i = 0; i < seedStr.length; i++) h = (h * 31 + seedStr.charCodeAt(i)) >>> 0;
+    return ("9" + String(h).padStart(9, "0")).slice(0, 10);
+  }
+  return "9" + Math.floor(100_000_000 + Math.random() * 899_999_999).toString();
+}
+
+function makeVirtualAccount(orderId: string, createdAtIso: string): VirtualAccount {
+  const expires = new Date(new Date(createdAtIso).getTime() + 30 * 60_000).toISOString();
+  return {
+    bank: AGROVEST_BANK_NAME,
+    accountNumber: genAccountNumber(orderId),
+    accountName: AGROVEST_BENEFICIARY,
+    expiresAt: expires,
+  };
+}
 
 type S = { orders: FRorder[] };
 
 function seed(): FRorder[] {
   const now = Date.now();
   const iso = (offset: number) => new Date(now - offset).toISOString();
+  const mk = (
+    id: string,
+    amountUsd: number,
+    rate: number,
+    reference: string,
+    status: OrderStatus,
+    createdOffset: number,
+    updatedOffset: number,
+    messages: FRMessage[],
+  ): FRorder => {
+    const createdAt = iso(createdOffset);
+    return {
+      id,
+      side: "buy",
+      amountUsd,
+      rate,
+      peer: "AgroVest",
+      bank: `${AGROVEST_BANK_NAME} · ${AGROVEST_BENEFICIARY}`,
+      virtualAccount: makeVirtualAccount(id, createdAt),
+      reference,
+      status,
+      createdAt,
+      updatedAt: iso(updatedOffset),
+      messages,
+    };
+  };
   return [
-    {
-      id: "fr_1001",
-      side: "buy",
-      amountUsd: 500,
-      rate: 1550,
-      peer: "AgroVest",
-      bank: AGROVEST_BANK,
-      reference: "AGV-1001",
-      status: "awaiting_payment",
-      createdAt: iso(60_000 * 18),
-      updatedAt: iso(60_000 * 12),
-      messages: [
-        { id: "m1", who: "system", t: "Order created. Send ₦775,000 to AgroVest's settlement account.", at: iso(60_000 * 18) },
-        { id: "m2", who: "agrovest", t: "We're standing by — upload your receipt once the transfer is sent.", at: iso(60_000 * 12) },
-      ],
-    },
-    {
-      id: "fr_1002",
-      side: "buy",
-      amountUsd: 200,
-      rate: 1540,
-      peer: "AgroVest",
-      bank: AGROVEST_BANK,
-      reference: "AGV-1002",
-      status: "admin_review",
-      createdAt: iso(60_000 * 60 * 3),
-      updatedAt: iso(60_000 * 22),
-      messages: [
-        { id: "m1", who: "system", t: "Receipt uploaded. Awaiting AgroVest admin confirmation.", at: iso(60_000 * 22) },
-      ],
-    },
-    {
-      id: "fr_1003",
-      side: "buy",
-      amountUsd: 1000,
-      rate: 1545,
-      peer: "AgroVest",
-      bank: AGROVEST_BANK,
-      reference: "AGV-1003",
-      status: "confirmed",
-      createdAt: iso(60_000 * 60 * 24),
-      updatedAt: iso(60_000 * 60 * 23),
-      messages: [
-        { id: "m1", who: "system", t: "Receipt confirmed. 1,000 cUSD credited to your AssetVault.", at: iso(60_000 * 60 * 23) },
-      ],
-    },
+    mk("fr_1001", 500, 1550, "AGV-1001", "awaiting_payment", 60_000 * 18, 60_000 * 12, [
+      { id: "m1", who: "system", t: "Order created. A one-time account number has been issued — transfer ₦775,000 to it.", at: iso(60_000 * 18) },
+      { id: "m2", who: "agrovest", t: "We're standing by — upload your receipt once the transfer is sent.", at: iso(60_000 * 12) },
+    ]),
+    mk("fr_1002", 200, 1540, "AGV-1002", "admin_review", 60_000 * 60 * 3, 60_000 * 22, [
+      { id: "m1", who: "system", t: "Receipt uploaded. Awaiting AgroVest admin confirmation.", at: iso(60_000 * 22) },
+    ]),
+    mk("fr_1003", 1000, 1545, "AGV-1003", "confirmed", 60_000 * 60 * 24, 60_000 * 60 * 23, [
+      { id: "m1", who: "system", t: "Receipt confirmed. 1,000 cUSD credited to your AssetVault.", at: iso(60_000 * 60 * 23) },
+    ]),
   ];
 }
 
