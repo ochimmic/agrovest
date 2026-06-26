@@ -31,7 +31,7 @@ function FarmRemit() {
     <AppShell>
       <div className="px-4 pt-3 space-y-4">
         <div>
-          <h1 className="text-2xl font-semibold text-navy">FarmRemit</h1>
+          <h1 className="text-2xl font-semibold text-navy">GoPay</h1>
           <p className="text-sm text-muted-foreground">
             Peer-to-peer Naira on/off ramp for cUSD. Settled manually with AgroVest escrow.
           </p>
@@ -128,7 +128,7 @@ function FarmRemit() {
 
         <div className="rounded-2xl border border-violet/20 bg-violet-soft/40 p-3 text-[11px] text-navy leading-relaxed">
           <ShieldCheck size={12} className="inline mr-1 text-violet" />
-          FarmRemit is a P2P matching service. AgroVest holds cUSD in escrow during settlement and only releases on
+          GoPay is a P2P matching service. AgroVest holds cUSD in escrow during settlement and only releases on
           verified payment. Chat in each order is auto-deleted 24h after settlement; transaction records are retained.
         </div>
 
@@ -179,7 +179,7 @@ function NewOrderSheet({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-navy">New FarmRemit order</h2>
+          <h2 className="text-base font-semibold text-navy">New GoPay order</h2>
           <button onClick={onClose} className="h-8 w-8 rounded-full bg-secondary grid place-items-center">
             <X size={16} />
           </button>
