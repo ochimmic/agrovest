@@ -138,7 +138,13 @@ function FarmVest() {
 
           {/* Quick actions */}
           <div className="mt-4 grid grid-cols-4 gap-2">
-            <QuickAction to="/invest/farmvest" label="Invest" icon={<Plus size={16} />} />
+            <QuickAction
+              onClick={() => {
+                document.getElementById("explore-farms")?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              label="Invest"
+              icon={<Plus size={16} />}
+            />
             <QuickAction to="/wallet/swap" label="Swap" icon={<RefreshCw size={16} />} />
             <QuickAction to="/wallet/history" label="Txns" icon={<Receipt size={16} />} />
             <QuickAction
@@ -148,6 +154,7 @@ function FarmVest() {
               icon={<FileText size={16} />}
             />
           </div>
+
         </section>
 
         {dash.count > 0 && (
