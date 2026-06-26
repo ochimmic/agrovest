@@ -1,11 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, TrendingUp, Wallet, MessagesSquare, User } from "lucide-react";
+import { Home, TrendingUp, Wallet, Landmark, User } from "lucide-react";
 
 const tabs = [
   { to: "/home", label: "Home", icon: Home },
   { to: "/invest", label: "Invest", icon: TrendingUp },
   { to: "/vault", label: "Vault", icon: Wallet },
-  { to: "/prichat", label: "GoPay", icon: MessagesSquare },
+  { to: "/prichat", label: "GoPay", icon: Landmark },
   { to: "/profile", label: "Profile", icon: User },
 ];
 

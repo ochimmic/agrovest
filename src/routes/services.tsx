@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Megaphone, Send, Store } from "lucide-react";
+import { Megaphone, Landmark, Store } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 
 export const Route = createFileRoute("/services")({ component: Services });
@@ -15,9 +15,9 @@ function Services() {
           <p className="text-xs text-white/70">Marketing & Promotion experts, certified by AgroVest.</p>
         </Link>
         <div className="rounded-3xl border border-border bg-card p-5">
-          <Send size={18} className="text-violet" />
+          <Landmark size={18} className="text-violet" />
           <p className="mt-2 font-semibold text-navy">GoPay</p>
-          <p className="text-xs text-muted-foreground">Cross-border remittance for agribusiness — coming soon.</p>
+          <p className="text-xs text-muted-foreground">Bank transfer top-up — pay NGN, get cUSD after admin confirmation.</p>
         </div>
         <div className="rounded-3xl border border-border bg-card p-5 opacity-75">
           <Store size={18} className="text-agro" />
