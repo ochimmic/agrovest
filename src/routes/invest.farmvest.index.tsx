@@ -95,12 +95,27 @@ function FarmVest() {
           {/* Yield chart */}
           <div className="mt-4 rounded-2xl bg-white/10 p-3">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] text-white/70">Projected yield · {range}</p>
+              <p className="text-[11px] text-white/70">Projected value · {range}</p>
               <p className="text-[11px] font-medium text-emerald-300">
                 +${Math.max(0, Math.round(series[series.length - 1] - series[0])).toLocaleString()}
               </p>
             </div>
-            <YieldChart data={series} />
+            <YieldChart data={series} years={years} />
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-white/70">
+              <span className="inline-flex items-center gap-1">
+                <span className="h-1.5 w-3 rounded-full bg-white/35" /> Maturation (Y1–2)
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="h-1.5 w-3 rounded-full bg-amber-300/80" /> Y3 · 20% locked
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="h-1.5 w-3 rounded-full bg-emerald-300" /> Y4+ withdrawable
+              </span>
+            </div>
+            <p className="mt-2 text-[10px] text-white/60 leading-snug">
+              Yield: Y3 20% (locked) → Y4 30% → Y5 40% → Y6+ 50% per year. Withdrawals begin Year 4
+              (Y3 unlocks with the Y4 distribution).
+            </p>
             <div className="mt-2 flex gap-1.5">
               {ranges.map((r) => (
                 <button
@@ -115,6 +130,7 @@ function FarmVest() {
               ))}
             </div>
           </div>
+
 
           {/* Quick actions */}
           <div className="mt-4 grid grid-cols-4 gap-2">
