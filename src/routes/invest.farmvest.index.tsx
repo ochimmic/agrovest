@@ -171,7 +171,8 @@ function FarmVest() {
                     <div
                       className={`h-10 w-10 rounded-xl bg-gradient-to-br ${
                         asset?.cover ?? "from-agro to-emerald-700"
-                      }`}
+                      } bg-cover bg-center`}
+                      style={asset?.image ? { backgroundImage: `url(${asset.image})` } : undefined}
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-navy truncate">{h.name}</p>
