@@ -31,7 +31,7 @@ export type InvestmentPurpose = {
   kind: "investment";
   assetId: string;
   assetName: string;
-  category: string;
+  category: "palm" | "cocoa" | "latex";
   unit: "plot" | "acre" | "hectare";
   qty: number;
 };

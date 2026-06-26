@@ -20,7 +20,7 @@ export type Holding = {
 
 export type Tx = {
   id: string;
-  type: "invest" | "swap" | "receive" | "send" | "reward";
+  type: "invest" | "swap" | "receive" | "send" | "reward" | "topup";
   amount: number;
   token: string;
   status: "pending" | "confirmed";
