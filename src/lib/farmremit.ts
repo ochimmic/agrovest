@@ -142,18 +142,13 @@ function hydrate(orders: FRorder[]): FRorder[] {
 }
 
 function load(): S {
-  if (typeof window === "undefined") return { orders: seed() };
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return { orders: seed() };
-    const parsed = JSON.parse(raw) as S;
-    return { orders: hydrate(parsed.orders ?? []) };
-  } catch {
-    return { orders: seed() };
-  }
+  // Always start from the deterministic seed so SSR and the first client
+  // render match. localStorage is read after mount via hydrateFromStorage().
+  return { orders: seed() };
 }
 
 let s: S = load();
+let hydrated = false;
 const listeners = new Set<() => void>();
 function persist() {
   if (typeof window === "undefined") return;
@@ -161,7 +156,22 @@ function persist() {
 }
 function emit() { listeners.forEach((l) => l()); }
 
+function hydrateFromStorage() {
+  if (hydrated || typeof window === "undefined") return;
+  hydrated = true;
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw) as S;
+    s = { orders: hydrate(parsed.orders ?? []) };
+    emit();
+  } catch {}
+}
+
 export function useFarmRemit<T>(sel: (s: S) => T): T {
+  if (typeof window !== "undefined" && !hydrated) {
+    queueMicrotask(hydrateFromStorage);
+  }
   return useSyncExternalStore(
     (cb) => { listeners.add(cb); return () => listeners.delete(cb); },
     () => sel(s),
