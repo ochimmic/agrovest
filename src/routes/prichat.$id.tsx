@@ -303,6 +303,30 @@ function OrderRoom() {
   );
 }
 
+function CopyAccountButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+  const onCopy = async () => {
+    try {
+      await navigator.clipboard?.writeText(value);
+      setCopied(true);
+      toast.success("Account number copied");
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      toast.error("Couldn't copy — copy it manually");
+    }
+  };
+  return (
+    <button
+      onClick={onCopy}
+      className={`w-full flex items-center justify-center gap-2 rounded-2xl py-2.5 text-xs font-semibold transition-colors ${
+        copied ? "bg-agro text-white" : "bg-violet text-white hover:bg-violet/90"
+      }`}
+    >
+      {copied ? <><CheckCircle2 size={14} /> Copied {value}</> : <><Copy size={14} /> Copy account number</>}
+    </button>
+  );
+}
+
 function Row({ k, v, bold, copy }: { k: string; v: string; bold?: boolean; copy?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-2">
@@ -406,6 +430,10 @@ function ExpiringAccountCard({ ngn, account, settled }: { ngn: number; account: 
         <Row k="Account name" v={account.accountName} />
         <Row k="Expires" v={expiresLabel} />
       </div>
+
+      {!expired && !settled && (
+        <CopyAccountButton value={account.accountNumber} />
+      )}
 
       {expired && (
         <button
