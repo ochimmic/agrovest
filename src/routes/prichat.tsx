@@ -136,8 +136,10 @@ function GoPay() {
           onCreate={(amount) => {
             const o = createOrder({ amountUsd: amount, rate: NGN_PER_USD });
             setShowNew(false);
-            toast.success(`Order ${o.reference} opened`);
-            nav({ to: "/prichat/$id", params: { id: o.id } });
+            // Navigate to the Order Room (one-time account + tracker) immediately.
+            void nav({ to: "/prichat/$id", params: { id: o.id } }).then(() => {
+              toast.success(`Order ${o.reference} opened — transfer to the one-time account below.`);
+            });
           }}
         />
       )}
