@@ -191,7 +191,7 @@ function Detail() {
         </section>
 
         <p className="text-[10px] text-muted-foreground text-center">
-          Projected values are estimates based on available asset information and market assumptions.
+          Projected values are estimates based on available asset information and market projections.
           Actual results may vary.
         </p>
       </main>
