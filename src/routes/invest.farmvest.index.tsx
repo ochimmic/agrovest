@@ -225,7 +225,8 @@ function FarmVest() {
             const cs = a.comingSoon;
             const Card = (
               <div className={`block rounded-3xl border border-border bg-card overflow-hidden shadow-card ${cs ? "opacity-95" : ""}`}>
-                <div className={`h-32 bg-gradient-to-br ${a.cover} relative`}>
+                <div className={`h-32 bg-gradient-to-br ${a.cover} relative bg-cover bg-center`} style={a.image ? { backgroundImage: `url(${a.image})` } : undefined}>
+                  {a.image && <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />}
                   <div className="absolute top-2 left-2 flex gap-1.5">
                     <span className="rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-medium text-[oklch(0.27_0.07_268)]">
                       {a.status}
