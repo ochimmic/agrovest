@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowLeft, Send, Lock, Flag, Upload, CheckCircle2, AlertTriangle, Copy, Phone, MessageCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Send, Lock, Flag, Upload, CheckCircle2, AlertTriangle, Copy, Phone, MessageCircle, Clock, TimerReset } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { AgroBadge } from "@/components/ui/agro-badge";
@@ -151,25 +151,11 @@ function OrderRoom() {
 
         {/* One-time AgroVest Bank account */}
         {order.virtualAccount && (
-          <section className="rounded-3xl border border-violet/30 bg-card p-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-navy">One-time account number</h3>
-              <AgroBadge tone="violet" size="xs">Single use</AgroBadge>
-            </div>
-            <p className="text-[11px] text-muted-foreground">
-              Transfer <b>₦{ngn.toLocaleString()}</b> to this AgroVest Bank account.
-              It's unique to this order and closes after settlement or expiry.
-            </p>
-            <div className="rounded-2xl bg-secondary p-3 space-y-2">
-              <Row k="Bank" v={order.virtualAccount.bank} />
-              <Row k="Account number" v={order.virtualAccount.accountNumber} bold copy />
-              <Row k="Account name" v={order.virtualAccount.accountName} />
-              <Row
-                k="Expires"
-                v={new Date(order.virtualAccount.expiresAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-              />
-            </div>
-          </section>
+          <ExpiringAccountCard
+            ngn={ngn}
+            account={order.virtualAccount}
+            settled={order.status === "confirmed" || order.status === "admin_review" || order.status === "receipt_uploaded"}
+          />
         )}
 
         {/* Action by status */}
@@ -317,5 +303,101 @@ function Row({ k, v, bold, copy }: { k: string; v: string; bold?: boolean; copy?
         )}
       </div>
     </div>
+  );
+}
+
+type VAccount = { bank: string; accountNumber: string; accountName: string; expiresAt: string };
+
+function ExpiringAccountCard({ ngn, account, settled }: { ngn: number; account: VAccount; settled: boolean }) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const expiresMs = new Date(account.expiresAt).getTime();
+  const totalMs = Math.max(0, expiresMs - now);
+  const expired = totalMs <= 0 && !settled;
+  const mins = Math.floor(totalMs / 60000);
+  const secs = Math.floor((totalMs % 60000) / 1000);
+  const mmss = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  const urgent = totalMs > 0 && totalMs < 5 * 60_000;
+
+  const tone = settled ? "agro" : expired ? "danger" : urgent ? "amber" : "violet";
+  const expiresLabel = new Date(account.expiresAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  return (
+    <section
+      className={`rounded-3xl border bg-card p-4 space-y-3 ${
+        expired ? "border-destructive/40" : urgent ? "border-warn/40" : "border-violet/30"
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-navy">One-time account number</h3>
+        <AgroBadge tone={tone as never} size="xs">
+          {settled ? "Used" : expired ? "Expired" : "Single use"}
+        </AgroBadge>
+      </div>
+
+      {/* Countdown */}
+      <div
+        className={`flex items-center justify-between rounded-2xl px-3 py-2.5 ${
+          settled
+            ? "bg-agro-soft/40"
+            : expired
+              ? "bg-destructive/10"
+              : urgent
+                ? "bg-warn/10"
+                : "bg-violet-soft/40"
+        }`}
+      >
+        <div className="flex items-center gap-2 text-xs text-navy">
+          <Clock size={14} className={expired ? "text-destructive" : urgent ? "text-warn" : "text-violet"} />
+          <span className="font-medium">
+            {settled ? "Account closed — payment received" : expired ? "Account expired" : "Expires in"}
+          </span>
+        </div>
+        {!settled && !expired && (
+          <span className={`tabular text-base font-bold ${urgent ? "text-warn" : "text-violet"}`}>
+            {mmss}
+          </span>
+        )}
+        {expired && (
+          <span className="text-[11px] font-semibold text-destructive">at {expiresLabel}</span>
+        )}
+      </div>
+
+      {expired ? (
+        <p className="text-[11px] text-destructive">
+          This one-time account is no longer valid. Don't send funds to it. Generate a new account to
+          continue — your order stays open.
+        </p>
+      ) : settled ? (
+        <p className="text-[11px] text-muted-foreground">
+          AgroVest has detected the transfer. The account is now closed; no further deposits will be accepted.
+        </p>
+      ) : (
+        <p className="text-[11px] text-muted-foreground">
+          Transfer <b>₦{ngn.toLocaleString()}</b> to this AgroVest Bank account before it auto-expires
+          at <b>{expiresLabel}</b>. It's unique to this order and closes after settlement or expiry.
+        </p>
+      )}
+
+      <div className={`rounded-2xl bg-secondary p-3 space-y-2 ${expired ? "opacity-60" : ""}`}>
+        <Row k="Bank" v={account.bank} />
+        <Row k="Account number" v={account.accountNumber} bold copy />
+        <Row k="Account name" v={account.accountName} />
+        <Row k="Expires" v={expiresLabel} />
+      </div>
+
+      {expired && (
+        <button
+          onClick={() => toast.success("Requested a fresh one-time account. AgroVest is generating it now.")}
+          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-violet text-white py-2.5 text-xs font-semibold"
+        >
+          <TimerReset size={14} /> Request new account
+        </button>
+      )}
+    </section>
   );
 }
