@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, Send, Lock, Flag, Upload, CheckCircle2, AlertTriangle, Copy } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
@@ -16,7 +16,6 @@ const stages = ["awaiting_payment", "receipt_uploaded", "admin_review", "confirm
 
 function OrderRoom() {
   const { id } = Route.useParams();
-  const nav = useNavigate();
   const order = useFarmRemit((s) => s.orders.find((o) => o.id === id));
   const [msg, setMsg] = useState("");
 
@@ -30,7 +29,7 @@ function OrderRoom() {
     );
   }
 
-  const stepIdx = Math.max(0, stages.indexOf(order.status as any));
+  const stepIdx = Math.max(0, stages.indexOf(order.status as typeof stages[number]));
   const ngn = order.amountUsd * order.rate;
 
   function send() {
@@ -45,15 +44,15 @@ function OrderRoom() {
         <Link to="/prichat" className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center"><ArrowLeft size={18} /></Link>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-navy truncate">
-            {order.side === "buy" ? "Buy" : "Sell"} ${order.amountUsd.toLocaleString()} cUSD
+            Buy ${order.amountUsd.toLocaleString()} cUSD
           </p>
           <p className="text-[11px] text-muted-foreground flex items-center gap-1">
-            <Lock size={10} /> {order.peer} · {order.id.replace("fr_", "#")}
+            <Lock size={10} /> AgroVest · {order.reference ?? order.id.replace("fr_", "#")}
           </p>
         </div>
         <AgroBadge tone={statusTone[order.status]} size="xs">{statusLabel[order.status]}</AgroBadge>
         <button
-          onClick={() => { advance(order.id, "disputed", "Buyer opened a dispute."); toast.warning("Dispute opened. AgroVest review queued."); }}
+          onClick={() => { advance(order.id, "disputed", "User opened a dispute."); toast.warning("Dispute opened. AgroVest review queued."); }}
           className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center text-warn"
         >
           <Flag size={14} />
@@ -86,22 +85,23 @@ function OrderRoom() {
           <Row k="Amount" v={`$${order.amountUsd.toLocaleString()} cUSD`} bold />
           <Row k="In Naira" v={`₦${ngn.toLocaleString()}`} />
           <Row k="Rate" v={`₦${order.rate}/USD`} />
-          <Row k={order.side === "buy" ? "Pay to" : "Receive at"} v={order.bank ?? "—"} copy />
+          <Row k="Pay to" v={order.bank ?? "—"} copy />
           {order.reference && <Row k="Reference" v={order.reference} copy />}
+          {order.purpose && <Row k="Funds" v={order.purpose.assetName} />}
         </section>
 
         {/* Action by status */}
-        {order.status === "awaiting_payment" && order.side === "buy" && (
+        {order.status === "awaiting_payment" && (
           <section className="rounded-3xl border border-violet/20 bg-violet-soft/40 p-4 space-y-3">
             <h3 className="text-sm font-semibold text-navy">Confirm your transfer</h3>
             <p className="text-xs text-muted-foreground">
-              Send <b>₦{ngn.toLocaleString()}</b> to the seller's bank with reference <b>{order.reference}</b>.
-              Upload your receipt below — AgroVest verifies before releasing cUSD.
+              Send <b>₦{ngn.toLocaleString()}</b> to AgroVest with reference <b>{order.reference}</b>.
+              Upload your receipt below — AgroVest admin verifies it before crediting cUSD to your AssetVault.
             </p>
             <button
               onClick={() => {
                 uploadReceipt(order.id, "mock://receipt.pdf");
-                toast.success("Receipt uploaded — under review");
+                toast.success("Receipt uploaded — awaiting AgroVest confirmation");
               }}
               className="w-full flex items-center justify-center gap-2 rounded-2xl bg-violet text-white py-3 text-sm font-medium"
             >
@@ -110,37 +110,25 @@ function OrderRoom() {
           </section>
         )}
 
-        {order.status === "awaiting_payment" && order.side === "sell" && (
-          <section className="rounded-3xl border border-violet/20 bg-violet-soft/40 p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-navy">Awaiting buyer payment</h3>
-            <p className="text-xs text-muted-foreground">
-              Your cUSD is locked in escrow. Once the buyer uploads a payment receipt, AgroVest verifies and
-              releases NGN to your payout bank.
-            </p>
-            <AgroButton
-              size="md"
-              onClick={() => advance(order.id, "admin_review", "Seller flagged payment received.")}
-            >
-              I've received the funds — confirm
-            </AgroButton>
-          </section>
-        )}
-
         {order.status === "admin_review" && (
           <section className="rounded-3xl border border-border bg-card p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-navy">AgroVest is verifying</h3>
+            <h3 className="text-sm font-semibold text-navy">AgroVest is verifying your receipt</h3>
             <p className="text-xs text-muted-foreground">
-              Typical review takes 5–30 minutes during banking hours. You'll get a notification the moment it
-              settles.
+              Typical confirmation takes 5–30 minutes during banking hours. You'll get a notification
+              the moment cUSD is credited to your AssetVault.
             </p>
             <AgroButton
               size="md"
               onClick={() => {
-                advance(order.id, "confirmed", `Settled · ${order.side === "buy" ? `${order.amountUsd} cUSD released to your AssetVault` : `₦${ngn.toLocaleString()} sent to your payout bank`}.`);
-                toast.success("Order settled");
+                advance(
+                  order.id,
+                  "confirmed",
+                  `Receipt confirmed by AgroVest · ${order.amountUsd} cUSD credited to your AssetVault${order.purpose ? ` and applied to ${order.purpose.assetName}` : ""}.`,
+                );
+                toast.success("Receipt confirmed");
               }}
             >
-              Simulate admin approval
+              Simulate admin confirmation
             </AgroButton>
           </section>
         )}
@@ -151,9 +139,8 @@ function OrderRoom() {
               <CheckCircle2 size={14} className="text-agro" /> Settled
             </h3>
             <p className="mt-1 text-xs text-muted-foreground">
-              {order.side === "buy"
-                ? `${order.amountUsd} cUSD credited to your AssetVault.`
-                : `₦${ngn.toLocaleString()} sent to your payout bank.`}
+              {order.amountUsd} cUSD credited to your AssetVault
+              {order.purpose ? ` and applied to ${order.purpose.assetName}.` : "."}
             </p>
           </section>
         )}
@@ -171,7 +158,7 @@ function OrderRoom() {
 
         {/* Chat */}
         <section>
-          <h3 className="mb-2 text-[11px] uppercase tracking-wide text-muted-foreground">Conversation</h3>
+          <h3 className="mb-2 text-[11px] uppercase tracking-wide text-muted-foreground">Conversation with AgroVest</h3>
           <div className="space-y-2">
             {order.messages.map((m) => (
               <div
@@ -196,7 +183,7 @@ function OrderRoom() {
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder={order.status === "confirmed" ? "Order closed — message peer" : "Message your peer"}
+          placeholder={order.status === "confirmed" ? "Order closed — message AgroVest" : "Message AgroVest support"}
           className="flex-1 h-11 rounded-full border border-input bg-card px-4 text-sm outline-none focus:border-violet"
         />
         <button onClick={send} className="h-11 w-11 rounded-full gradient-violet text-white flex items-center justify-center shadow-glow">
