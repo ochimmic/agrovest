@@ -201,7 +201,7 @@ function FarmVest() {
           </section>
         )}
 
-        <h2 className="mt-6 text-sm font-semibold text-navy">Explore farms</h2>
+        <h2 id="explore-farms" className="mt-6 scroll-mt-20 text-sm font-semibold text-navy">Explore farms</h2>
 
         <div className="mt-3 flex items-center gap-2 rounded-2xl border border-border bg-card px-3 h-11">
           <Search size={16} className="text-muted-foreground" />
