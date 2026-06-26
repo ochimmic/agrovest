@@ -131,12 +131,23 @@ function seed(): FRorder[] {
   ];
 }
 
+function hydrate(orders: FRorder[]): FRorder[] {
+  // Backfill virtualAccount for orders persisted before the one-time
+  // account feature shipped so the Order Room always shows it.
+  return orders.map((o) =>
+    o.virtualAccount
+      ? o
+      : { ...o, virtualAccount: makeVirtualAccount(o.id, o.createdAt ?? new Date().toISOString()) },
+  );
+}
+
 function load(): S {
   if (typeof window === "undefined") return { orders: seed() };
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return { orders: seed() };
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw) as S;
+    return { orders: hydrate(parsed.orders ?? []) };
   } catch {
     return { orders: seed() };
   }
