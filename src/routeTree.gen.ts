@@ -31,6 +31,7 @@ import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as BrokerRouteImport } from './routes/broker'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PrichatIndexRouteImport } from './routes/prichat.index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as WalletSwapRouteImport } from './routes/wallet.swap'
@@ -175,6 +176,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PrichatIndexRoute = PrichatIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PrichatRoute,
 } as any)
 const InvestIndexRoute = InvestIndexRouteImport.update({
   id: '/invest/',
@@ -397,6 +403,7 @@ export interface FileRoutesByFullPath {
   '/wallet/swap': typeof WalletSwapRoute
   '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
+  '/prichat/': typeof PrichatIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -419,7 +426,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/partner': typeof PartnerRoute
-  '/prichat': typeof PrichatRouteWithChildren
   '/profile': typeof ProfileRoute
   '/role-select': typeof RoleSelectRoute
   '/security': typeof SecurityRoute
@@ -455,6 +461,7 @@ export interface FileRoutesByTo {
   '/wallet/swap': typeof WalletSwapRoute
   '/admin': typeof AdminIndexRoute
   '/invest': typeof InvestIndexRoute
+  '/prichat': typeof PrichatIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -514,6 +521,7 @@ export interface FileRoutesById {
   '/wallet/swap': typeof WalletSwapRoute
   '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
+  '/prichat/': typeof PrichatIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -574,6 +582,7 @@ export interface FileRouteTypes {
     | '/wallet/swap'
     | '/admin/'
     | '/invest/'
+    | '/prichat/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -596,7 +605,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/partner'
-    | '/prichat'
     | '/profile'
     | '/role-select'
     | '/security'
@@ -632,6 +640,7 @@ export interface FileRouteTypes {
     | '/wallet/swap'
     | '/admin'
     | '/invest'
+    | '/prichat'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -690,6 +699,7 @@ export interface FileRouteTypes {
     | '/wallet/swap'
     | '/admin/'
     | '/invest/'
+    | '/prichat/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -905,6 +915,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/prichat/': {
+      id: '/prichat/'
+      path: '/'
+      fullPath: '/prichat/'
+      preLoaderRoute: typeof PrichatIndexRouteImport
+      parentRoute: typeof PrichatRoute
     }
     '/invest/': {
       id: '/invest/'
@@ -1160,10 +1177,12 @@ const BrokerRouteWithChildren =
 
 interface PrichatRouteChildren {
   PrichatIdRoute: typeof PrichatIdRoute
+  PrichatIndexRoute: typeof PrichatIndexRoute
 }
 
 const PrichatRouteChildren: PrichatRouteChildren = {
   PrichatIdRoute: PrichatIdRoute,
+  PrichatIndexRoute: PrichatIndexRoute,
 }
 
 const PrichatRouteWithChildren =

@@ -47,7 +47,7 @@ function Checkout() {
       }, 1200);
       return;
     }
-    // Bank transfer → open a GoPay order tied to this investment.
+    // Bank transfer → open an Order Room and deep-link to its one-time account.
     const order = createOrder({
       amountUsd: p.final,
       rate: NGN_PER_USD,
@@ -60,8 +60,13 @@ function Checkout() {
         qty,
       },
     });
-    toast.success(`Bank transfer order ${order.reference} opened in GoPay`);
-    nav({ to: "/prichat/$id", params: { id: order.id } });
+    void nav({
+      to: "/prichat/$id",
+      params: { id: order.id },
+      hash: "one-time-account",
+    }).then(() => {
+      toast.success(`Bank transfer order ${order.reference} opened — use the one-time account below.`);
+    });
   }
 
   return (
