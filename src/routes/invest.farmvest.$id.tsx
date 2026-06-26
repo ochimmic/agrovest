@@ -67,8 +67,8 @@ function Detail() {
       <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
         <div className="flex items-center justify-between gap-2">
           <NotAdviceBadge size="xs" />
-          <RiskBadge level={asset.risk} />
         </div>
+
 
         {asset.comingSoon && (
           <section className="rounded-3xl border border-violet/20 bg-violet-soft/40 p-4">
