@@ -152,14 +152,15 @@ function PropertyDetail() {
   );
 }
 
-function Row({ k, v, bold }: { k: string; v: string; bold?: boolean }) {
+function RowM({ k, usd, bold, muted }: { k: string; usd: number; bold?: boolean; muted?: boolean }) {
   return (
-    <div className="flex justify-between">
+    <div className="flex items-center justify-between">
       <span className="text-muted-foreground">{k}</span>
-      <span className={`tabular ${bold ? "font-semibold text-navy" : "text-navy"}`}>{v}</span>
+      <Money usd={usd} layout="inline" size={bold ? "md" : "sm"} emphasis={muted ? "muted" : "primary"} />
     </div>
   );
 }
+
 function PayOption({ label, sub, active }: { label: string; sub: string; active?: boolean }) {
   return (
     <div className={`flex items-center gap-3 rounded-2xl border p-3 ${active ? "border-violet bg-violet-soft/30" : "border-border"}`}>
