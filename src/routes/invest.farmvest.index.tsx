@@ -339,7 +339,7 @@ function QuickAction({
 }
 
 
-function YieldChart({ data }: { data: number[] }) {
+function YieldChart({ data, years }: { data: number[]; years: number }) {
   const w = 300;
   const h = 90;
   const min = Math.min(...data);
@@ -349,16 +349,55 @@ function YieldChart({ data }: { data: number[] }) {
   const pts = data.map((v, i) => [i * step, h - ((v - min) / span) * (h - 8) - 4] as const);
   const path = pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
   const area = `${path} L${w},${h} L0,${h} Z`;
+  const yearX = (y: number) => (y / years) * w;
+  // Maturation band Y0–Y2, locked band Y2–Y3
+  const maturationW = Math.min(w, yearX(2));
+  const lockStart = Math.min(w, yearX(2));
+  const lockW = Math.max(0, Math.min(w, yearX(3)) - lockStart);
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="mt-2 h-20 w-full">
+    <svg viewBox={`0 0 ${w} ${h}`} className="mt-2 h-20 w-full" preserveAspectRatio="none">
       <defs>
         <linearGradient id="yg" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor="rgb(110 231 183)" stopOpacity="0.45" />
           <stop offset="100%" stopColor="rgb(110 231 183)" stopOpacity="0" />
         </linearGradient>
       </defs>
+      {maturationW > 0 && (
+        <rect x={0} y={0} width={maturationW} height={h} fill="rgba(255,255,255,0.06)" />
+      )}
+      {lockW > 0 && (
+        <rect x={lockStart} y={0} width={lockW} height={h} fill="rgba(252,211,77,0.12)" />
+      )}
+      {/* Year gridlines */}
+      {Array.from({ length: years - 1 }, (_, i) => i + 1).map((y) => (
+        <line
+          key={y}
+          x1={yearX(y)}
+          x2={yearX(y)}
+          y1={0}
+          y2={h}
+          stroke="rgba(255,255,255,0.08)"
+          strokeDasharray="2 3"
+        />
+      ))}
       <path d={area} fill="url(#yg)" />
       <path d={path} fill="none" stroke="rgb(110 231 183)" strokeWidth="2" strokeLinecap="round" />
+      {/* Year labels */}
+      {Array.from({ length: years + 1 }, (_, y) => y)
+        .filter((y) => y === 0 || y === 3 || y === years || y % Math.max(1, Math.round(years / 4)) === 0)
+        .map((y) => (
+          <text
+            key={`lbl-${y}`}
+            x={Math.min(w - 8, Math.max(8, yearX(y)))}
+            y={h - 2}
+            fontSize="8"
+            textAnchor="middle"
+            fill="rgba(255,255,255,0.55)"
+          >
+            Y{y}
+          </text>
+        ))}
     </svg>
   );
 }
+
