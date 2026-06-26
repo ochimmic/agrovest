@@ -216,11 +216,17 @@ function Pill({ k, v, icon }: { k: string; v: string; icon?: any }) {
     </div>
   );
 }
-function Row({ k, v, bold, accent }: { k: string; v: string; bold?: boolean; accent?: boolean }) {
+function RowMoney({ k, usd, bold, accent, muted }: { k: string; usd: number; bold?: boolean; accent?: boolean; muted?: boolean }) {
   return (
     <div className="flex items-center justify-between">
       <span className="text-muted-foreground">{k}</span>
-      <span className={`tabular ${bold ? "font-semibold text-navy" : accent ? "text-agro font-medium" : "text-navy"}`}>{v}</span>
+      <Money
+        usd={usd}
+        layout="inline"
+        size={bold ? "md" : "sm"}
+        emphasis={accent ? "agro" : muted ? "muted" : "primary"}
+      />
     </div>
   );
 }
+
