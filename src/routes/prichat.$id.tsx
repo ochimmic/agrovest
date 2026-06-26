@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/prichat/$id")({ component: OrderRoom });
 
-const stages = ["awaiting_payment", "receipt_uploaded", "admin_review", "confirmed"] as const;
+
 
 const trackerSteps = [
   {
