@@ -234,6 +234,7 @@ function OrderRoom() {
 
       <div className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center gap-2">
         <input
+          id="gopay-chat-input"
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send()}
