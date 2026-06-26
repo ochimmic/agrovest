@@ -6,7 +6,9 @@ import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { farmAssets, priceFor } from "@/lib/mock-data";
 import { addHolding, addTx } from "@/lib/store";
+import { Money } from "@/components/ui/money";
 import { toast } from "sonner";
+
 
 const search = z.object({
   unit: z.enum(["plot", "acre", "hectare"]).default("plot"),
@@ -56,13 +58,15 @@ function Checkout() {
         </div>
 
         <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
-          <Row k="Base" v={`$${p.base.toLocaleString()}`} />
-          <Row k="Platform fee" v={`$${p.platformFee.toLocaleString()}`} />
-          <Row k="Network fee" v={`$${p.networkFee.toLocaleString()}`} />
-          {p.discount > 0 && <Row k="Discount" v={`− $${p.discount.toLocaleString()}`} accent />}
+          <RowM k="Base" usd={p.base} />
+          <RowM k="Platform fee (3%)" usd={p.platformFee} />
+          <RowM k="Network fee" usd={p.networkFee} />
+          <RowM k="Escrow reserve (20%, held)" usd={p.escrowReserve} muted />
+          {p.discount > 0 && <RowM k="Discount" usd={-p.discount} accent />}
           <div className="border-t border-border my-1" />
-          <Row k="Total" v={`$${p.final.toLocaleString()}`} bold />
+          <RowM k="Total" usd={p.final} bold />
         </div>
+
 
         <div className="rounded-3xl border border-border bg-card p-4">
           <h2 className="text-sm font-semibold text-navy">Pay with</h2>
@@ -80,8 +84,9 @@ function Checkout() {
 
       <div className="border-t border-border p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <AgroButton size="xl" onClick={pay} disabled={paying}>
-          {paying ? "Confirming…" : `Confirm & pay $${p.final.toLocaleString()}`}
+          {paying ? "Confirming…" : `Confirm & pay $${p.final.toLocaleString()} · ≈ ₦${(p.final * 1550).toLocaleString()}`}
         </AgroButton>
+
       </div>
     </MobileFrame>
   );
