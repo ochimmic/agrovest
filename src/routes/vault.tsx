@@ -149,8 +149,8 @@ function Vault() {
         <section>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-navy">African Markets</h2>
-              <span className="rounded-full bg-agro/15 px-2 py-0.5 text-[10px] font-medium text-agro">🌍 Africa</span>
+              <h2 className="text-sm font-semibold text-navy">New Listing</h2>
+              <span className="rounded-full bg-agro/15 px-2 py-0.5 text-[10px] font-medium text-agro">Fresh</span>
             </div>
             <span className="text-[10px] text-muted-foreground">Informational</span>
           </div>
