@@ -124,7 +124,7 @@ function PropertyDetail() {
               <div className="mt-3 space-y-2">
                 <PayOption label="$CLYST Wallet" sub="On Binance Smart Chain" active />
                 <PayOption label="Card / Bank transfer" sub="Connect to fiat ramp" />
-                <PayOption label="FarmRemit (NGN P2P)" sub="Pay in Naira via verified peers" />
+                <PayOption label="GoPay (NGN P2P)" sub="Pay in Naira via verified peers" />
               </div>
             </div>
 

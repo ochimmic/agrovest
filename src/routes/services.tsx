@@ -16,7 +16,7 @@ function Services() {
         </Link>
         <div className="rounded-3xl border border-border bg-card p-5">
           <Send size={18} className="text-violet" />
-          <p className="mt-2 font-semibold text-navy">FarmRemit</p>
+          <p className="mt-2 font-semibold text-navy">GoPay</p>
           <p className="text-xs text-muted-foreground">Cross-border remittance for agribusiness — coming soon.</p>
         </div>
         <div className="rounded-3xl border border-border bg-card p-5 opacity-75">
