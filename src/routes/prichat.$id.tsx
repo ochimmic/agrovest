@@ -59,7 +59,6 @@ function OrderRoom() {
     );
   }
 
-  const stepIdx = Math.max(0, stages.indexOf(order.status as typeof stages[number]));
   const ngn = order.amountUsd * order.rate;
 
   function send() {
