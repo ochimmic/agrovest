@@ -310,25 +310,38 @@ function DashStat({ icon, k, v }: { icon: React.ReactNode; k: string; v: string 
 function QuickAction({
   to,
   params,
+  onClick,
   label,
   icon,
 }: {
-  to: string;
+  to?: string;
   params?: Record<string, string>;
+  onClick?: () => void;
   label: string;
   icon: React.ReactNode;
 }) {
-  return (
-    <Link
-      to={to as any}
-      params={params as any}
-      className="flex flex-col items-center justify-center gap-1 rounded-2xl bg-white/10 py-3 text-white text-[11px] font-medium hover:bg-white/15 transition"
-    >
+  const className =
+    "flex flex-col items-center justify-center gap-1 rounded-2xl bg-white/10 py-3 text-white text-[11px] font-medium hover:bg-white/15 transition";
+  const inner = (
+    <>
       <span className="h-8 w-8 grid place-items-center rounded-full bg-white/15">{icon}</span>
       {label}
-    </Link>
+    </>
+  );
+  if (to) {
+    return (
+      <Link to={to as any} params={params as any} className={className}>
+        {inner}
+      </Link>
+    );
+  }
+  return (
+    <button type="button" onClick={onClick} className={className}>
+      {inner}
+    </button>
   );
 }
+
 
 function YieldChart({ data }: { data: number[] }) {
   const w = 300;
