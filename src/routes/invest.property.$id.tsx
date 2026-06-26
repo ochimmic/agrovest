@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, ShieldCheck, FileText, AlertTriangle, Lock, Check } from "lucide-react";
+import { ArrowLeft, ShieldCheck, FileText, AlertTriangle, Lock, Check, Info } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
-import { properties } from "@/lib/mock-data";
+import { Money } from "@/components/ui/money";
+import { properties, propertyFees } from "@/lib/mock-data";
 import { addHolding, addTx, getState } from "@/lib/store";
 import { toast } from "sonner";
+import { EscrowReserveBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/invest/property/$id")({ component: PropertyDetail });
 
@@ -16,9 +18,9 @@ function PropertyDetail() {
   const [step, setStep] = useState<"detail" | "checkout">("detail");
   const [paying, setPaying] = useState(false);
 
-  const platformFee = Math.round(p.price * 0.02);
-  const networkFee = Math.round(p.price * 0.005);
-  const total = p.price + platformFee + networkFee;
+  const fees = propertyFees(p.price);
+  const { platformFee, escrowReserve, total } = fees;
+
 
   function start() {
     if (getState().kyc !== "approved") {
