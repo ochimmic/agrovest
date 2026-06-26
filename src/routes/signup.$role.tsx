@@ -13,7 +13,7 @@ const requirements: Record<Role, string[]> = {
   investor: [
     "Full legal name", "Email / phone", "Password", "Country & nationality",
     "Date of birth", "Government ID", "Face verification", "Address",
-    "Risk + custody acceptance", "Wallet setup",
+    "T&C, AML", "Wallet setup",
   ],
   vendor: [
     "Full legal name", "Business name (if any)", "Email / phone", "Password",
