@@ -98,7 +98,47 @@ function OrderRoom() {
       </header>
 
       <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
-        {/* Stepper */}
+        {/* Step-by-step tracker */}
+        <ol className="rounded-3xl border border-border bg-card p-4">
+          {trackerSteps.map((step, i) => {
+            const reached = trackerIndex(order.status) > i;
+            const active = trackerIndex(order.status) === i + 1 && order.status !== "confirmed";
+            const isLast = i === trackerSteps.length - 1;
+            return (
+              <li key={step.key} className="relative flex gap-3">
+                <div className="flex flex-col items-center">
+                  <span
+                    className={`h-8 w-8 rounded-full grid place-items-center text-[11px] font-semibold ring-4 ${
+                      reached
+                        ? "bg-agro text-white ring-agro/15"
+                        : active
+                          ? "bg-violet text-white ring-violet/20"
+                          : "bg-secondary text-muted-foreground ring-transparent"
+                    }`}
+                  >
+                    {reached ? <CheckCircle2 size={15} /> : i + 1}
+                  </span>
+                  {!isLast && (
+                    <span
+                      className={`w-0.5 flex-1 my-1 ${reached ? "bg-agro" : "bg-border"}`}
+                    />
+                  )}
+                </div>
+                <div className={`pb-4 ${isLast ? "pb-0" : ""}`}>
+                  <p className={`text-sm font-semibold ${active || reached ? "text-navy" : "text-muted-foreground"}`}>
+                    {step.title}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">{step.desc}</p>
+                  {active && (
+                    <AgroBadge tone="violet" size="xs" className="mt-1.5">In progress</AgroBadge>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+
+        {/* Legacy status stepper */}
         <ol className="rounded-3xl border border-border bg-card p-3">
           {stages.map((st, i) => {
             const done = i < stepIdx || order.status === "confirmed";
