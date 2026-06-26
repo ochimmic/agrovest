@@ -1,6 +1,6 @@
 // GoPay — Bank transfer top-up between the user and AgroVest.
 // There is no peer-to-peer selling. Every order is the user paying NGN
-// into AgroVest's settlement bank; AgroVest admin confirms the receipt
+// into AgroVest's One-Time Account; AgroVest admin confirms the receipt
 // and credits cUSD to the user's AssetVault.
 //
 // Order state machine:
