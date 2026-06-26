@@ -23,11 +23,11 @@ const internationalMarkets: Pair[] = [
   { sym: "cUSD", name: "Clyst USD", price: 1.0, change: 0.0, spark: [9,9,10,9,10,9,10,10,9,10,9,10,10] },
 ];
 const africanMarkets: Pair[] = [
-  { sym: "WKC", name: "Wakanda Inu", price: 0.0008, change: 3.4, spark: [4,5,5,6,5,7,6,8,7,9,8,10,11] },
-  { sym: "TKC", name: "Tanzania Krypto", price: 0.027, change: -2.1, spark: [11,10,11,10,9,10,9,8,9,8,9,8,7] },
-  { sym: "HKM", name: "Hakuna Matata", price: 0.014, change: 5.6, spark: [3,4,4,5,6,5,7,8,8,9,10,11,12] },
-  { sym: "GTAN", name: "Ghana Token", price: 0.092, change: 1.8, spark: [6,6,7,7,8,7,8,9,9,10,9,10,11] },
-  { sym: "CARDIO", name: "Cardio Africa", price: 0.31, change: -0.9, spark: [10,10,9,10,9,10,9,9,10,9,10,9,9] },
+  { sym: "WKC", name: "Wikicat", price: 0.0008, change: 3.4, spark: [4,5,5,6,5,7,6,8,7,9,8,10,11] },
+  { sym: "TKC", name: "The Kingdom Coin", price: 0.027, change: -2.1, spark: [11,10,11,10,9,10,9,8,9,8,9,8,7] },
+  { sym: "HKM", name: "Hakrium", price: 0.014, change: 5.6, spark: [3,4,4,5,6,5,7,8,8,9,10,11,12] },
+  { sym: "GTAN", name: "Giant Token", price: 0.092, change: 1.8, spark: [6,6,7,7,8,7,8,9,9,10,9,10,11] },
+  { sym: "CARDIO", name: "Cardio Coin", price: 0.31, change: -0.9, spark: [10,10,9,10,9,10,9,9,10,9,10,9,9] },
 ];
 
 function Vault() {
