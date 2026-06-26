@@ -46,8 +46,17 @@ function HoldingDetail() {
   const asset = farmAssets.find((a) => a.id === holding.assetId) ?? farmAssets[0];
   const platformFee = Math.round(holding.invested * 0.02);
   const netPrincipal = holding.invested - platformFee;
-  const projectedYr = Math.round(holding.invested * 0.105);
+  // Steady-state projected annual yield (Y6+ = 50% of principal)
+  const projectedYr = Math.round(holding.invested * 0.5);
   const txHash = `0x${holding.id.replace(/[^a-f0-9]/gi, "").padEnd(8, "a").slice(0, 8)}…${holding.id.slice(-4)}`;
+
+  const schedule = [
+    { y: "Y1–2", pct: "0%", note: "Maturation", tone: "muted" as const },
+    { y: "Y3", pct: "20%", note: "Accrued · locked", tone: "warn" as const },
+    { y: "Y4", pct: "30%", note: "Withdrawable · Y3 unlocks", tone: "agro" as const },
+    { y: "Y5", pct: "40%", note: "Withdrawable", tone: "agro" as const },
+    { y: "Y6+", pct: "50% / yr", note: "Steady-state, perpetual", tone: "agro" as const },
+  ];
 
   const timeline = [
     { label: "Investment confirmed", date: holding.purchasedAt, done: true, icon: <CheckCircle2 size={14} /> },
@@ -200,9 +209,43 @@ function HoldingDetail() {
             <Row k="Total invested" v={`$${holding.invested.toLocaleString()}`} strong />
             <div className="my-2 h-px bg-border" />
             <Row k="Expected yield" v={asset.expectedYield} />
-            <Row k="Projected /yr" v={`$${projectedYr.toLocaleString()}`} accent />
+            <Row k="Projected /yr (Y6+)" v={`$${projectedYr.toLocaleString()}`} accent />
             <Row k="Appreciation" v={asset.appreciation} />
           </div>
+        </section>
+
+        {/* Yield schedule */}
+        <section className="rounded-3xl border border-border bg-card p-4">
+          <h2 className="text-sm font-semibold text-navy">Yield schedule</h2>
+          <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
+            Year 3 yield is accrued but locked. Withdrawals begin Year 4 — the Year 3 amount
+            unlocks with the Year 4 distribution. From Year 6 onward, 50% per year continues
+            indefinitely.
+          </p>
+          <ul className="mt-3 space-y-1.5">
+            {schedule.map((s) => {
+              const toneCls =
+                s.tone === "agro"
+                  ? "bg-agro-soft text-agro"
+                  : s.tone === "warn"
+                    ? "bg-warn/15 text-warn"
+                    : "bg-secondary text-muted-foreground";
+              return (
+                <li
+                  key={s.y}
+                  className="flex items-center justify-between rounded-2xl bg-secondary px-3 py-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex min-w-[44px] justify-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${toneCls}`}>
+                      {s.y}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground">{s.note}</span>
+                  </div>
+                  <span className="text-sm font-semibold text-navy tabular">{s.pct}</span>
+                </li>
+              );
+            })}
+          </ul>
         </section>
 
         {/* On-chain / Off-chain status */}
