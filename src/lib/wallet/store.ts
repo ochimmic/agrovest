@@ -93,7 +93,7 @@ export function useVault<T>(sel: (s: State) => T): T {
 export function getVaultState() { return state; }
 
 export function tokenList(s: State = state): TokenConfig[] {
-  return [...TOKENS[s.network], ...s.customTokens.filter((t) => t.network === undefined || true)];
+  return [...TOKENS[s.network], ...s.customTokens];
 }
 
 export function provider(net: NetworkId = state.network) {
