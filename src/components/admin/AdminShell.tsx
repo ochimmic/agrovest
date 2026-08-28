@@ -209,3 +209,41 @@ function initialsOf(name: string) {
     .join("")
     .toUpperCase();
 }
+
+/** Chrome for admin pages that render custom content instead of a list. */
+export function AdminShell({
+  title,
+  subtitle,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  icon?: LucideIcon;
+  children: ReactNode;
+}) {
+  return (
+    <MobileFrame>
+      <header className="px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-4 gradient-navy text-white">
+        <div className="flex items-center gap-2">
+          <Link
+            to="/admin"
+            className="h-9 w-9 rounded-full bg-white/15 hover:bg-white/25 transition flex items-center justify-center"
+            aria-label="Back to admin"
+          >
+            <ChevronLeft size={18} />
+          </Link>
+          <div className="min-w-0">
+            <p className="text-[10px] uppercase tracking-widest text-white/60">Operations</p>
+            <h1 className="font-semibold flex items-center gap-1.5 truncate">
+              {Icon ? <Icon size={14} /> : null}
+              {title}
+            </h1>
+          </div>
+        </div>
+        {subtitle ? <p className="mt-2 text-[11px] text-white/70">{subtitle}</p> : null}
+      </header>
+      <div className="flex-1 overflow-y-auto hide-scrollbar p-4">{children}</div>
+    </MobileFrame>
+  );
+}

@@ -22,6 +22,14 @@ export const Route = createFileRoute("/admin/")({ component: Admin });
 
 const queues = [
   {
+    to: "/admin/payments",
+    icon: Wallet,
+    label: "Payments",
+    desc: "Confirm wallet purchases & bank deposits",
+    count: 0,
+    tone: "from-agro to-emerald-700",
+  },
+  {
     to: "/admin/kyc",
     icon: FileCheck,
     label: "KYC review",

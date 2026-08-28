@@ -30,10 +30,10 @@ function GoPay() {
     <AppShell>
       <div className="px-4 pt-3 space-y-4">
         <div>
-          <h1 className="text-2xl font-semibold text-navy">GoPay</h1>
+          <h1 className="text-2xl font-semibold text-navy">Deposits</h1>
           <p className="text-sm text-muted-foreground">
-            Bank transfer top-up between you and AgroVest. Send NGN, AgroVest admin
-            confirms the receipt, and your cUSD is credited to AssetVault.
+            Fund your AssetVault by bank transfer. Send NGN to a One-Time account
+            number, AgroVest admin confirms the receipt, and cUSD is credited to your wallet.
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             <FarmRemitBadge size="xs" />

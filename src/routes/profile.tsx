@@ -44,7 +44,8 @@ function Profile() {
 
         <Section title="Wallet">
           <Row to="/vault" icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" />
-          <Row to="/wallet/security" icon={Lock} label="Wallet safety" sub="Recovery & locks" />
+          <Row to="/vault/settings" icon={Lock} label="Wallet settings" sub="Network, lock & recovery" />
+          <Row to="/prichat" icon={FileText} label="Deposit history" sub="Bank transfers to AgroVest" />
         </Section>
 
         <Section title="Account">

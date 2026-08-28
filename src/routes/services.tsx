@@ -16,8 +16,8 @@ function Services() {
         </Link>
         <div className="rounded-3xl border border-border bg-card p-5">
           <Landmark size={18} className="text-violet" />
-          <p className="mt-2 font-semibold text-navy">GoPay</p>
-          <p className="text-xs text-muted-foreground">Bank transfer top-up — pay NGN, get cUSD after admin confirmation.</p>
+          <p className="mt-2 font-semibold text-navy">Fund by bank transfer</p>
+          <p className="text-xs text-muted-foreground">Pay NGN to a One-Time account number — cUSD lands in your AssetVault after admin confirmation.</p>
         </div>
         <div className="rounded-3xl border border-border bg-card p-5 opacity-75">
           <Store size={18} className="text-agro" />

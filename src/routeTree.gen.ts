@@ -31,27 +31,32 @@ import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as BrokerRouteImport } from './routes/broker'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VaultIndexRouteImport } from './routes/vault.index'
 import { Route as PrichatIndexRouteImport } from './routes/prichat.index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as WalletSwapRouteImport } from './routes/wallet.swap'
 import { Route as WalletSecurityRouteImport } from './routes/wallet.security'
 import { Route as WalletIntroRouteImport } from './routes/wallet.intro'
 import { Route as WalletImportRouteImport } from './routes/wallet.import'
-import { Route as WalletHistoryRouteImport } from './routes/wallet.history'
 import { Route as WalletCreateRouteImport } from './routes/wallet.create'
 import { Route as WalletConfirmRouteImport } from './routes/wallet.confirm'
 import { Route as VendorOrdersRouteImport } from './routes/vendor.orders'
 import { Route as VendorListingsRouteImport } from './routes/vendor.listings'
 import { Route as VendorDisputesRouteImport } from './routes/vendor.disputes'
 import { Route as VendorApplyRouteImport } from './routes/vendor.apply'
+import { Route as VaultTokensRouteImport } from './routes/vault.tokens'
+import { Route as VaultSettingsRouteImport } from './routes/vault.settings'
+import { Route as VaultSendRouteImport } from './routes/vault.send'
+import { Route as VaultReceiveRouteImport } from './routes/vault.receive'
 import { Route as SupportDisputeRouteImport } from './routes/support.dispute'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
 import { Route as ServicesMpRouteImport } from './routes/services.mp'
 import { Route as PrichatIdRouteImport } from './routes/prichat.$id'
+import { Route as PayOrderIdRouteImport } from './routes/pay.$orderId'
 import { Route as BrokerRewardsRouteImport } from './routes/broker.rewards'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
+import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
 import { Route as AdminPartnersRouteImport } from './routes/admin.partners'
 import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminDisputesRouteImport } from './routes/admin.disputes'
@@ -177,6 +182,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VaultIndexRoute = VaultIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VaultRoute,
+} as any)
 const PrichatIndexRoute = PrichatIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -192,11 +202,6 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WalletSwapRoute = WalletSwapRouteImport.update({
-  id: '/wallet/swap',
-  path: '/wallet/swap',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const WalletSecurityRoute = WalletSecurityRouteImport.update({
   id: '/wallet/security',
   path: '/wallet/security',
@@ -210,11 +215,6 @@ const WalletIntroRoute = WalletIntroRouteImport.update({
 const WalletImportRoute = WalletImportRouteImport.update({
   id: '/wallet/import',
   path: '/wallet/import',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WalletHistoryRoute = WalletHistoryRouteImport.update({
-  id: '/wallet/history',
-  path: '/wallet/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WalletCreateRoute = WalletCreateRouteImport.update({
@@ -247,6 +247,26 @@ const VendorApplyRoute = VendorApplyRouteImport.update({
   path: '/apply',
   getParentRoute: () => VendorRoute,
 } as any)
+const VaultTokensRoute = VaultTokensRouteImport.update({
+  id: '/tokens',
+  path: '/tokens',
+  getParentRoute: () => VaultRoute,
+} as any)
+const VaultSettingsRoute = VaultSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => VaultRoute,
+} as any)
+const VaultSendRoute = VaultSendRouteImport.update({
+  id: '/send',
+  path: '/send',
+  getParentRoute: () => VaultRoute,
+} as any)
+const VaultReceiveRoute = VaultReceiveRouteImport.update({
+  id: '/receive',
+  path: '/receive',
+  getParentRoute: () => VaultRoute,
+} as any)
 const SupportDisputeRoute = SupportDisputeRouteImport.update({
   id: '/dispute',
   path: '/dispute',
@@ -267,6 +287,11 @@ const PrichatIdRoute = PrichatIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => PrichatRoute,
 } as any)
+const PayOrderIdRoute = PayOrderIdRouteImport.update({
+  id: '/pay/$orderId',
+  path: '/pay/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrokerRewardsRoute = BrokerRewardsRouteImport.update({
   id: '/rewards',
   path: '/rewards',
@@ -280,6 +305,11 @@ const AdminVendorsRoute = AdminVendorsRouteImport.update({
 const AdminRewardsRoute = AdminRewardsRouteImport.update({
   id: '/admin/rewards',
   path: '/admin/rewards',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
+  id: '/admin/payments',
+  path: '/admin/payments',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminPartnersRoute = AdminPartnersRouteImport.update({
@@ -374,7 +404,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRouteWithChildren
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRouteWithChildren
-  '/vault': typeof VaultRoute
+  '/vault': typeof VaultRouteWithChildren
   '/vendor': typeof VendorRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
@@ -383,27 +413,32 @@ export interface FileRoutesByFullPath {
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
+  '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/support/dispute': typeof SupportDisputeRoute
+  '/vault/receive': typeof VaultReceiveRoute
+  '/vault/send': typeof VaultSendRoute
+  '/vault/settings': typeof VaultSettingsRoute
+  '/vault/tokens': typeof VaultTokensRoute
   '/vendor/apply': typeof VendorApplyRoute
   '/vendor/disputes': typeof VendorDisputesRoute
   '/vendor/listings': typeof VendorListingsRoute
   '/vendor/orders': typeof VendorOrdersRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
-  '/wallet/history': typeof WalletHistoryRoute
   '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
-  '/wallet/swap': typeof WalletSwapRoute
   '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
+  '/vault/': typeof VaultIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -432,7 +467,6 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRouteWithChildren
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRouteWithChildren
-  '/vault': typeof VaultRoute
   '/vendor': typeof VendorRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
@@ -441,27 +475,32 @@ export interface FileRoutesByTo {
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
+  '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/support/dispute': typeof SupportDisputeRoute
+  '/vault/receive': typeof VaultReceiveRoute
+  '/vault/send': typeof VaultSendRoute
+  '/vault/settings': typeof VaultSettingsRoute
+  '/vault/tokens': typeof VaultTokensRoute
   '/vendor/apply': typeof VendorApplyRoute
   '/vendor/disputes': typeof VendorDisputesRoute
   '/vendor/listings': typeof VendorListingsRoute
   '/vendor/orders': typeof VendorOrdersRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
-  '/wallet/history': typeof WalletHistoryRoute
   '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
-  '/wallet/swap': typeof WalletSwapRoute
   '/admin': typeof AdminIndexRoute
   '/invest': typeof InvestIndexRoute
   '/prichat': typeof PrichatIndexRoute
+  '/vault': typeof VaultIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -492,7 +531,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRouteWithChildren
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRouteWithChildren
-  '/vault': typeof VaultRoute
+  '/vault': typeof VaultRouteWithChildren
   '/vendor': typeof VendorRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
@@ -501,27 +540,32 @@ export interface FileRoutesById {
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
+  '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/support/dispute': typeof SupportDisputeRoute
+  '/vault/receive': typeof VaultReceiveRoute
+  '/vault/send': typeof VaultSendRoute
+  '/vault/settings': typeof VaultSettingsRoute
+  '/vault/tokens': typeof VaultTokensRoute
   '/vendor/apply': typeof VendorApplyRoute
   '/vendor/disputes': typeof VendorDisputesRoute
   '/vendor/listings': typeof VendorListingsRoute
   '/vendor/orders': typeof VendorOrdersRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
-  '/wallet/history': typeof WalletHistoryRoute
   '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
-  '/wallet/swap': typeof WalletSwapRoute
   '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
+  '/vault/': typeof VaultIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -562,27 +606,32 @@ export interface FileRouteTypes {
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
+    | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
+    | '/pay/$orderId'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
     | '/support/dispute'
+    | '/vault/receive'
+    | '/vault/send'
+    | '/vault/settings'
+    | '/vault/tokens'
     | '/vendor/apply'
     | '/vendor/disputes'
     | '/vendor/listings'
     | '/vendor/orders'
     | '/wallet/confirm'
     | '/wallet/create'
-    | '/wallet/history'
     | '/wallet/import'
     | '/wallet/intro'
     | '/wallet/security'
-    | '/wallet/swap'
     | '/admin/'
     | '/invest/'
     | '/prichat/'
+    | '/vault/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -611,7 +660,6 @@ export interface FileRouteTypes {
     | '/services'
     | '/settings'
     | '/support'
-    | '/vault'
     | '/vendor'
     | '/welcome'
     | '/admin/audit'
@@ -620,27 +668,32 @@ export interface FileRouteTypes {
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
+    | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
+    | '/pay/$orderId'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
     | '/support/dispute'
+    | '/vault/receive'
+    | '/vault/send'
+    | '/vault/settings'
+    | '/vault/tokens'
     | '/vendor/apply'
     | '/vendor/disputes'
     | '/vendor/listings'
     | '/vendor/orders'
     | '/wallet/confirm'
     | '/wallet/create'
-    | '/wallet/history'
     | '/wallet/import'
     | '/wallet/intro'
     | '/wallet/security'
-    | '/wallet/swap'
     | '/admin'
     | '/invest'
     | '/prichat'
+    | '/vault'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -679,27 +732,32 @@ export interface FileRouteTypes {
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
+    | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
+    | '/pay/$orderId'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
     | '/support/dispute'
+    | '/vault/receive'
+    | '/vault/send'
+    | '/vault/settings'
+    | '/vault/tokens'
     | '/vendor/apply'
     | '/vendor/disputes'
     | '/vendor/listings'
     | '/vendor/orders'
     | '/wallet/confirm'
     | '/wallet/create'
-    | '/wallet/history'
     | '/wallet/import'
     | '/wallet/intro'
     | '/wallet/security'
-    | '/wallet/swap'
     | '/admin/'
     | '/invest/'
     | '/prichat/'
+    | '/vault/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -730,7 +788,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRouteWithChildren
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRouteWithChildren
-  VaultRoute: typeof VaultRoute
+  VaultRoute: typeof VaultRouteWithChildren
   VendorRoute: typeof VendorRouteWithChildren
   WelcomeRoute: typeof WelcomeRoute
   AdminAuditRoute: typeof AdminAuditRoute
@@ -739,16 +797,16 @@ export interface RootRouteChildren {
   AdminDisputesRoute: typeof AdminDisputesRoute
   AdminKycRoute: typeof AdminKycRoute
   AdminPartnersRoute: typeof AdminPartnersRoute
+  AdminPaymentsRoute: typeof AdminPaymentsRoute
   AdminRewardsRoute: typeof AdminRewardsRoute
   AdminVendorsRoute: typeof AdminVendorsRoute
+  PayOrderIdRoute: typeof PayOrderIdRoute
   SignupRoleRoute: typeof SignupRoleRoute
   WalletConfirmRoute: typeof WalletConfirmRoute
   WalletCreateRoute: typeof WalletCreateRoute
-  WalletHistoryRoute: typeof WalletHistoryRoute
   WalletImportRoute: typeof WalletImportRoute
   WalletIntroRoute: typeof WalletIntroRoute
   WalletSecurityRoute: typeof WalletSecurityRoute
-  WalletSwapRoute: typeof WalletSwapRoute
   AdminIndexRoute: typeof AdminIndexRoute
   InvestIndexRoute: typeof InvestIndexRoute
   InvestCheckoutIdRoute: typeof InvestCheckoutIdRoute
@@ -916,6 +974,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vault/': {
+      id: '/vault/'
+      path: '/'
+      fullPath: '/vault/'
+      preLoaderRoute: typeof VaultIndexRouteImport
+      parentRoute: typeof VaultRoute
+    }
     '/prichat/': {
       id: '/prichat/'
       path: '/'
@@ -937,13 +1002,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/wallet/swap': {
-      id: '/wallet/swap'
-      path: '/wallet/swap'
-      fullPath: '/wallet/swap'
-      preLoaderRoute: typeof WalletSwapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/wallet/security': {
       id: '/wallet/security'
       path: '/wallet/security'
@@ -963,13 +1021,6 @@ declare module '@tanstack/react-router' {
       path: '/wallet/import'
       fullPath: '/wallet/import'
       preLoaderRoute: typeof WalletImportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/wallet/history': {
-      id: '/wallet/history'
-      path: '/wallet/history'
-      fullPath: '/wallet/history'
-      preLoaderRoute: typeof WalletHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wallet/create': {
@@ -1014,6 +1065,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorApplyRouteImport
       parentRoute: typeof VendorRoute
     }
+    '/vault/tokens': {
+      id: '/vault/tokens'
+      path: '/tokens'
+      fullPath: '/vault/tokens'
+      preLoaderRoute: typeof VaultTokensRouteImport
+      parentRoute: typeof VaultRoute
+    }
+    '/vault/settings': {
+      id: '/vault/settings'
+      path: '/settings'
+      fullPath: '/vault/settings'
+      preLoaderRoute: typeof VaultSettingsRouteImport
+      parentRoute: typeof VaultRoute
+    }
+    '/vault/send': {
+      id: '/vault/send'
+      path: '/send'
+      fullPath: '/vault/send'
+      preLoaderRoute: typeof VaultSendRouteImport
+      parentRoute: typeof VaultRoute
+    }
+    '/vault/receive': {
+      id: '/vault/receive'
+      path: '/receive'
+      fullPath: '/vault/receive'
+      preLoaderRoute: typeof VaultReceiveRouteImport
+      parentRoute: typeof VaultRoute
+    }
     '/support/dispute': {
       id: '/support/dispute'
       path: '/dispute'
@@ -1042,6 +1121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrichatIdRouteImport
       parentRoute: typeof PrichatRoute
     }
+    '/pay/$orderId': {
+      id: '/pay/$orderId'
+      path: '/pay/$orderId'
+      fullPath: '/pay/$orderId'
+      preLoaderRoute: typeof PayOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/broker/rewards': {
       id: '/broker/rewards'
       path: '/rewards'
@@ -1061,6 +1147,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/rewards'
       fullPath: '/admin/rewards'
       preLoaderRoute: typeof AdminRewardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/payments': {
+      id: '/admin/payments'
+      path: '/admin/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AdminPaymentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/partners': {
@@ -1223,6 +1316,24 @@ const SupportRouteChildren: SupportRouteChildren = {
 const SupportRouteWithChildren =
   SupportRoute._addFileChildren(SupportRouteChildren)
 
+interface VaultRouteChildren {
+  VaultReceiveRoute: typeof VaultReceiveRoute
+  VaultSendRoute: typeof VaultSendRoute
+  VaultSettingsRoute: typeof VaultSettingsRoute
+  VaultTokensRoute: typeof VaultTokensRoute
+  VaultIndexRoute: typeof VaultIndexRoute
+}
+
+const VaultRouteChildren: VaultRouteChildren = {
+  VaultReceiveRoute: VaultReceiveRoute,
+  VaultSendRoute: VaultSendRoute,
+  VaultSettingsRoute: VaultSettingsRoute,
+  VaultTokensRoute: VaultTokensRoute,
+  VaultIndexRoute: VaultIndexRoute,
+}
+
+const VaultRouteWithChildren = VaultRoute._addFileChildren(VaultRouteChildren)
+
 interface VendorRouteChildren {
   VendorApplyRoute: typeof VendorApplyRoute
   VendorDisputesRoute: typeof VendorDisputesRoute
@@ -1260,7 +1371,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRouteWithChildren,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRouteWithChildren,
-  VaultRoute: VaultRoute,
+  VaultRoute: VaultRouteWithChildren,
   VendorRoute: VendorRouteWithChildren,
   WelcomeRoute: WelcomeRoute,
   AdminAuditRoute: AdminAuditRoute,
@@ -1269,16 +1380,16 @@ const rootRouteChildren: RootRouteChildren = {
   AdminDisputesRoute: AdminDisputesRoute,
   AdminKycRoute: AdminKycRoute,
   AdminPartnersRoute: AdminPartnersRoute,
+  AdminPaymentsRoute: AdminPaymentsRoute,
   AdminRewardsRoute: AdminRewardsRoute,
   AdminVendorsRoute: AdminVendorsRoute,
+  PayOrderIdRoute: PayOrderIdRoute,
   SignupRoleRoute: SignupRoleRoute,
   WalletConfirmRoute: WalletConfirmRoute,
   WalletCreateRoute: WalletCreateRoute,
-  WalletHistoryRoute: WalletHistoryRoute,
   WalletImportRoute: WalletImportRoute,
   WalletIntroRoute: WalletIntroRoute,
   WalletSecurityRoute: WalletSecurityRoute,
-  WalletSwapRoute: WalletSwapRoute,
   AdminIndexRoute: AdminIndexRoute,
   InvestIndexRoute: InvestIndexRoute,
   InvestCheckoutIdRoute: InvestCheckoutIdRoute,

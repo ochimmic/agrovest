@@ -114,7 +114,7 @@ function Home() {
               <Activity size={14} className="text-violet" />
               <h2 className="text-sm font-semibold text-navy">Recent activity</h2>
             </div>
-            <Link to="/wallet/history" className="text-xs text-violet">See all</Link>
+            <Link to="/vault" className="text-xs text-violet">See all</Link>
           </div>
           {txs.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-border bg-card p-5 text-center">
