@@ -1,3 +1,4 @@
+import { LocalTime } from "@/components/ui/local-time";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ExternalLink, MessageSquare, Phone } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
@@ -82,7 +83,7 @@ function PayStatus() {
                     <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-violet" />
                     <div>
                       <p className="text-xs text-foreground">{t.t}</p>
-                      <p className="text-[10px] text-muted-foreground">{new Date(t.at).toLocaleString()}</p>
+                      <p className="text-[10px] text-muted-foreground"><LocalTime at={t.at} /></p>
                     </div>
                   </li>
                 ))}

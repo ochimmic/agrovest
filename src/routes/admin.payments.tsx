@@ -1,3 +1,4 @@
+import { LocalTime } from "@/components/ui/local-time";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Check, ExternalLink, Info, X } from "lucide-react";
@@ -129,7 +130,7 @@ function AdminPayments() {
                     </div>
                     <p className="mt-1 truncate text-xs text-muted-foreground">{r.purpose}</p>
                     <p className="mt-0.5 text-[11px] text-muted-foreground">
-                      {r.method} · {new Date(r.at).toLocaleString()}
+                      {r.method} · <LocalTime at={r.at} />
                     </p>
                     {r.hash && (
                       <a
