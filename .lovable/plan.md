@@ -1,75 +1,82 @@
-# AgroVest: Manual Payments, Two Roles, No AssetVault
+# AgroVest MVP: Real BSC AssetVault, Manual Payments, GoPay Retired
 
-Three changes: remove AssetVault, make every payment a manual (admin-confirmed) transfer, and split the app into streamlined Investor and Broker experiences.
+AssetVault stays and becomes a real BSC (BEP-20) wallet. Every in-app payment is deducted from AssetVault. GoPay stops being a P2P product and becomes a read-only deposit history. Admin confirmation stays manual.
 
-## 1. Remove AssetVault
+## 1. AssetVault becomes a real BSC wallet
 
-- Delete the `/vault` screen and drop it from the bottom tab bar.
-- Replace the Vault tab with **Buy Assets**, routed to `/invest/property` (the existing Buy Assets catalogue), with correct active-state highlighting.
-- Wallet sub-screens that only existed to serve the Vault (`/wallet/swap`, `/wallet/history`, `/wallet/security`, wallet setup) are folded down to a single read-only **Balance** card inside Profile: confirmed cUSD balance plus a link to payment history. No swap, no markets strip.
-- The `cUSD` unit stays as the internal credit users hold after a confirmed payment, with the NGN equivalent shown beside it everywhere.
+Non-custodial wallet that runs in the browser — keys never leave the device, no backend holds funds.
 
-New investor tab bar: `Home · FarmVest · Buy Assets · GoPay · Profile`.
+- Create wallet: generate a 12-word phrase (BIP-39), show it once, confirm it, then encrypt the key with the user's password and store only the encrypted blob locally. Import an existing phrase or private key too.
+- Unlock with password (or biometric prompt where the device supports it) before any send.
+- Live balances read from the BSC chain: BNB, USDT, cUSD, $CLYST, plus **Add token** by contract address for any other BEP-20.
+- Receive: address + QR + copy.
+- Send: pick token, paste/scan address, amount with max, live gas estimate in BNB and NGN/USD, confirm sheet, then a real on-chain transaction with a BscScan link and pending → confirmed status.
+- Activity list backed by real chain history for the wallet address.
+- Network switch between BSC Mainnet and BSC Testnet so the whole thing can be tested end to end with free test BNB before going live.
 
-## 2. One manual payment system
+Markets strip, cUSD balance card, and the existing badges stay.
 
-Every payment in the app — FarmVest investment, Buy Assets purchase, GoPay top-up — routes through one shared flow instead of separate checkout logic.
+### Two things that need your input
+
+- **Token contracts.** Real balances need real BEP-20 contract addresses for cUSD and $CLYST on BSC. USDT and BNB are known. If those two tokens aren't deployed yet, they'll be wired as configurable addresses and stay at zero until you supply them — everything else still works.
+- **Mainnet is real money.** The MVP will default to BSC Testnet so we can test safely; flipping to mainnet is a one-line config change once you're happy.
+
+## 2. Payments come out of AssetVault
+
+One shared checkout used by FarmVest, Buy Assets, and anything else:
 
 ```text
-User picks asset / amount
+Pick asset / amount
         ↓
-Payment Instructions screen
-  ├── Bank transfer  → One-Time Account number, bank, beneficiary, countdown
-  ├── USDT (BEP-20)  → wallet address + QR + copy
-  └── $CLYST         → wallet address + QR + copy
+Pay from AssetVault  →  cUSD / USDT / $CLYST balance check
         ↓
-"I have made the payment"  (+ optional reference / receipt upload)
+Sign + send on-chain to the AgroVest treasury address
         ↓
-Status: Awaiting admin confirmation   ← user can chat or call admin
+Order status: awaiting admin confirmation   ← chat or call admin
         ↓
-Admin approves  →  credit applied, holding created, receipt issued
-Admin rejects   →  reason shown, user can retry or dispute
+Admin confirms  →  holding created, documents issued
+Admin rejects   →  reason shown, retry or dispute
 ```
 
-- Payment destinations (bank account, USDT address, CLYST address) live in one config file so they can be changed in a single place.
-- Every payment creates an **order** with a full status timeline the user can revisit from GoPay or Profile at any time.
-- Nothing is credited, and no holding is created, until an admin confirms. Purchases stay in a pending state with a clear badge.
+- Insufficient balance offers a **Fund wallet** route.
+- Nothing is credited and no holding is created until an admin confirms — the on-chain transfer alone doesn't complete a purchase.
 
-## 3. Admin confirmation protocol
+## 3. Funding the wallet (One-Time Account stays)
 
-A single **Payments** queue in the admin area (mobile and desktop) listing every pending payment across all products:
+Two ways to add value, both manually confirmed:
 
-- Columns: user, product/purpose, amount (NGN + USD), method, reference, submitted time, age.
-- Actions: **Confirm** (credits the user and completes the purchase), **Reject** (requires a reason), **Request more info** (asks for a clearer receipt).
-- Filters by status and method; confirmed items keep an audit trail entry with who confirmed and when.
-- Confirmation is the only path that changes a user's balance or creates a holding.
+- **Bank transfer (NGN)** — generates a One-Time Account number with the existing countdown and "I've made the transfer" step. Admin confirms and credits cUSD.
+- **Crypto deposit** — send USDT/BNB/$CLYST straight to the wallet address; arrives on-chain with no admin step.
 
-## 4. Investor vs Broker
+## 4. GoPay retired
 
-Role is chosen at signup and remembered; sign-in sends each user to their own home.
+- Removed from the bottom tab bar and from the services grid.
+- The screen survives as **Deposit history** reachable from Profile and from AssetVault, listing past and pending bank-transfer deposits with their status. Existing saved orders keep working.
+- No P2P, no counterparties, no sell side.
 
-**Investor** — lands on `/home`
-- Portfolio value, active holdings, pending payments, yield outlook
-- Tabs: Home · FarmVest · Buy Assets · GoPay · Profile
+New investor tab bar: `Home · Invest · AssetVault · Buy Assets · Profile`.
 
-**Broker** — lands on `/broker`
-- Rebuilt dashboard: total referred volume, commission earned vs paid out, lead pipeline by stage, reward-tier progress, referral code/share
-- **Request payout** uses the same manual flow in reverse: broker submits payout details, admin confirms the transfer
-- Tabs: Dashboard · Leads · Rewards · GoPay · Profile — no Invest/Buy Assets tabs
+## 5. Admin confirmation
 
-Vendor and Partner screens remain reachable but are not part of the two primary paths.
+One **Payments** queue in the admin area covering bank deposits and asset purchases: user, purpose, amount (NGN + USD), method, on-chain tx hash where applicable, submitted time, age. Actions: Confirm, Reject with reason, Request more info. Confirmation is the only thing that credits a balance or creates a holding, and every action leaves an audit entry.
+
+## 6. Build and test
+
+Testing is part of this pass, not an afterthought: create a wallet, fund it with testnet BNB/USDT, send between two addresses, buy an asset with the balance, confirm it from the admin queue, and check the holding and documents appear. Dark mode and the contrast check run over every new screen.
 
 ## Technical notes
 
-- New `src/lib/payments.ts`: unified order model (`draft → awaiting_payment → submitted → admin_review → confirmed | rejected`), payment-method config, and the credit/holding side effects that only run on confirm. `src/lib/farmremit.ts` is refactored to sit on top of it so existing GoPay orders keep working (the existing hydrate/recover logic is preserved for orders already in localStorage).
-- New shared route `/pay/$orderId` renders instructions, countdown, method tabs, "I've paid", and the step tracker — replacing the duplicated logic currently in `prichat.$id.tsx` and `invest.checkout.$id.tsx`.
-- `BottomNav` becomes role-aware, reading `role` from the store; `AppShell` passes it through.
-- `/vault` is deleted; `wallet.swap`, `wallet.history`, `wallet.security` are removed and their inbound links repointed to Profile.
-- Login and signup set `role` and redirect accordingly; a small role guard sends brokers away from investor-only routes and vice versa.
-- New admin route `admin.payments.tsx` plus a panel on the desktop console.
-- State stays in the existing localStorage store — no backend in this pass, so "admin" actions are performed from the admin screens in the same app. Wiring this to Lovable Cloud (real accounts, server-side confirmation, RLS) is the natural next step once the flows are approved.
+- `ethers` v6 in the browser. Encrypted JSON keystore in localStorage; password-derived key, never persisted in plain text.
+- `src/lib/wallet/` — chain config (RPC, chainId, explorer, token list), keystore, balances (multicall-style batched `balanceOf`), send/gas, tx history via BscScan API.
+- BSC RPC and BscScan API key proxied through a TanStack server function so the key isn't in the client bundle.
+- `src/lib/payments.ts` — one order model (`draft → paid_onchain | awaiting_transfer → admin_review → confirmed | rejected`) that both the wallet checkout and the bank-transfer flow feed into. `src/lib/farmremit.ts` refactors onto it, keeping the existing hydrate/recover logic so saved orders survive.
+- Wallet screens are client-only (`ClientOnly` / lazy import) — key material and `window.crypto` must not touch SSR.
+- `/vault` gains sub-routes for send, receive, add-token, and settings; `wallet.swap` is dropped, `wallet.history` folds into the vault activity list.
+- New `admin.payments.tsx` plus a panel on the desktop console.
+- State stays in localStorage this pass; balances and transactions are real chain data. Real accounts and server-side confirmation come with Lovable Cloud in the next pass.
 
-## Out of scope for this pass
+## Out of scope
 
-- Automatic payment verification or on-chain listening
-- Real authentication and multi-device sync
+- Swaps / DEX routing
+- Custodial recovery of lost phrases (impossible by design)
+- Broker vs Investor dashboard split — next pass, as agreed
