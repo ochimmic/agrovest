@@ -56,6 +56,7 @@ import { Route as PayOrderIdRouteImport } from './routes/pay.$orderId'
 import { Route as BrokerRewardsRouteImport } from './routes/broker.rewards'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
+import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
 import { Route as AdminPartnersRouteImport } from './routes/admin.partners'
 import { Route as AdminKycRouteImport } from './routes/admin.kyc'
 import { Route as AdminDisputesRouteImport } from './routes/admin.disputes'
@@ -306,6 +307,11 @@ const AdminRewardsRoute = AdminRewardsRouteImport.update({
   path: '/admin/rewards',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
+  id: '/admin/payments',
+  path: '/admin/payments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPartnersRoute = AdminPartnersRouteImport.update({
   id: '/admin/partners',
   path: '/admin/partners',
@@ -407,6 +413,7 @@ export interface FileRoutesByFullPath {
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
@@ -468,6 +475,7 @@ export interface FileRoutesByTo {
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
@@ -532,6 +540,7 @@ export interface FileRoutesById {
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/kyc': typeof AdminKycRoute
   '/admin/partners': typeof AdminPartnersRoute
+  '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
@@ -597,6 +606,7 @@ export interface FileRouteTypes {
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
+    | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
@@ -658,6 +668,7 @@ export interface FileRouteTypes {
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
+    | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
@@ -721,6 +732,7 @@ export interface FileRouteTypes {
     | '/admin/disputes'
     | '/admin/kyc'
     | '/admin/partners'
+    | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
@@ -785,6 +797,7 @@ export interface RootRouteChildren {
   AdminDisputesRoute: typeof AdminDisputesRoute
   AdminKycRoute: typeof AdminKycRoute
   AdminPartnersRoute: typeof AdminPartnersRoute
+  AdminPaymentsRoute: typeof AdminPaymentsRoute
   AdminRewardsRoute: typeof AdminRewardsRoute
   AdminVendorsRoute: typeof AdminVendorsRoute
   PayOrderIdRoute: typeof PayOrderIdRoute
@@ -1136,6 +1149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRewardsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/payments': {
+      id: '/admin/payments'
+      path: '/admin/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AdminPaymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/partners': {
       id: '/admin/partners'
       path: '/admin/partners'
@@ -1360,6 +1380,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminDisputesRoute: AdminDisputesRoute,
   AdminKycRoute: AdminKycRoute,
   AdminPartnersRoute: AdminPartnersRoute,
+  AdminPaymentsRoute: AdminPaymentsRoute,
   AdminRewardsRoute: AdminRewardsRoute,
   AdminVendorsRoute: AdminVendorsRoute,
   PayOrderIdRoute: PayOrderIdRoute,
