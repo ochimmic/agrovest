@@ -44,6 +44,10 @@ import { Route as VendorOrdersRouteImport } from './routes/vendor.orders'
 import { Route as VendorListingsRouteImport } from './routes/vendor.listings'
 import { Route as VendorDisputesRouteImport } from './routes/vendor.disputes'
 import { Route as VendorApplyRouteImport } from './routes/vendor.apply'
+import { Route as VaultTokensRouteImport } from './routes/vault.tokens'
+import { Route as VaultSettingsRouteImport } from './routes/vault.settings'
+import { Route as VaultSendRouteImport } from './routes/vault.send'
+import { Route as VaultReceiveRouteImport } from './routes/vault.receive'
 import { Route as SupportDisputeRouteImport } from './routes/support.dispute'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
 import { Route as ServicesMpRouteImport } from './routes/services.mp'
@@ -241,6 +245,26 @@ const VendorApplyRoute = VendorApplyRouteImport.update({
   path: '/apply',
   getParentRoute: () => VendorRoute,
 } as any)
+const VaultTokensRoute = VaultTokensRouteImport.update({
+  id: '/tokens',
+  path: '/tokens',
+  getParentRoute: () => VaultRoute,
+} as any)
+const VaultSettingsRoute = VaultSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => VaultRoute,
+} as any)
+const VaultSendRoute = VaultSendRouteImport.update({
+  id: '/send',
+  path: '/send',
+  getParentRoute: () => VaultRoute,
+} as any)
+const VaultReceiveRoute = VaultReceiveRouteImport.update({
+  id: '/receive',
+  path: '/receive',
+  getParentRoute: () => VaultRoute,
+} as any)
 const SupportDisputeRoute = SupportDisputeRouteImport.update({
   id: '/dispute',
   path: '/dispute',
@@ -384,6 +408,10 @@ export interface FileRoutesByFullPath {
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/support/dispute': typeof SupportDisputeRoute
+  '/vault/receive': typeof VaultReceiveRoute
+  '/vault/send': typeof VaultSendRoute
+  '/vault/settings': typeof VaultSettingsRoute
+  '/vault/tokens': typeof VaultTokensRoute
   '/vendor/apply': typeof VendorApplyRoute
   '/vendor/disputes': typeof VendorDisputesRoute
   '/vendor/listings': typeof VendorListingsRoute
@@ -440,6 +468,10 @@ export interface FileRoutesByTo {
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/support/dispute': typeof SupportDisputeRoute
+  '/vault/receive': typeof VaultReceiveRoute
+  '/vault/send': typeof VaultSendRoute
+  '/vault/settings': typeof VaultSettingsRoute
+  '/vault/tokens': typeof VaultTokensRoute
   '/vendor/apply': typeof VendorApplyRoute
   '/vendor/disputes': typeof VendorDisputesRoute
   '/vendor/listings': typeof VendorListingsRoute
@@ -499,6 +531,10 @@ export interface FileRoutesById {
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/support/dispute': typeof SupportDisputeRoute
+  '/vault/receive': typeof VaultReceiveRoute
+  '/vault/send': typeof VaultSendRoute
+  '/vault/settings': typeof VaultSettingsRoute
+  '/vault/tokens': typeof VaultTokensRoute
   '/vendor/apply': typeof VendorApplyRoute
   '/vendor/disputes': typeof VendorDisputesRoute
   '/vendor/listings': typeof VendorListingsRoute
@@ -559,6 +595,10 @@ export interface FileRouteTypes {
     | '/services/mp'
     | '/signup/$role'
     | '/support/dispute'
+    | '/vault/receive'
+    | '/vault/send'
+    | '/vault/settings'
+    | '/vault/tokens'
     | '/vendor/apply'
     | '/vendor/disputes'
     | '/vendor/listings'
@@ -615,6 +655,10 @@ export interface FileRouteTypes {
     | '/services/mp'
     | '/signup/$role'
     | '/support/dispute'
+    | '/vault/receive'
+    | '/vault/send'
+    | '/vault/settings'
+    | '/vault/tokens'
     | '/vendor/apply'
     | '/vendor/disputes'
     | '/vendor/listings'
@@ -673,6 +717,10 @@ export interface FileRouteTypes {
     | '/services/mp'
     | '/signup/$role'
     | '/support/dispute'
+    | '/vault/receive'
+    | '/vault/send'
+    | '/vault/settings'
+    | '/vault/tokens'
     | '/vendor/apply'
     | '/vendor/disputes'
     | '/vendor/listings'
@@ -991,6 +1039,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorApplyRouteImport
       parentRoute: typeof VendorRoute
     }
+    '/vault/tokens': {
+      id: '/vault/tokens'
+      path: '/tokens'
+      fullPath: '/vault/tokens'
+      preLoaderRoute: typeof VaultTokensRouteImport
+      parentRoute: typeof VaultRoute
+    }
+    '/vault/settings': {
+      id: '/vault/settings'
+      path: '/settings'
+      fullPath: '/vault/settings'
+      preLoaderRoute: typeof VaultSettingsRouteImport
+      parentRoute: typeof VaultRoute
+    }
+    '/vault/send': {
+      id: '/vault/send'
+      path: '/send'
+      fullPath: '/vault/send'
+      preLoaderRoute: typeof VaultSendRouteImport
+      parentRoute: typeof VaultRoute
+    }
+    '/vault/receive': {
+      id: '/vault/receive'
+      path: '/receive'
+      fullPath: '/vault/receive'
+      preLoaderRoute: typeof VaultReceiveRouteImport
+      parentRoute: typeof VaultRoute
+    }
     '/support/dispute': {
       id: '/support/dispute'
       path: '/dispute'
@@ -1201,10 +1277,18 @@ const SupportRouteWithChildren =
   SupportRoute._addFileChildren(SupportRouteChildren)
 
 interface VaultRouteChildren {
+  VaultReceiveRoute: typeof VaultReceiveRoute
+  VaultSendRoute: typeof VaultSendRoute
+  VaultSettingsRoute: typeof VaultSettingsRoute
+  VaultTokensRoute: typeof VaultTokensRoute
   VaultIndexRoute: typeof VaultIndexRoute
 }
 
 const VaultRouteChildren: VaultRouteChildren = {
+  VaultReceiveRoute: VaultReceiveRoute,
+  VaultSendRoute: VaultSendRoute,
+  VaultSettingsRoute: VaultSettingsRoute,
+  VaultTokensRoute: VaultTokensRoute,
   VaultIndexRoute: VaultIndexRoute,
 }
 
