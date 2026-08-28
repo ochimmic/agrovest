@@ -34,11 +34,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrichatIndexRouteImport } from './routes/prichat.index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as WalletSwapRouteImport } from './routes/wallet.swap'
 import { Route as WalletSecurityRouteImport } from './routes/wallet.security'
 import { Route as WalletIntroRouteImport } from './routes/wallet.intro'
 import { Route as WalletImportRouteImport } from './routes/wallet.import'
-import { Route as WalletHistoryRouteImport } from './routes/wallet.history'
 import { Route as WalletCreateRouteImport } from './routes/wallet.create'
 import { Route as WalletConfirmRouteImport } from './routes/wallet.confirm'
 import { Route as VendorOrdersRouteImport } from './routes/vendor.orders'
@@ -192,11 +190,6 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WalletSwapRoute = WalletSwapRouteImport.update({
-  id: '/wallet/swap',
-  path: '/wallet/swap',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const WalletSecurityRoute = WalletSecurityRouteImport.update({
   id: '/wallet/security',
   path: '/wallet/security',
@@ -210,11 +203,6 @@ const WalletIntroRoute = WalletIntroRouteImport.update({
 const WalletImportRoute = WalletImportRouteImport.update({
   id: '/wallet/import',
   path: '/wallet/import',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WalletHistoryRoute = WalletHistoryRouteImport.update({
-  id: '/wallet/history',
-  path: '/wallet/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WalletCreateRoute = WalletCreateRouteImport.update({
@@ -396,11 +384,9 @@ export interface FileRoutesByFullPath {
   '/vendor/orders': typeof VendorOrdersRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
-  '/wallet/history': typeof WalletHistoryRoute
   '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
-  '/wallet/swap': typeof WalletSwapRoute
   '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
@@ -454,11 +440,9 @@ export interface FileRoutesByTo {
   '/vendor/orders': typeof VendorOrdersRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
-  '/wallet/history': typeof WalletHistoryRoute
   '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
-  '/wallet/swap': typeof WalletSwapRoute
   '/admin': typeof AdminIndexRoute
   '/invest': typeof InvestIndexRoute
   '/prichat': typeof PrichatIndexRoute
@@ -514,11 +498,9 @@ export interface FileRoutesById {
   '/vendor/orders': typeof VendorOrdersRoute
   '/wallet/confirm': typeof WalletConfirmRoute
   '/wallet/create': typeof WalletCreateRoute
-  '/wallet/history': typeof WalletHistoryRoute
   '/wallet/import': typeof WalletImportRoute
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
-  '/wallet/swap': typeof WalletSwapRoute
   '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
@@ -575,11 +557,9 @@ export interface FileRouteTypes {
     | '/vendor/orders'
     | '/wallet/confirm'
     | '/wallet/create'
-    | '/wallet/history'
     | '/wallet/import'
     | '/wallet/intro'
     | '/wallet/security'
-    | '/wallet/swap'
     | '/admin/'
     | '/invest/'
     | '/prichat/'
@@ -633,11 +613,9 @@ export interface FileRouteTypes {
     | '/vendor/orders'
     | '/wallet/confirm'
     | '/wallet/create'
-    | '/wallet/history'
     | '/wallet/import'
     | '/wallet/intro'
     | '/wallet/security'
-    | '/wallet/swap'
     | '/admin'
     | '/invest'
     | '/prichat'
@@ -692,11 +670,9 @@ export interface FileRouteTypes {
     | '/vendor/orders'
     | '/wallet/confirm'
     | '/wallet/create'
-    | '/wallet/history'
     | '/wallet/import'
     | '/wallet/intro'
     | '/wallet/security'
-    | '/wallet/swap'
     | '/admin/'
     | '/invest/'
     | '/prichat/'
@@ -744,11 +720,9 @@ export interface RootRouteChildren {
   SignupRoleRoute: typeof SignupRoleRoute
   WalletConfirmRoute: typeof WalletConfirmRoute
   WalletCreateRoute: typeof WalletCreateRoute
-  WalletHistoryRoute: typeof WalletHistoryRoute
   WalletImportRoute: typeof WalletImportRoute
   WalletIntroRoute: typeof WalletIntroRoute
   WalletSecurityRoute: typeof WalletSecurityRoute
-  WalletSwapRoute: typeof WalletSwapRoute
   AdminIndexRoute: typeof AdminIndexRoute
   InvestIndexRoute: typeof InvestIndexRoute
   InvestCheckoutIdRoute: typeof InvestCheckoutIdRoute
@@ -937,13 +911,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/wallet/swap': {
-      id: '/wallet/swap'
-      path: '/wallet/swap'
-      fullPath: '/wallet/swap'
-      preLoaderRoute: typeof WalletSwapRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/wallet/security': {
       id: '/wallet/security'
       path: '/wallet/security'
@@ -963,13 +930,6 @@ declare module '@tanstack/react-router' {
       path: '/wallet/import'
       fullPath: '/wallet/import'
       preLoaderRoute: typeof WalletImportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/wallet/history': {
-      id: '/wallet/history'
-      path: '/wallet/history'
-      fullPath: '/wallet/history'
-      preLoaderRoute: typeof WalletHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wallet/create': {
@@ -1274,11 +1234,9 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoleRoute: SignupRoleRoute,
   WalletConfirmRoute: WalletConfirmRoute,
   WalletCreateRoute: WalletCreateRoute,
-  WalletHistoryRoute: WalletHistoryRoute,
   WalletImportRoute: WalletImportRoute,
   WalletIntroRoute: WalletIntroRoute,
   WalletSecurityRoute: WalletSecurityRoute,
-  WalletSwapRoute: WalletSwapRoute,
   AdminIndexRoute: AdminIndexRoute,
   InvestIndexRoute: InvestIndexRoute,
   InvestCheckoutIdRoute: InvestCheckoutIdRoute,
