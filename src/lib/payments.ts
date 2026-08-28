@@ -165,10 +165,10 @@ export const payStatusLabel: Record<PayStatus, string> = {
   rejected: "Rejected",
 };
 
-export const payStatusTone: Record<PayStatus, "warn" | "info" | "success" | "danger"> = {
+export const payStatusTone: Record<PayStatus, "warn" | "violet" | "agro" | "danger"> = {
   awaiting_payment: "warn",
-  paid_onchain: "info",
-  admin_review: "info",
-  confirmed: "success",
+  paid_onchain: "violet",
+  admin_review: "warn",
+  confirmed: "agro",
   rejected: "danger",
 };

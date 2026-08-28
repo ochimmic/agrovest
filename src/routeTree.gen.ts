@@ -52,6 +52,7 @@ import { Route as SupportDisputeRouteImport } from './routes/support.dispute'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
 import { Route as ServicesMpRouteImport } from './routes/services.mp'
 import { Route as PrichatIdRouteImport } from './routes/prichat.$id'
+import { Route as PayOrderIdRouteImport } from './routes/pay.$orderId'
 import { Route as BrokerRewardsRouteImport } from './routes/broker.rewards'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
@@ -285,6 +286,11 @@ const PrichatIdRoute = PrichatIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => PrichatRoute,
 } as any)
+const PayOrderIdRoute = PayOrderIdRouteImport.update({
+  id: '/pay/$orderId',
+  path: '/pay/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrokerRewardsRoute = BrokerRewardsRouteImport.update({
   id: '/rewards',
   path: '/rewards',
@@ -404,6 +410,7 @@ export interface FileRoutesByFullPath {
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
+  '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
@@ -464,6 +471,7 @@ export interface FileRoutesByTo {
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
+  '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
@@ -527,6 +535,7 @@ export interface FileRoutesById {
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
   '/broker/rewards': typeof BrokerRewardsRoute
+  '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
@@ -591,6 +600,7 @@ export interface FileRouteTypes {
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
+    | '/pay/$orderId'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
@@ -651,6 +661,7 @@ export interface FileRouteTypes {
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
+    | '/pay/$orderId'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
@@ -713,6 +724,7 @@ export interface FileRouteTypes {
     | '/admin/rewards'
     | '/admin/vendors'
     | '/broker/rewards'
+    | '/pay/$orderId'
     | '/prichat/$id'
     | '/services/mp'
     | '/signup/$role'
@@ -775,6 +787,7 @@ export interface RootRouteChildren {
   AdminPartnersRoute: typeof AdminPartnersRoute
   AdminRewardsRoute: typeof AdminRewardsRoute
   AdminVendorsRoute: typeof AdminVendorsRoute
+  PayOrderIdRoute: typeof PayOrderIdRoute
   SignupRoleRoute: typeof SignupRoleRoute
   WalletConfirmRoute: typeof WalletConfirmRoute
   WalletCreateRoute: typeof WalletCreateRoute
@@ -1095,6 +1108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrichatIdRouteImport
       parentRoute: typeof PrichatRoute
     }
+    '/pay/$orderId': {
+      id: '/pay/$orderId'
+      path: '/pay/$orderId'
+      fullPath: '/pay/$orderId'
+      preLoaderRoute: typeof PayOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/broker/rewards': {
       id: '/broker/rewards'
       path: '/rewards'
@@ -1342,6 +1362,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPartnersRoute: AdminPartnersRoute,
   AdminRewardsRoute: AdminRewardsRoute,
   AdminVendorsRoute: AdminVendorsRoute,
+  PayOrderIdRoute: PayOrderIdRoute,
   SignupRoleRoute: SignupRoleRoute,
   WalletConfirmRoute: WalletConfirmRoute,
   WalletCreateRoute: WalletCreateRoute,
