@@ -31,6 +31,7 @@ import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as BrokerRouteImport } from './routes/broker'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VaultIndexRouteImport } from './routes/vault.index'
 import { Route as PrichatIndexRouteImport } from './routes/prichat.index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
@@ -174,6 +175,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const VaultIndexRoute = VaultIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VaultRoute,
 } as any)
 const PrichatIndexRoute = PrichatIndexRouteImport.update({
   id: '/',
@@ -362,7 +368,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRouteWithChildren
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRouteWithChildren
-  '/vault': typeof VaultRoute
+  '/vault': typeof VaultRouteWithChildren
   '/vendor': typeof VendorRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
@@ -390,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
+  '/vault/': typeof VaultIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -418,7 +425,6 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRouteWithChildren
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRouteWithChildren
-  '/vault': typeof VaultRoute
   '/vendor': typeof VendorRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
@@ -446,6 +452,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/invest': typeof InvestIndexRoute
   '/prichat': typeof PrichatIndexRoute
+  '/vault': typeof VaultIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -476,7 +483,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRouteWithChildren
   '/settings': typeof SettingsRoute
   '/support': typeof SupportRouteWithChildren
-  '/vault': typeof VaultRoute
+  '/vault': typeof VaultRouteWithChildren
   '/vendor': typeof VendorRouteWithChildren
   '/welcome': typeof WelcomeRoute
   '/admin/audit': typeof AdminAuditRoute
@@ -504,6 +511,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
+  '/vault/': typeof VaultIndexRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -563,6 +571,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/invest/'
     | '/prichat/'
+    | '/vault/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -591,7 +600,6 @@ export interface FileRouteTypes {
     | '/services'
     | '/settings'
     | '/support'
-    | '/vault'
     | '/vendor'
     | '/welcome'
     | '/admin/audit'
@@ -619,6 +627,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/invest'
     | '/prichat'
+    | '/vault'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -676,6 +685,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/invest/'
     | '/prichat/'
+    | '/vault/'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -706,7 +716,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRouteWithChildren
   SettingsRoute: typeof SettingsRoute
   SupportRoute: typeof SupportRouteWithChildren
-  VaultRoute: typeof VaultRoute
+  VaultRoute: typeof VaultRouteWithChildren
   VendorRoute: typeof VendorRouteWithChildren
   WelcomeRoute: typeof WelcomeRoute
   AdminAuditRoute: typeof AdminAuditRoute
@@ -889,6 +899,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/vault/': {
+      id: '/vault/'
+      path: '/'
+      fullPath: '/vault/'
+      preLoaderRoute: typeof VaultIndexRouteImport
+      parentRoute: typeof VaultRoute
     }
     '/prichat/': {
       id: '/prichat/'
@@ -1183,6 +1200,16 @@ const SupportRouteChildren: SupportRouteChildren = {
 const SupportRouteWithChildren =
   SupportRoute._addFileChildren(SupportRouteChildren)
 
+interface VaultRouteChildren {
+  VaultIndexRoute: typeof VaultIndexRoute
+}
+
+const VaultRouteChildren: VaultRouteChildren = {
+  VaultIndexRoute: VaultIndexRoute,
+}
+
+const VaultRouteWithChildren = VaultRoute._addFileChildren(VaultRouteChildren)
+
 interface VendorRouteChildren {
   VendorApplyRoute: typeof VendorApplyRoute
   VendorDisputesRoute: typeof VendorDisputesRoute
@@ -1220,7 +1247,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRouteWithChildren,
   SettingsRoute: SettingsRoute,
   SupportRoute: SupportRouteWithChildren,
-  VaultRoute: VaultRoute,
+  VaultRoute: VaultRouteWithChildren,
   VendorRoute: VendorRouteWithChildren,
   WelcomeRoute: WelcomeRoute,
   AdminAuditRoute: AdminAuditRoute,
