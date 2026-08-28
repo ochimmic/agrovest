@@ -188,8 +188,8 @@ function HoldingDetail() {
             icon={<Plus size={16} />}
             onClick={() => nav({ to: "/invest/farmvest/$id", params: { id: asset.id } })}
           />
-          <Action label="Swap" icon={<RefreshCw size={16} />} onClick={() => nav({ to: "/wallet/swap" })} />
-          <Action label="Txns" icon={<Receipt size={16} />} onClick={() => nav({ to: "/wallet/history" })} />
+          <Action label="Send" icon={<RefreshCw size={16} />} onClick={() => nav({ to: "/vault/send" })} />
+          <Action label="Txns" icon={<Receipt size={16} />} onClick={() => nav({ to: "/vault" })} />
           <Action
             label="Docs"
             icon={<FileText size={16} />}

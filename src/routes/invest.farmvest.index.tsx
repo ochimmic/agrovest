@@ -141,8 +141,8 @@ function FarmVest() {
               label="Invest"
               icon={<Plus size={16} />}
             />
-            <QuickAction to="/wallet/swap" label="Swap" icon={<RefreshCw size={16} />} />
-            <QuickAction to="/wallet/history" label="Txns" icon={<Receipt size={16} />} />
+            <QuickAction to="/vault/send" label="Send" icon={<RefreshCw size={16} />} />
+            <QuickAction to="/vault" label="Txns" icon={<Receipt size={16} />} />
             <QuickAction
               to={dash.count > 0 ? "/invest/farmvest/holding/$hid" : "/invest/farmvest"}
               params={dash.count > 0 ? { hid: holdings[0].id } : undefined}
@@ -157,7 +157,7 @@ function FarmVest() {
           <section className="mt-4">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-navy">Your holdings</h2>
-              <Link to="/wallet/history" className="text-[11px] text-agro font-medium">
+              <Link to="/vault" className="text-[11px] text-agro font-medium">
                 See all
               </Link>
             </div>
