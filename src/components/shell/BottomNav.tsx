@@ -1,12 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, TrendingUp, Wallet, Landmark, User } from "lucide-react";
+import { Home, TrendingUp, Wallet, Store, User } from "lucide-react";
 
 const tabs = [
-  { to: "/home", label: "Home", icon: Home },
-  { to: "/invest", label: "Invest", icon: TrendingUp },
-  { to: "/vault", label: "Vault", icon: Wallet },
-  { to: "/prichat", label: "GoPay", icon: Landmark },
-  { to: "/profile", label: "Profile", icon: User },
+  { to: "/home", label: "Home", icon: Home, match: "/home" },
+  { to: "/invest/farmvest", label: "FarmVest", icon: TrendingUp, match: "/invest/farmvest" },
+  { to: "/vault", label: "AssetVault", icon: Wallet, match: "/vault" },
+  { to: "/invest/property", label: "Buy Assets", icon: Store, match: "/invest/property" },
+  { to: "/profile", label: "Profile", icon: User, match: "/profile" },
 ];
 
 export function BottomNav() {
@@ -14,8 +14,8 @@ export function BottomNav() {
   return (
     <nav className="sticky bottom-0 z-30 border-t border-border bg-background/85 glass">
       <ul className="grid grid-cols-5 px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-        {tabs.map(({ to, label, icon: Icon }) => {
-          const active = pathname === to || pathname.startsWith(to + "/");
+        {tabs.map(({ to, label, icon: Icon, match }) => {
+          const active = pathname === match || pathname.startsWith(match + "/");
           return (
             <li key={to}>
               <Link
