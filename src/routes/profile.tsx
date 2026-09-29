@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ShieldCheck, FileText, Settings, Lock, LogOut, ChevronRight, Award,
-  HelpCircle, Scale, Wallet,, CalendarClock } from "lucide-react";
+  HelpCircle, Scale, Wallet, CalendarClock } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState, reset } from "@/lib/store";
 import { RoleBadge, KycBadge, NonCustodialBadge, BscBadge } from "@/components/ui/agro-badge";
