@@ -1,7 +1,8 @@
 import { LocalTime } from "@/components/ui/local-time";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Check, Copy, ExternalLink, MessageSquare, Phone } from "lucide-react";
+import { ArrowLeft, Check, Copy, ExternalLink, MessageSquare, Phone, Upload } from "lucide-react";
+import { ACCEPT, uploadPrivate } from "@/lib/uploads";
 import { toast } from "sonner";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroBadge } from "@/components/ui/agro-badge";
@@ -31,12 +32,23 @@ function PayStatus() {
   const order = usePayments((s) => s.orders.find((o) => o.id === orderId));
   const account = order?.rail === "usd" ? USD_ACCOUNT : NGN_ACCOUNT;
   const isBank = order?.rail === "ngn" || order?.rail === "usd";
-  const awaiting = order?.status === "awaiting_payment";
+  const canNotify = order?.status === "awaiting_payment" || order?.status === "admin_review";
+  const [receipt, setReceipt] = useState<File | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  function notify() {
+  async function notify() {
     if (!order) return;
-    markTransferNotified(order.id);
-    toast.success("AgroVest has been notified — an admin will confirm shortly.");
+    setBusy(true);
+    try {
+      const path = receipt ? await uploadPrivate("payment-receipts", receipt, order.reference) : undefined;
+      await markTransferNotified(order.id, path);
+      toast.success("AgroVest has been notified — an admin will confirm shortly.");
+      setReceipt(null);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -108,8 +120,23 @@ function PayStatus() {
                       Very important: enter <span className="font-semibold">{order.reference}</span> as the
                       transfer description or narration so AgroVest can match your payment.
                     </div>
-                    {awaiting && (
-                      <AgroButton size="lg" onClick={notify}>I have made the transfer</AgroButton>
+                    {canNotify && (
+                      <>
+                        <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed border-violet/40 p-3">
+                          <Upload size={16} className="text-violet" />
+                          <span className="flex-1 text-xs text-foreground line-clamp-1">
+                            {receipt ? receipt.name : "Attach transfer receipt (recommended)"}
+                          </span>
+                          <input type="file" accept={ACCEPT} className="hidden"
+                            onChange={(e) => { setReceipt(e.target.files?.[0] ?? null); e.target.value = ""; }} />
+                        </label>
+                        <AgroButton size="lg" onClick={notify} disabled={busy}>
+                          {busy ? "Sending…" : "I have made the transfer"}
+                        </AgroButton>
+                      </>
+                    )}
+                    {order.receiptPath && (
+                      <p className="flex items-center gap-1.5 text-[11px] text-agro"><Check size={12} /> Receipt received</p>
                     )}
                   </>
                 )}
