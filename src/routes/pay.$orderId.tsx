@@ -1,17 +1,22 @@
 import { LocalTime } from "@/components/ui/local-time";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ExternalLink, MessageSquare, Phone } from "lucide-react";
+import { useState } from "react";
+import { ArrowLeft, Check, Copy, ExternalLink, MessageSquare, Phone } from "lucide-react";
+import { toast } from "sonner";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroBadge } from "@/components/ui/agro-badge";
+import { AgroButton } from "@/components/ui/agro-button";
 import { Money } from "@/components/ui/money";
 import { txUrl, type NetworkId } from "@/lib/wallet/chain";
-import { payStatusLabel, payStatusTone, usePayments } from "@/lib/payments";
+import { NGN_ACCOUNT, USD_ACCOUNT, SUPPORT_PHONE } from "@/lib/company";
+import { NGN_PER_USD } from "@/lib/fx";
+import { markTransferNotified, payStatusLabel, payStatusTone, usePayments } from "@/lib/payments";
 
 export const Route = createFileRoute("/pay/$orderId")({
   head: () => ({
     meta: [
       { title: "Payment status | AgroVest" },
-      { name: "description", content: "Track your AgroVest payment from on-chain transfer through manual admin confirmation." },
+      { name: "description", content: "Track your AgroVest payment from transfer through manual admin confirmation." },
       { property: "og:title", content: "Payment status | AgroVest" },
       { property: "og:description", content: "Follow every step of your AgroVest payment confirmation." },
       { property: "og:type", content: "website" },
@@ -24,6 +29,15 @@ export const Route = createFileRoute("/pay/$orderId")({
 function PayStatus() {
   const { orderId } = Route.useParams();
   const order = usePayments((s) => s.orders.find((o) => o.id === orderId));
+  const account = order?.rail === "usd" ? USD_ACCOUNT : NGN_ACCOUNT;
+  const isBank = order?.rail === "ngn" || order?.rail === "usd";
+  const awaiting = order?.status === "awaiting_payment";
+
+  function notify() {
+    if (!order) return;
+    markTransferNotified(order.id);
+    toast.success("AgroVest has been notified — an admin will confirm shortly.");
+  }
 
   return (
     <MobileFrame>
@@ -43,15 +57,59 @@ function PayStatus() {
           <>
             <section className="rounded-3xl gradient-navy p-5 text-white shadow-pop">
               <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-widest text-white/60">{order.reference}</span>
+                <span className="text-xs uppercase tracking-widest text-white/60">Ticket ID</span>
                 <AgroBadge size="xs" tone={payStatusTone[order.status]}>{payStatusLabel[order.status]}</AgroBadge>
+              </div>
+              <div className="mt-1 flex items-center gap-2">
+                <p className="text-lg font-semibold tracking-wide">{order.reference}</p>
+                <CopyBtn value={order.reference} light />
               </div>
               <p className="mt-3 text-2xl font-semibold tabular">${order.amountUsd.toLocaleString()}</p>
               <p className="mt-0.5 text-xs text-white/70">
                 {order.purpose.qty} × {order.purpose.unit} · {order.purpose.assetName}
               </p>
-              <p className="mt-2 text-[11px] text-white/60">Paid in {order.token}</p>
+              <p className="mt-2 text-[11px] text-white/60">
+                {order.rail === "crypto"
+                  ? `Paid in ${order.token}`
+                  : order.rail === "ngn"
+                    ? `≈ ₦${Math.round(order.amountUsd * NGN_PER_USD).toLocaleString()} by bank transfer`
+                    : "US dollar transfer"}
+              </p>
             </section>
+
+            {isBank && (
+              <section className="rounded-3xl border border-border bg-card p-4 space-y-3">
+                <h2 className="text-sm font-semibold text-foreground">
+                  {order.rail === "ngn" ? "Transfer to AgroVest" : "AgroVest dollar account"}
+                </h2>
+                {!account.available ? (
+                  <p className="rounded-2xl bg-secondary p-3 text-xs text-muted-foreground">
+                    The dollar domiciliary account is being finalised. Please contact the AgroVest
+                    team below, or pay in naira or crypto instead.
+                  </p>
+                ) : (
+                  <>
+                    <AcctRow k="Bank" v={account.bankName} />
+                    <AcctRow k="Account name" v={account.accountName} />
+                    <AcctRow k="Account number" v={account.accountNumber} copy />
+                    {account.swift && <AcctRow k="SWIFT / BIC" v={account.swift} copy />}
+                    <AcctRow
+                      k="Amount"
+                      v={order.rail === "ngn"
+                        ? `₦${Math.round(order.amountUsd * NGN_PER_USD).toLocaleString()}`
+                        : `$${order.amountUsd.toLocaleString()}`}
+                    />
+                    <div className="rounded-2xl bg-violet-soft/40 border border-violet/20 p-3 text-[11px] text-foreground">
+                      Very important: enter <span className="font-semibold">{order.reference}</span> as the
+                      transfer description or narration so AgroVest can match your payment.
+                    </div>
+                    {awaiting && (
+                      <AgroButton size="lg" onClick={notify}>I have made the transfer</AgroButton>
+                    )}
+                  </>
+                )}
+              </section>
+            )}
 
             <section className="rounded-2xl border border-border bg-card p-4 space-y-2 text-sm">
               <Row k="Amount">
@@ -63,7 +121,7 @@ function PayStatus() {
               {order.txHash && (
                 <Row k="On-chain">
                   <a
-                    href={txUrl((order.network ?? "bsc-testnet") as NetworkId, order.txHash)}
+                    href={txUrl((order.network ?? "bsc-mainnet") as NetworkId, order.txHash)}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-1 text-violet"
@@ -91,7 +149,7 @@ function PayStatus() {
             </section>
 
             <div className="grid grid-cols-2 gap-2">
-              <a href="tel:+2348000000000" className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card p-3 text-xs font-medium text-foreground">
+              <a href={`tel:${SUPPORT_PHONE}`} className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card p-3 text-xs font-medium text-foreground">
                 <Phone size={14} /> Call admin
               </a>
               <Link to="/support" className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card p-3 text-xs font-medium text-foreground">
@@ -102,6 +160,37 @@ function PayStatus() {
         )}
       </div>
     </MobileFrame>
+  );
+}
+
+function CopyBtn({ value, light }: { value: string; light?: boolean }) {
+  const [done, setDone] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        void navigator.clipboard.writeText(value);
+        setDone(true);
+        toast.success("Copied");
+        setTimeout(() => setDone(false), 1500);
+      }}
+      className={`rounded-full p-1.5 ${light ? "bg-white/15 text-white" : "bg-secondary text-foreground"}`}
+      aria-label="Copy"
+    >
+      {done ? <Check size={13} /> : <Copy size={13} />}
+    </button>
+  );
+}
+
+function AcctRow({ k, v, copy }: { k: string; v: string; copy?: boolean }) {
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-xs text-muted-foreground">{k}</span>
+      <span className="flex items-center gap-2 text-sm font-medium text-foreground tabular">
+        {v}
+        {copy && <CopyBtn value={v} />}
+      </span>
+    </div>
   );
 }
 
