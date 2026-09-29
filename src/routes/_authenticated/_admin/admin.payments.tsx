@@ -57,6 +57,7 @@ function AdminPayments() {
       label: payStatusLabel[o.status],
       tone: payStatusTone[o.status],
       hash: o.txHash,
+      receipt: o.receiptPath,
       network: o.network,
       settled: o.status === "confirmed" || o.status === "rejected",
     }));
@@ -73,6 +74,7 @@ function AdminPayments() {
       label: o.status.replace(/_/g, " "),
       tone: (o.status === "confirmed" ? "agro" : o.status === "cancelled" ? "danger" : "warn") as "agro" | "danger" | "warn",
       hash: undefined as string | undefined,
+      receipt: undefined as string | undefined,
       network: undefined as string | undefined,
       settled: o.status === "confirmed" || o.status === "cancelled",
     }));
