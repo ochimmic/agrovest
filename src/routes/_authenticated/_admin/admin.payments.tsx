@@ -2,7 +2,8 @@ import "@/lib/assetpay";
 import { LocalTime } from "@/components/ui/local-time";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Bell, Check, ExternalLink, Info, X } from "lucide-react";
+import { Bell, Check, ExternalLink, FileText, Info, X } from "lucide-react";
+import { openPrivate } from "@/lib/uploads";
 import { toast } from "sonner";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AgroBadge } from "@/components/ui/agro-badge";
@@ -56,6 +57,7 @@ function AdminPayments() {
       label: payStatusLabel[o.status],
       tone: payStatusTone[o.status],
       hash: o.txHash,
+      receipt: o.receiptPath,
       network: o.network,
       settled: o.status === "confirmed" || o.status === "rejected",
     }));
@@ -72,6 +74,7 @@ function AdminPayments() {
       label: o.status.replace(/_/g, " "),
       tone: (o.status === "confirmed" ? "agro" : o.status === "cancelled" ? "danger" : "warn") as "agro" | "danger" | "warn",
       hash: undefined as string | undefined,
+      receipt: undefined as string | undefined,
       network: undefined as string | undefined,
       settled: o.status === "confirmed" || o.status === "cancelled",
     }));
@@ -180,6 +183,14 @@ function AdminPayments() {
                     <p className="mt-0.5 text-[11px] text-muted-foreground">
                       {r.method} · <LocalTime at={r.at} />
                     </p>
+                    {r.receipt && (
+                      <button
+                        onClick={() => openPrivate("payment-receipts", r.receipt!).catch((e) => toast.error(e instanceof Error ? e.message : "Could not open receipt"))}
+                        className="mt-1 mr-3 inline-flex items-center gap-1 text-[11px] font-medium text-violet"
+                      >
+                        <FileText size={11} /> View receipt
+                      </button>
+                    )}
                     {r.hash && (
                       <a
                         href={txUrl((r.network ?? "bsc-testnet") as NetworkId, r.hash)}

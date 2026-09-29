@@ -101,6 +101,63 @@ export type Database = {
         }
         Relationships: []
       }
+      kyc_submissions: {
+        Row: {
+          address: string
+          address_doc_path: string | null
+          admin_note: string | null
+          city: string
+          created_at: string
+          id: string
+          id_doc_path: string
+          id_number: string
+          id_type: string
+          postcode: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          selfie_path: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          address_doc_path?: string | null
+          admin_note?: string | null
+          city: string
+          created_at?: string
+          id?: string
+          id_doc_path: string
+          id_number: string
+          id_type: string
+          postcode?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_path: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          address?: string
+          address_doc_path?: string | null
+          admin_note?: string | null
+          city?: string
+          created_at?: string
+          id?: string
+          id_doc_path?: string
+          id_number?: string
+          id_type?: string
+          postcode?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_path?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       pay_orders: {
         Row: {
           amount_usd: number
@@ -112,6 +169,7 @@ export type Database = {
           rail: string
           rate: number
           reason: string | null
+          receipt_path: string | null
           reference: string
           reviewed_by: string | null
           status: string
@@ -131,6 +189,7 @@ export type Database = {
           rail: string
           rate?: number
           reason?: string | null
+          receipt_path?: string | null
           reference: string
           reviewed_by?: string | null
           status?: string
@@ -150,6 +209,7 @@ export type Database = {
           rail?: string
           rate?: number
           reason?: string | null
+          receipt_path?: string | null
           reference?: string
           reviewed_by?: string | null
           status?: string
@@ -269,6 +329,10 @@ export type Database = {
         Args: { p_id: string; p_note: string }
         Returns: undefined
       }
+      admin_review_kyc: {
+        Args: { p_decision: string; p_id: string; p_note: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -280,7 +344,10 @@ export type Database = {
         Args: { p_id: string; p_network: string; p_tx_hash: string }
         Returns: undefined
       }
-      order_mark_transfer: { Args: { p_id: string }; Returns: undefined }
+      order_mark_transfer: {
+        Args: { p_id: string; p_receipt?: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "investor" | "broker" | "vendor" | "admin"

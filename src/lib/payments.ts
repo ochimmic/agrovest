@@ -43,6 +43,8 @@ export type PayOrder = {
   network?: string;
   status: PayStatus;
   reason?: string;
+  /** Private storage path of the uploaded transfer receipt. */
+  receiptPath?: string;
   createdAt: string;
   updatedAt: string;
   purpose: PayPurpose;
@@ -72,13 +74,14 @@ function enqueue<T>(fn: () => PromiseLike<{ error: { message: string } | null }>
 type Row = {
   id: string; reference: string; rail: string; payer_name: string; amount_usd: number; rate: number; token: string;
   tx_hash: string | null; network: string | null; status: string; reason: string | null; purpose: unknown; timeline: unknown;
-  created_at: string; updated_at: string;
+  created_at: string; updated_at: string; receipt_path?: string | null;
 };
 function fromRow(r: Row): PayOrder {
   return {
     id: r.id, reference: r.reference, rail: r.rail as PayRail, payerName: r.payer_name, amountUsd: Number(r.amount_usd),
     rate: Number(r.rate), token: r.token, ...(r.tx_hash ? { txHash: r.tx_hash } : {}), ...(r.network ? { network: r.network } : {}),
     status: r.status as PayStatus, ...(r.reason ? { reason: r.reason } : {}), createdAt: r.created_at, updatedAt: r.updated_at,
+    ...(r.receipt_path ? { receiptPath: r.receipt_path } : {}),
     purpose: r.purpose as PayPurpose, timeline: (r.timeline as PayOrder["timeline"]) ?? [],
   };
 }
@@ -153,9 +156,9 @@ function local(id: string, p: Partial<PayOrder>, note?: string) {
 }
 
 /** Buyer says they've completed a bank transfer — sends it to the admin queue. */
-export function markTransferNotified(id: string) {
-  local(id, { status: "payment_notified" }, "Buyer confirmed the bank transfer. Awaiting AgroVest verification.");
-  return enqueue(() => supabase.rpc("order_mark_transfer", { p_id: id }));
+export function markTransferNotified(id: string, receiptPath?: string) {
+  local(id, { status: "payment_notified", ...(receiptPath ? { receiptPath } : {}) }, "Buyer confirmed the bank transfer. Awaiting AgroVest verification.");
+  return enqueue(() => supabase.rpc("order_mark_transfer", receiptPath ? { p_id: id, p_receipt: receiptPath } : { p_id: id }));
 }
 
 export function markPaidOnChain(id: string, txHash: string, network: string) {
