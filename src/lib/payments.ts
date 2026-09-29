@@ -6,7 +6,6 @@
 //
 //   awaiting_payment → paid_onchain → admin_review → confirmed | rejected
 import { useSyncExternalStore } from "react";
-import { addHolding, addTx } from "@/lib/store";
 
 export type PayStatus =
   | "awaiting_payment"
@@ -50,31 +49,49 @@ export type PayOrder = {
   timeline: { t: string; at: string }[];
 };
 
-const KEY = "agrovest_payments_v1";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
-type S = { orders: PayOrder[] };
-let s: S = { orders: [] };
-let hydrated = false;
+type S = { orders: PayOrder[]; loaded: boolean };
+let s: S = { orders: [], loaded: false };
 const listeners = new Set<() => void>();
 function emit() { listeners.forEach((l) => l()); }
-function persist() {
-  if (typeof window === "undefined") return;
-  try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ }
+
+// Serialise writes so e.g. "create order" always lands before "mark paid".
+let queue: Promise<unknown> = Promise.resolve();
+function enqueue<T>(fn: () => PromiseLike<{ error: { message: string } | null }>, onDone?: () => void) {
+  queue = queue.then(async () => {
+    const { error } = await fn();
+    if (error) { console.error(error); toast.error(error.message); }
+    await refreshPayments();
+    onDone?.();
+  });
+  return queue;
 }
 
-function hydrateFromStorage() {
-  if (hydrated || typeof window === "undefined") return;
-  hydrated = true;
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return;
-    s = { orders: (JSON.parse(raw) as S).orders ?? [] };
-    emit();
-  } catch { /* ignore */ }
+type Row = {
+  id: string; reference: string; rail: string; payer_name: string; amount_usd: number; rate: number; token: string;
+  tx_hash: string | null; network: string | null; status: string; reason: string | null; purpose: unknown; timeline: unknown;
+  created_at: string; updated_at: string;
+};
+function fromRow(r: Row): PayOrder {
+  return {
+    id: r.id, reference: r.reference, rail: r.rail as PayRail, payerName: r.payer_name, amountUsd: Number(r.amount_usd),
+    rate: Number(r.rate), token: r.token, ...(r.tx_hash ? { txHash: r.tx_hash } : {}), ...(r.network ? { network: r.network } : {}),
+    status: r.status as PayStatus, ...(r.reason ? { reason: r.reason } : {}), createdAt: r.created_at, updatedAt: r.updated_at,
+    purpose: r.purpose as PayPurpose, timeline: (r.timeline as PayOrder["timeline"]) ?? [],
+  };
 }
+
+export async function refreshPayments() {
+  const { data, error } = await supabase.from("pay_orders").select("*").order("created_at", { ascending: false }).limit(500);
+  if (error) { console.error(error); return; }
+  s = { orders: (data as Row[]).map(fromRow), loaded: true };
+  emit();
+}
+export function clearPayments() { s = { orders: [], loaded: false }; emit(); }
 
 export function usePayments<T>(sel: (s: S) => T): T {
-  if (typeof window !== "undefined" && !hydrated) queueMicrotask(hydrateFromStorage);
   return useSyncExternalStore(
     (cb) => { listeners.add(cb); return () => listeners.delete(cb); },
     () => sel(s),
@@ -104,7 +121,7 @@ export function createPayOrder(input: {
   purpose: PayPurpose;
 }): PayOrder {
   const now = new Date().toISOString();
-  const id = `pay_${Date.now()}`;
+  const id = `pay_${crypto.randomUUID()}`;
   const rail: PayRail = input.rail ?? "crypto";
   const order: PayOrder = {
     id,
@@ -120,85 +137,50 @@ export function createPayOrder(input: {
     purpose: input.purpose,
     timeline: [{ t: `Order created for ${input.purpose.assetName}.`, at: now }],
   };
-  s = { orders: [order, ...s.orders] };
-  persist();
+  s = { ...s, orders: [order, ...s.orders] };
   emit();
+  void enqueue(() => supabase.from("pay_orders").insert({
+    id, reference: order.reference, rail, payer_name: order.payerName, amount_usd: order.amountUsd,
+    rate: order.rate, token: order.token, purpose: order.purpose as never, timeline: order.timeline as never,
+  }));
   return order;
 }
 
-/** Buyer says they've completed a bank transfer — sends it to the admin queue. */
-export function markTransferNotified(id: string, note?: string) {
-  patch(
-    id,
-    { status: "payment_notified" },
-    note ?? "Buyer confirmed the bank transfer. Awaiting AgroVest verification.",
-  );
-}
-
-function patch(id: string, p: Partial<PayOrder>, note?: string) {
+function local(id: string, p: Partial<PayOrder>, note?: string) {
   const now = new Date().toISOString();
-  s = {
-    orders: s.orders.map((o) =>
-      o.id === id
-        ? {
-            ...o,
-            ...p,
-            updatedAt: now,
-            timeline: note ? [...o.timeline, { t: note, at: now }] : o.timeline,
-          }
-        : o,
-    ),
-  };
-  persist();
+  s = { ...s, orders: s.orders.map((o) => o.id === id ? { ...o, ...p, updatedAt: now, timeline: note ? [...o.timeline, { t: note, at: now }] : o.timeline } : o) };
   emit();
 }
 
-export function markPaidOnChain(id: string, txHash: string, network: string) {
-  patch(id, { status: "admin_review", txHash, network }, `Payment sent on-chain (${txHash.slice(0, 10)}…). Awaiting AgroVest confirmation.`);
+/** Buyer says they've completed a bank transfer — sends it to the admin queue. */
+export function markTransferNotified(id: string) {
+  local(id, { status: "payment_notified" }, "Buyer confirmed the bank transfer. Awaiting AgroVest verification.");
+  return enqueue(() => supabase.rpc("order_mark_transfer", { p_id: id }));
 }
 
-/** Admin confirms — this is the only path that creates a holding. */
-type InstallmentHooks = { confirm: (planId: string, i: number) => void; release: (planId: string, i: number) => void };
-let installmentHooks: InstallmentHooks | null = null;
-export function registerInstallmentHooks(h: InstallmentHooks) { installmentHooks = h; }
+export function markPaidOnChain(id: string, txHash: string, network: string) {
+  local(id, { status: "admin_review", txHash, network });
+  return enqueue(() => supabase.rpc("order_mark_onchain", { p_id: id, p_tx_hash: txHash, p_network: network }));
+}
 
+/** Admin confirms — the server creates the holding for the buyer. */
 export function confirmPayOrder(id: string) {
-  const order = s.orders.find((o) => o.id === id);
-  if (!order || order.status === "confirmed") return;
-  if (order.purpose.planId != null && order.purpose.installment != null) {
-    patch(id, { status: "confirmed" }, "AgroVest confirmed this AssetPay installment.");
-    installmentHooks?.confirm(order.purpose.planId, order.purpose.installment);
-    addTx({ type: "invest", amount: order.amountUsd, token: order.token, status: "confirmed", meta: `AssetPay · ${order.purpose.assetName}`, ...(order.txHash ? { hash: order.txHash } : {}) });
-    return;
-  }
-  patch(id, { status: "confirmed" }, "AgroVest confirmed the payment. Holding created and documents issued.");
-  addHolding({
-    assetId: order.purpose.assetId,
-    name: order.purpose.assetName,
-    category: order.purpose.category,
-    units: order.purpose.qty,
-    unit: order.purpose.unit,
-    invested: order.amountUsd,
-  });
-  addTx({
-    type: "invest",
-    amount: order.amountUsd,
-    token: order.token,
-    status: "confirmed",
-    meta: order.purpose.assetName,
-    ...(order.txHash ? { hash: order.txHash } : {}),
-  });
+  local(id, { status: "confirmed" });
+  return enqueue(() => supabase.rpc("admin_confirm_order", { p_id: id }), onSettled);
 }
 
 export function rejectPayOrder(id: string, reason: string) {
-  patch(id, { status: "rejected", reason }, `Rejected by AgroVest: ${reason}`);
-  const o = s.orders.find((x) => x.id === id);
-  if (o?.purpose.planId != null && o.purpose.installment != null) installmentHooks?.release(o.purpose.planId, o.purpose.installment);
+  local(id, { status: "rejected", reason });
+  return enqueue(() => supabase.rpc("admin_reject_order", { p_id: id, p_reason: reason }), onSettled);
 }
 
 export function requestMoreInfo(id: string, note: string) {
-  patch(id, { status: "admin_review" }, `AgroVest requested more information: ${note}`);
+  return enqueue(() => supabase.rpc("admin_request_info", { p_id: id, p_note: note }));
 }
+
+let settledHook: (() => void) | null = null;
+export function onOrderSettled(fn: () => void) { settledHook = fn; }
+function onSettled() { settledHook?.(); }
 
 export const payStatusLabel: Record<PayStatus, string> = {
   awaiting_payment: "Awaiting payment",

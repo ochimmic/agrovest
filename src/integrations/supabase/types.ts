@@ -14,6 +14,189 @@ export type Database = {
   }
   public: {
     Tables: {
+      assetpay_plans: {
+        Row: {
+          cancel_reason: string | null
+          created_at: string
+          deposit_pct: number
+          id: string
+          installments: Json
+          months: number
+          purpose: Json
+          refund_usd: number | null
+          status: string
+          total_usd: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_reason?: string | null
+          created_at?: string
+          deposit_pct: number
+          id: string
+          installments: Json
+          months: number
+          purpose: Json
+          refund_usd?: number | null
+          status?: string
+          total_usd: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          cancel_reason?: string | null
+          created_at?: string
+          deposit_pct?: number
+          id?: string
+          installments?: Json
+          months?: number
+          purpose?: Json
+          refund_usd?: number | null
+          status?: string
+          total_usd?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      holdings: {
+        Row: {
+          asset_id: string
+          category: string
+          id: string
+          invested: number
+          name: string
+          order_id: string | null
+          plan_id: string | null
+          purchased_at: string
+          unit: string
+          units: number
+          user_id: string
+        }
+        Insert: {
+          asset_id: string
+          category: string
+          id?: string
+          invested: number
+          name: string
+          order_id?: string | null
+          plan_id?: string | null
+          purchased_at?: string
+          unit: string
+          units: number
+          user_id: string
+        }
+        Update: {
+          asset_id?: string
+          category?: string
+          id?: string
+          invested?: number
+          name?: string
+          order_id?: string | null
+          plan_id?: string | null
+          purchased_at?: string
+          unit?: string
+          units?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pay_orders: {
+        Row: {
+          amount_usd: number
+          created_at: string
+          id: string
+          network: string | null
+          payer_name: string
+          purpose: Json
+          rail: string
+          rate: number
+          reason: string | null
+          reference: string
+          reviewed_by: string | null
+          status: string
+          timeline: Json
+          token: string
+          tx_hash: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_usd: number
+          created_at?: string
+          id: string
+          network?: string | null
+          payer_name?: string
+          purpose: Json
+          rail: string
+          rate?: number
+          reason?: string | null
+          reference: string
+          reviewed_by?: string | null
+          status?: string
+          timeline?: Json
+          token: string
+          tx_hash?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          amount_usd?: number
+          created_at?: string
+          id?: string
+          network?: string | null
+          payer_name?: string
+          purpose?: Json
+          rail?: string
+          rate?: number
+          reason?: string | null
+          reference?: string
+          reviewed_by?: string | null
+          status?: string
+          timeline?: Json
+          token?: string
+          tx_hash?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      portfolio_txs: {
+        Row: {
+          amount: number
+          created_at: string
+          hash: string | null
+          id: string
+          meta: string | null
+          status: string
+          token: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          hash?: string | null
+          id?: string
+          meta?: string | null
+          status?: string
+          token: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          hash?: string | null
+          id?: string
+          meta?: string | null
+          status?: string
+          token?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -76,6 +259,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _tl: { Args: { msg: string; tl: Json }; Returns: Json }
+      admin_confirm_order: { Args: { p_id: string }; Returns: undefined }
+      admin_reject_order: {
+        Args: { p_id: string; p_reason: string }
+        Returns: undefined
+      }
+      admin_request_info: {
+        Args: { p_id: string; p_note: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -83,6 +276,11 @@ export type Database = {
         }
         Returns: boolean
       }
+      order_mark_onchain: {
+        Args: { p_id: string; p_network: string; p_tx_hash: string }
+        Returns: undefined
+      }
+      order_mark_transfer: { Args: { p_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "investor" | "broker" | "vendor" | "admin"

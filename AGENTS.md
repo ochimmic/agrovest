@@ -1,0 +1,2 @@
+- Orders, AssetPay plans, holdings and portfolio activity live in the cloud DB (pay_orders, assetpay_plans, holdings, portfolio_txs); client stores in src/lib/payments.ts / assetpay.ts are caches synced by src/lib/cloud-sync.ts. Why: admins must see every user's payments across devices.
+- Order status changes and holding creation only happen through SECURITY DEFINER RPCs (order_mark_*, admin_*); a trigger blocks buyers from marking installments paid. Why: financial records must not be forgeable from the browser.

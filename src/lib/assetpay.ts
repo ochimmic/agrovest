@@ -8,8 +8,9 @@
 //  - Missed installment: 7-day grace (reminder) → 5% late fee → cancelled after
 //    30 days overdue, refund of amount paid minus a 10% cancellation fee.
 import { useSyncExternalStore } from "react";
-import { addHolding } from "@/lib/store";
-import { registerInstallmentHooks, type PayPurpose } from "@/lib/payments";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import type { PayPurpose } from "@/lib/payments";
 
 export const MIN_DEPOSIT_PCT = 10;
 export const PLAN_MONTHS = [3, 6, 12] as const;
@@ -45,29 +46,39 @@ export type Plan = {
   installments: Installment[];
 };
 
-const KEY = "agrovest_assetpay_v1";
-type S = { plans: Plan[] };
-let s: S = { plans: [] };
-let hydrated = false;
+type S = { plans: Plan[]; loaded: boolean };
+let s: S = { plans: [], loaded: false };
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
-function persist() {
-  if (typeof window === "undefined") return;
-  try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* ignore */ }
+let queue: Promise<unknown> = Promise.resolve();
+function enqueue(fn: () => PromiseLike<{ error: { message: string } | null }>) {
+  queue = queue.then(async () => {
+    const { error } = await fn();
+    if (error) { console.error(error); toast.error(error.message); await refreshPlans(); }
+  });
+  return queue;
 }
-function hydrate() {
-  if (hydrated || typeof window === "undefined") return;
-  hydrated = true;
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) s = { plans: (JSON.parse(raw) as S).plans ?? [] };
-  } catch { /* ignore */ }
+type Row = { id: string; purpose: unknown; total_usd: number; deposit_pct: number; months: number; status: string; cancel_reason: string | null; refund_usd: number | null; installments: unknown; created_at: string };
+const fromRow = (r: Row): Plan => ({
+  id: r.id, purpose: r.purpose as Plan["purpose"], totalUsd: Number(r.total_usd), depositPct: Number(r.deposit_pct), months: r.months,
+  status: r.status as Plan["status"], ...(r.cancel_reason ? { cancelReason: r.cancel_reason } : {}),
+  ...(r.refund_usd != null ? { refundUsd: Number(r.refund_usd) } : {}), createdAt: r.created_at, installments: r.installments as Installment[],
+});
+export async function refreshPlans() {
+  const { data, error } = await supabase.from("assetpay_plans").select("*").order("created_at", { ascending: false });
+  if (error) { console.error(error); return; }
+  s = { plans: (data as Row[]).map(fromRow), loaded: true };
   sweep();
   emit();
 }
+export function clearPlans() { s = { plans: [], loaded: false }; emit(); }
+function persistPlan(p: Plan) {
+  void enqueue(() => supabase.from("assetpay_plans").update({
+    installments: p.installments as never, status: p.status, cancel_reason: p.cancelReason ?? null, refund_usd: p.refundUsd ?? null,
+  }).eq("id", p.id));
+}
 
 export function useAssetPay<T>(sel: (s: S) => T): T {
-  if (typeof window !== "undefined" && !hydrated) queueMicrotask(hydrate);
   return useSyncExternalStore(
     (cb) => { listeners.add(cb); return () => listeners.delete(cb); },
     () => sel(s),
@@ -93,7 +104,7 @@ export function buildSchedule(totalUsd: number, depositPct: number, months: numb
 
 export function createPlan(input: { purpose: Omit<PayPurpose, "kind">; totalUsd: number; depositPct: number; months: number }): Plan {
   const plan: Plan = {
-    id: `ap_${Date.now()}`,
+    id: `ap_${crypto.randomUUID()}`,
     purpose: input.purpose,
     totalUsd: input.totalUsd,
     depositPct: Math.max(MIN_DEPOSIT_PCT, Math.min(90, input.depositPct)),
@@ -102,20 +113,23 @@ export function createPlan(input: { purpose: Omit<PayPurpose, "kind">; totalUsd:
     createdAt: new Date().toISOString(),
     installments: buildSchedule(input.totalUsd, input.depositPct, input.months),
   };
-  s = { plans: [plan, ...s.plans] };
-  persist();
+  s = { ...s, plans: [plan, ...s.plans] };
   emit();
+  void enqueue(() => supabase.from("assetpay_plans").insert({
+    id: plan.id, purpose: plan.purpose as never, total_usd: plan.totalUsd, deposit_pct: plan.depositPct, months: plan.months,
+    installments: plan.installments as never,
+  }));
   return plan;
 }
 
 function update(id: string, fn: (p: Plan) => Plan) {
-  hydrate();
-  s = { plans: s.plans.map((p) => (p.id === id ? fn(p) : p)) };
-  persist();
+  let changed: Plan | undefined;
+  s = { ...s, plans: s.plans.map((p) => (p.id === id ? (changed = fn(p)) : p)) };
   emit();
+  if (changed) persistPlan(changed);
 }
 
-export const getPlan = (id: string) => { hydrate(); return s.plans.find((p) => p.id === id); };
+export const getPlan = (id: string) => s.plans.find((p) => p.id === id);
 
 export function installmentStatus(i: Installment, now = Date.now()): InstallmentStatus {
   if (i.paid) return "paid";
@@ -143,33 +157,36 @@ export function nextInstallment(p: Plan) {
 
 /** Apply late fees and cancel plans overdue beyond the limit. */
 export function sweep(now = Date.now()) {
-  let changed = false;
+  const changed: Plan[] = [];
   s = {
+    ...s,
     plans: s.plans.map((p) => {
       if (p.status !== "active") return p;
       const inst = p.installments.map((i) => {
         if (!i.paid && !i.orderId && installmentStatus(i, now) === "late" && i.lateFeeUsd === 0) {
-          changed = true;
           return { ...i, lateFeeUsd: round2((i.amountUsd * LATE_FEE_PCT) / 100) };
         }
         return i;
       });
       const expired = inst.some((i) => !i.paid && !i.orderId && now - new Date(i.dueAt).getTime() > CANCEL_AFTER_DAYS * DAY);
       if (expired) {
-        changed = true;
         const paid = round2(inst.filter((i) => i.paid).reduce((a, i) => a + i.amountUsd, 0));
-        return {
+        const np: Plan = {
           ...p,
           installments: inst,
           status: "cancelled" as const,
           cancelReason: `Installment more than ${CANCEL_AFTER_DAYS} days overdue.`,
           refundUsd: round2(paid * (1 - CANCEL_FEE_PCT / 100)),
         };
+        changed.push(np);
+        return np;
       }
-      return { ...p, installments: inst };
+      const np = { ...p, installments: inst };
+      if (JSON.stringify(inst) !== JSON.stringify(p.installments)) changed.push(np);
+      return np;
     }),
   };
-  if (changed) persist();
+  changed.forEach(persistPlan);
 }
 
 export function attachOrder(planId: string, index: number, orderId: string) {
@@ -187,26 +204,6 @@ export function releaseOrder(planId: string, index: number) {
   }));
 }
 
-/** Called when an admin confirms an installment payment. */
-export function confirmInstallment(planId: string, index: number) {
-  const plan = getPlan(planId);
-  if (!plan) return;
-  const now = new Date().toISOString();
-  const installments = plan.installments.map((i) => (i.index === index ? { ...i, paid: true, paidAt: now } : i));
-  const done = installments.every((i) => i.paid);
-  update(planId, (p) => ({ ...p, installments, status: done ? "completed" : p.status }));
-  if (done) {
-    addHolding({
-      assetId: plan.purpose.assetId,
-      name: plan.purpose.assetName,
-      category: plan.purpose.category,
-      units: plan.purpose.qty,
-      unit: plan.purpose.unit,
-      invested: plan.totalUsd,
-    });
-  }
-}
-
 export function cancelPlan(id: string, reason = "Cancelled by buyer.") {
   const p = getPlan(id);
   if (!p) return;
@@ -217,4 +214,3 @@ export function installmentLabel(i: number) {
   return i === 0 ? "Deposit" : `Installment ${i}`;
 }
 
-registerInstallmentHooks({ confirm: confirmInstallment, release: releaseOrder });
