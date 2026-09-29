@@ -173,5 +173,7 @@ export function authErrorMessage(e: unknown) {
   if (/email not confirmed/i.test(msg)) return "Please confirm your email first — check your inbox.";
   if (/already registered|already exists/i.test(msg)) return "An account with that email already exists. Try signing in.";
   if (/password/i.test(msg) && /least/i.test(msg)) return "Your password needs at least 6 characters.";
+  if (/weak|pwned/i.test(msg)) return "That password has appeared in a data breach. Please choose a stronger one.";
+  if (/rate limit|too many/i.test(msg)) return "Too many attempts. Please wait a minute and try again.";
   return msg;
 }
