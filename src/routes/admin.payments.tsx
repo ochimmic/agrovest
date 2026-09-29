@@ -117,6 +117,33 @@ function AdminPayments() {
   return (
     <AdminShell title="Payments" subtitle="Manual confirmation queue">
       <div className="space-y-4">
+        {alerts.length > 0 && (
+          <div className="rounded-2xl border border-violet/30 bg-violet-soft/40 p-4">
+            <div className="flex items-center gap-2">
+              <Bell size={15} className="text-violet" />
+              <p className="text-sm font-semibold text-foreground">
+                {alerts.length} new payment{alerts.length > 1 ? "s" : ""} pending review
+              </p>
+            </div>
+            <ul className="mt-2 space-y-1">
+              {alerts.slice(0, 4).map((o) => (
+                <li key={o.id} className="text-[11px] text-foreground">
+                  <span className="font-semibold">#{o.reference}</span> · {o.payerName ?? "AgroVest user"} ·{" "}
+                  ${o.amountUsd.toLocaleString()} · {RAIL_LABEL[o.rail ?? "crypto"]} ·{" "}
+                  <LocalTime at={o.updatedAt} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search ticket ID or user name"
+          className="w-full rounded-full border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground"
+        />
+
         <div className="flex flex-wrap items-center gap-2">
           {(["pending", "all", "confirmed"] as Filter[]).map((f) => (
             <button
@@ -131,6 +158,7 @@ function AdminPayments() {
           ))}
           <span className="ml-auto text-xs text-muted-foreground">{pendingCount} awaiting action</span>
         </div>
+
 
         {rows.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
