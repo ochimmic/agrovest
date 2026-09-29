@@ -174,10 +174,17 @@ function Signup() {
         </label>
       </div>
 
-      <div className="px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 border-t border-border bg-background">
-        <AgroButton size="xl" onClick={submit}>
-          Continue to verification
+      <div className="px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 border-t border-border bg-background space-y-2">
+        <AgroButton size="xl" onClick={submit} disabled={busy}>
+          {busy ? "Creating account…" : "Continue to verification"}
         </AgroButton>
+        <button
+          type="button"
+          onClick={google}
+          className="h-11 w-full rounded-2xl border border-input bg-card text-sm font-medium text-navy transition hover:bg-secondary/60"
+        >
+          Continue with Google
+        </button>
       </div>
     </MobileFrame>
   );
