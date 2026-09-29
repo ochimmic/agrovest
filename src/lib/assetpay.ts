@@ -109,12 +109,13 @@ export function createPlan(input: { purpose: Omit<PayPurpose, "kind">; totalUsd:
 }
 
 function update(id: string, fn: (p: Plan) => Plan) {
+  hydrate();
   s = { plans: s.plans.map((p) => (p.id === id ? fn(p) : p)) };
   persist();
   emit();
 }
 
-export const getPlan = (id: string) => s.plans.find((p) => p.id === id);
+export const getPlan = (id: string) => { hydrate(); return s.plans.find((p) => p.id === id); };
 
 export function installmentStatus(i: Installment, now = Date.now()): InstallmentStatus {
   if (i.paid) return "paid";
