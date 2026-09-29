@@ -57,10 +57,15 @@ function Profile() {
 
         {role === "broker" && <RoleQuick to="/broker" label="Broker dashboard" />}
         {role === "vendor" && <RoleQuick to="/vendor" label="Vendor dashboard" />}
-        <RoleQuick to="/admin" label="Admin (demo)" />
+        {admin && <RoleQuick to="/admin" label="Admin dashboard" />}
 
         <button
-          onClick={() => { reset(); nav({ to: "/welcome" }); }}
+          onClick={async () => {
+            await queryClient.cancelQueries();
+            queryClient.clear();
+            await signOutEverywhere();
+            nav({ to: "/welcome", replace: true });
+          }}
           className="w-full rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive py-3 text-sm font-medium flex items-center justify-center gap-2"
         >
           <LogOut size={14} /> Log out
