@@ -202,6 +202,7 @@ function Admin() {
       </header>
 
       <div className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
+        <PaymentAlerts />
         <CrosshairContext.Provider value={{ index, setIndex, length }}>
           <section className="space-y-2.5">
             <div className="flex items-center justify-between px-1">
