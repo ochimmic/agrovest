@@ -70,9 +70,11 @@ import { Route as AuthenticatedInvestCheckoutIdRouteImport } from './routes/_aut
 import { Route as AuthenticatedAssetpayNewIdRouteImport } from './routes/_authenticated/assetpay.new.$id'
 import { Route as AuthenticatedAdminAdminVendorsRouteImport } from './routes/_authenticated/_admin/admin.vendors'
 import { Route as AuthenticatedAdminAdminRewardsRouteImport } from './routes/_authenticated/_admin/admin.rewards'
+import { Route as AuthenticatedAdminAdminPayoutsRouteImport } from './routes/_authenticated/_admin/admin.payouts'
 import { Route as AuthenticatedAdminAdminPaymentsRouteImport } from './routes/_authenticated/_admin/admin.payments'
 import { Route as AuthenticatedAdminAdminPartnersRouteImport } from './routes/_authenticated/_admin/admin.partners'
 import { Route as AuthenticatedAdminAdminKycRouteImport } from './routes/_authenticated/_admin/admin.kyc'
+import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin.documents'
 import { Route as AuthenticatedAdminAdminDisputesRouteImport } from './routes/_authenticated/_admin/admin.disputes'
 import { Route as AuthenticatedAdminAdminDesktopRouteImport } from './routes/_authenticated/_admin/admin.desktop'
 import { Route as AuthenticatedAdminAdminConsultantsRouteImport } from './routes/_authenticated/_admin/admin.consultants'
@@ -406,6 +408,12 @@ const AuthenticatedAdminAdminRewardsRoute =
     path: '/admin/rewards',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminAdminPayoutsRoute =
+  AuthenticatedAdminAdminPayoutsRouteImport.update({
+    id: '/admin/payouts',
+    path: '/admin/payouts',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminAdminPaymentsRoute =
   AuthenticatedAdminAdminPaymentsRouteImport.update({
     id: '/admin/payments',
@@ -422,6 +430,12 @@ const AuthenticatedAdminAdminKycRoute =
   AuthenticatedAdminAdminKycRouteImport.update({
     id: '/admin/kyc',
     path: '/admin/kyc',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminDocumentsRoute =
+  AuthenticatedAdminAdminDocumentsRouteImport.update({
+    id: '/admin/documents',
+    path: '/admin/documents',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminAdminDisputesRoute =
@@ -513,9 +527,11 @@ export interface FileRoutesByFullPath {
   '/admin/consultants': typeof AuthenticatedAdminAdminConsultantsRoute
   '/admin/desktop': typeof AuthenticatedAdminAdminDesktopRoute
   '/admin/disputes': typeof AuthenticatedAdminAdminDisputesRoute
+  '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/kyc': typeof AuthenticatedAdminAdminKycRoute
   '/admin/partners': typeof AuthenticatedAdminAdminPartnersRoute
   '/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
+  '/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
   '/admin/vendors': typeof AuthenticatedAdminAdminVendorsRoute
   '/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
@@ -579,9 +595,11 @@ export interface FileRoutesByTo {
   '/admin/consultants': typeof AuthenticatedAdminAdminConsultantsRoute
   '/admin/desktop': typeof AuthenticatedAdminAdminDesktopRoute
   '/admin/disputes': typeof AuthenticatedAdminAdminDisputesRoute
+  '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/kyc': typeof AuthenticatedAdminAdminKycRoute
   '/admin/partners': typeof AuthenticatedAdminAdminPartnersRoute
   '/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
+  '/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
   '/admin/vendors': typeof AuthenticatedAdminAdminVendorsRoute
   '/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
@@ -651,9 +669,11 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/consultants': typeof AuthenticatedAdminAdminConsultantsRoute
   '/_authenticated/_admin/admin/desktop': typeof AuthenticatedAdminAdminDesktopRoute
   '/_authenticated/_admin/admin/disputes': typeof AuthenticatedAdminAdminDisputesRoute
+  '/_authenticated/_admin/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/_authenticated/_admin/admin/kyc': typeof AuthenticatedAdminAdminKycRoute
   '/_authenticated/_admin/admin/partners': typeof AuthenticatedAdminAdminPartnersRoute
   '/_authenticated/_admin/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
+  '/_authenticated/_admin/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/_authenticated/_admin/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
   '/_authenticated/_admin/admin/vendors': typeof AuthenticatedAdminAdminVendorsRoute
   '/_authenticated/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
@@ -722,9 +742,11 @@ export interface FileRouteTypes {
     | '/admin/consultants'
     | '/admin/desktop'
     | '/admin/disputes'
+    | '/admin/documents'
     | '/admin/kyc'
     | '/admin/partners'
     | '/admin/payments'
+    | '/admin/payouts'
     | '/admin/rewards'
     | '/admin/vendors'
     | '/assetpay/new/$id'
@@ -788,9 +810,11 @@ export interface FileRouteTypes {
     | '/admin/consultants'
     | '/admin/desktop'
     | '/admin/disputes'
+    | '/admin/documents'
     | '/admin/kyc'
     | '/admin/partners'
     | '/admin/payments'
+    | '/admin/payouts'
     | '/admin/rewards'
     | '/admin/vendors'
     | '/assetpay/new/$id'
@@ -859,9 +883,11 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/consultants'
     | '/_authenticated/_admin/admin/desktop'
     | '/_authenticated/_admin/admin/disputes'
+    | '/_authenticated/_admin/admin/documents'
     | '/_authenticated/_admin/admin/kyc'
     | '/_authenticated/_admin/admin/partners'
     | '/_authenticated/_admin/admin/payments'
+    | '/_authenticated/_admin/admin/payouts'
     | '/_authenticated/_admin/admin/rewards'
     | '/_authenticated/_admin/admin/vendors'
     | '/_authenticated/assetpay/new/$id'
@@ -1320,6 +1346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminRewardsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/_admin/admin/payouts': {
+      id: '/_authenticated/_admin/admin/payouts'
+      path: '/admin/payouts'
+      fullPath: '/admin/payouts'
+      preLoaderRoute: typeof AuthenticatedAdminAdminPayoutsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/_admin/admin/payments': {
       id: '/_authenticated/_admin/admin/payments'
       path: '/admin/payments'
@@ -1339,6 +1372,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/kyc'
       fullPath: '/admin/kyc'
       preLoaderRoute: typeof AuthenticatedAdminAdminKycRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/documents': {
+      id: '/_authenticated/_admin/admin/documents'
+      path: '/admin/documents'
+      fullPath: '/admin/documents'
+      preLoaderRoute: typeof AuthenticatedAdminAdminDocumentsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/_admin/admin/disputes': {
@@ -1384,9 +1424,11 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAdminConsultantsRoute: typeof AuthenticatedAdminAdminConsultantsRoute
   AuthenticatedAdminAdminDesktopRoute: typeof AuthenticatedAdminAdminDesktopRoute
   AuthenticatedAdminAdminDisputesRoute: typeof AuthenticatedAdminAdminDisputesRoute
+  AuthenticatedAdminAdminDocumentsRoute: typeof AuthenticatedAdminAdminDocumentsRoute
   AuthenticatedAdminAdminKycRoute: typeof AuthenticatedAdminAdminKycRoute
   AuthenticatedAdminAdminPartnersRoute: typeof AuthenticatedAdminAdminPartnersRoute
   AuthenticatedAdminAdminPaymentsRoute: typeof AuthenticatedAdminAdminPaymentsRoute
+  AuthenticatedAdminAdminPayoutsRoute: typeof AuthenticatedAdminAdminPayoutsRoute
   AuthenticatedAdminAdminRewardsRoute: typeof AuthenticatedAdminAdminRewardsRoute
   AuthenticatedAdminAdminVendorsRoute: typeof AuthenticatedAdminAdminVendorsRoute
   AuthenticatedAdminAdminIndexRoute: typeof AuthenticatedAdminAdminIndexRoute
@@ -1399,9 +1441,12 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminAdminConsultantsRoute,
     AuthenticatedAdminAdminDesktopRoute: AuthenticatedAdminAdminDesktopRoute,
     AuthenticatedAdminAdminDisputesRoute: AuthenticatedAdminAdminDisputesRoute,
+    AuthenticatedAdminAdminDocumentsRoute:
+      AuthenticatedAdminAdminDocumentsRoute,
     AuthenticatedAdminAdminKycRoute: AuthenticatedAdminAdminKycRoute,
     AuthenticatedAdminAdminPartnersRoute: AuthenticatedAdminAdminPartnersRoute,
     AuthenticatedAdminAdminPaymentsRoute: AuthenticatedAdminAdminPaymentsRoute,
+    AuthenticatedAdminAdminPayoutsRoute: AuthenticatedAdminAdminPayoutsRoute,
     AuthenticatedAdminAdminRewardsRoute: AuthenticatedAdminAdminRewardsRoute,
     AuthenticatedAdminAdminVendorsRoute: AuthenticatedAdminAdminVendorsRoute,
     AuthenticatedAdminAdminIndexRoute: AuthenticatedAdminAdminIndexRoute,
