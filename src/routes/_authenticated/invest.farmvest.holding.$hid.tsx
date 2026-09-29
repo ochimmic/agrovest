@@ -22,6 +22,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
+import { HoldingDocuments } from "@/components/documents/HoldingDocuments";
 
 export const Route = createFileRoute("/_authenticated/invest/farmvest/holding/$hid")({ component: HoldingDetail });
 
@@ -303,73 +304,8 @@ function HoldingDetail() {
 
 
         <section id="docs-section" className="rounded-3xl border border-border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-navy">Documents</h2>
-            <button
-              onClick={() => {
-                const pending = docs.find((d) => d.status === "Pending" || d.status === "Failed");
-                if (pending) onIssue(pending);
-                else toast.info("All documents already issued");
-              }}
-              className="text-[11px] text-agro font-medium"
-            >
-              Issue new
-            </button>
-          </div>
-          <ul className="mt-3 space-y-2">
-            {docs.map((d) => {
-              const downloadable = d.status === "Issued" || d.status === "Signed";
-              const canIssue = d.status === "Pending" || d.status === "Failed";
-              const verifyDisabled =
-                !downloadable || d.verification === "pending" || d.verification === "verified";
-              return (
-                <li key={d.id} className="rounded-2xl bg-secondary p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-xl bg-card grid place-items-center text-navy">
-                      <FileText size={16} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-navy truncate">{d.title}</p>
-                      <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                        <StatusChip status={d.status} />
-                        <VerifyChip v={d.verification} />
-                        <span className="text-[11px] text-muted-foreground">
-                          · {d.date === "—" ? "—" : new Date(d.date).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-3 grid grid-cols-3 gap-2">
-                    <DocBtn
-                      label="Download"
-                      icon={<Download size={13} />}
-                      onClick={() => onDownload(d)}
-                      disabled={!downloadable || d.pending !== null}
-                      loading={d.pending === "download"}
-                    />
-                    <DocBtn
-                      label={canIssue ? "Issue" : "Re-issue"}
-                      icon={<Send size={13} />}
-                      onClick={() => onIssue(d)}
-                      disabled={d.pending !== null}
-                      loading={d.pending === "issue"}
-                      tone={canIssue ? "primary" : "ghost"}
-                    />
-                    <DocBtn
-                      label={d.verification === "verified" ? "Verified" : "Verify"}
-                      icon={
-                        d.verification === "verified" ? <BadgeCheck size={13} /> : <Sparkles size={13} />
-                      }
-                      onClick={() => onVerify(d)}
-                      disabled={verifyDisabled || d.pending !== null}
-                      loading={d.pending === "verify"}
-                      tone={d.verification === "verified" ? "success" : "ghost"}
-                    />
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <h2 className="text-sm font-semibold text-navy">Documents</h2>
+          <div className="mt-3"><HoldingDocuments holdingId={holding.id} /></div>
         </section>
       </main>
     </MobileFrame>
