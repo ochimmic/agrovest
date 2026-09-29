@@ -21,6 +21,11 @@ export const Route = createFileRoute("/login")({
   component: Login,
 });
 
+function readRedirect() {
+  if (typeof window === "undefined") return undefined;
+  return new URLSearchParams(window.location.search).get("redirect") ?? undefined;
+}
+
 function safePath(v: string | undefined) {
   if (!v) return "/home";
   try {
@@ -33,10 +38,6 @@ function safePath(v: string | undefined) {
 }
 
 function Login() {
-  const redirect =
-    typeof window === "undefined"
-      ? undefined
-      : (new URLSearchParams(window.location.search).get("redirect") ?? undefined);
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [busy, setBusy] = useState(false);
@@ -48,7 +49,7 @@ function Login() {
     try {
       await signInWithEmail(email, pw);
       toast.success("Welcome back");
-      nav({ to: safePath(redirect) as string });
+      nav({ to: safePath(readRedirect()) as string });
     } catch (e) {
       toast.error(authErrorMessage(e));
     } finally {
@@ -63,7 +64,7 @@ function Login() {
       });
       if (result.error) return toast.error("Google sign-in failed. Please try again.");
       if (result.redirected) return;
-      nav({ to: safePath(redirect) as string });
+      nav({ to: safePath(readRedirect()) as string });
     } catch {
       toast.error("Google sign-in failed. Please try again.");
     }
