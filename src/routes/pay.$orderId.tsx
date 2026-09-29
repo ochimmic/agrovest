@@ -42,7 +42,7 @@ function PayStatus() {
   return (
     <MobileFrame>
       <header className="flex items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
-        <Link to="/home" className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+        <Link to={order?.purpose.planId ? "/assetpay" : "/home"} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
           <ArrowLeft size={18} />
         </Link>
         <h1 className="text-base font-semibold text-foreground">Payment status</h1>
@@ -68,6 +68,11 @@ function PayStatus() {
               <p className="mt-0.5 text-xs text-white/70">
                 {order.purpose.qty} × {order.purpose.unit} · {order.purpose.assetName}
               </p>
+              {order.purpose.planId && (
+                <p className="mt-0.5 text-[11px] text-white/70">
+                  AssetPay {order.purpose.installment === 0 ? "deposit" : `installment ${order.purpose.installment}`}
+                </p>
+              )}
               <p className="mt-2 text-[11px] text-white/60">
                 {order.rail === "crypto"
                   ? `Paid in ${order.token}`

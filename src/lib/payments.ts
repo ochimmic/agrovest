@@ -26,6 +26,9 @@ export type PayPurpose = {
   category: "palm" | "cocoa" | "latex";
   unit: "plot" | "acre" | "hectare";
   qty: number;
+  /** Set when this payment is one installment of an AssetPay plan. */
+  planId?: string;
+  installment?: number;
 };
 
 export type PayOrder = {
@@ -155,9 +158,19 @@ export function markPaidOnChain(id: string, txHash: string, network: string) {
 }
 
 /** Admin confirms — this is the only path that creates a holding. */
+type InstallmentHooks = { confirm: (planId: string, i: number) => void; release: (planId: string, i: number) => void };
+let installmentHooks: InstallmentHooks | null = null;
+export function registerInstallmentHooks(h: InstallmentHooks) { installmentHooks = h; }
+
 export function confirmPayOrder(id: string) {
   const order = s.orders.find((o) => o.id === id);
   if (!order || order.status === "confirmed") return;
+  if (order.purpose.planId != null && order.purpose.installment != null) {
+    patch(id, { status: "confirmed" }, "AgroVest confirmed this AssetPay installment.");
+    installmentHooks?.confirm(order.purpose.planId, order.purpose.installment);
+    addTx({ type: "invest", amount: order.amountUsd, token: order.token, status: "confirmed", meta: `AssetPay · ${order.purpose.assetName}`, ...(order.txHash ? { hash: order.txHash } : {}) });
+    return;
+  }
   patch(id, { status: "confirmed" }, "AgroVest confirmed the payment. Holding created and documents issued.");
   addHolding({
     assetId: order.purpose.assetId,
@@ -179,6 +192,8 @@ export function confirmPayOrder(id: string) {
 
 export function rejectPayOrder(id: string, reason: string) {
   patch(id, { status: "rejected", reason }, `Rejected by AgroVest: ${reason}`);
+  const o = s.orders.find((x) => x.id === id);
+  if (o?.purpose.planId != null && o.purpose.installment != null) installmentHooks?.release(o.purpose.planId, o.purpose.installment);
 }
 
 export function requestMoreInfo(id: string, note: string) {

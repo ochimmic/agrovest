@@ -1,8 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ShieldCheck, FileText, Settings, Lock, LogOut, ChevronRight, Award,
-  HelpCircle, Scale, Wallet,
-} from "lucide-react";
+  HelpCircle, Scale, Wallet, CalendarClock } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState, reset } from "@/lib/store";
 import { RoleBadge, KycBadge, NonCustodialBadge, BscBadge } from "@/components/ui/agro-badge";
@@ -45,6 +44,7 @@ function Profile() {
         <Section title="Wallet">
           <Row to="/vault" icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" />
           <Row to="/vault/settings" icon={Lock} label="Wallet settings" sub="Network, lock & recovery" />
+          <Row to="/assetpay" icon={CalendarClock} label="AssetPay" sub="Installment plans" />
           <Row to="/prichat" icon={FileText} label="Deposit history" sub="Bank transfers to AgroVest" />
         </Section>
 

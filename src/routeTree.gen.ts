@@ -30,10 +30,12 @@ import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as BrokerRouteImport } from './routes/broker'
+import { Route as AssetpayRouteImport } from './routes/assetpay'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VaultIndexRouteImport } from './routes/vault.index'
 import { Route as PrichatIndexRouteImport } from './routes/prichat.index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
+import { Route as AssetpayIndexRouteImport } from './routes/assetpay.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as WalletSecurityRouteImport } from './routes/wallet.security'
 import { Route as WalletIntroRouteImport } from './routes/wallet.intro'
@@ -54,6 +56,7 @@ import { Route as ServicesMpRouteImport } from './routes/services.mp'
 import { Route as PrichatIdRouteImport } from './routes/prichat.$id'
 import { Route as PayOrderIdRouteImport } from './routes/pay.$orderId'
 import { Route as BrokerRewardsRouteImport } from './routes/broker.rewards'
+import { Route as AssetpayPlanIdRouteImport } from './routes/assetpay.$planId'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
 import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
@@ -70,6 +73,7 @@ import { Route as InvestSuccessIdRouteImport } from './routes/invest.success.$id
 import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
 import { Route as InvestFarmvestIdRouteImport } from './routes/invest.farmvest.$id'
 import { Route as InvestCheckoutIdRouteImport } from './routes/invest.checkout.$id'
+import { Route as AssetpayNewIdRouteImport } from './routes/assetpay.new.$id'
 import { Route as InvestFarmvestHoldingHidRouteImport } from './routes/invest.farmvest.holding.$hid'
 
 const WelcomeRoute = WelcomeRouteImport.update({
@@ -177,6 +181,11 @@ const BrokerRoute = BrokerRouteImport.update({
   path: '/broker',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssetpayRoute = AssetpayRouteImport.update({
+  id: '/assetpay',
+  path: '/assetpay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -196,6 +205,11 @@ const InvestIndexRoute = InvestIndexRouteImport.update({
   id: '/invest/',
   path: '/invest/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AssetpayIndexRoute = AssetpayIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AssetpayRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
@@ -297,6 +311,11 @@ const BrokerRewardsRoute = BrokerRewardsRouteImport.update({
   path: '/rewards',
   getParentRoute: () => BrokerRoute,
 } as any)
+const AssetpayPlanIdRoute = AssetpayPlanIdRouteImport.update({
+  id: '/$planId',
+  path: '/$planId',
+  getParentRoute: () => AssetpayRoute,
+} as any)
 const AdminVendorsRoute = AdminVendorsRouteImport.update({
   id: '/admin/vendors',
   path: '/admin/vendors',
@@ -377,6 +396,11 @@ const InvestCheckoutIdRoute = InvestCheckoutIdRouteImport.update({
   path: '/invest/checkout/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssetpayNewIdRoute = AssetpayNewIdRouteImport.update({
+  id: '/new/$id',
+  path: '/new/$id',
+  getParentRoute: () => AssetpayRoute,
+} as any)
 const InvestFarmvestHoldingHidRoute =
   InvestFarmvestHoldingHidRouteImport.update({
     id: '/invest/farmvest/holding/$hid',
@@ -386,6 +410,7 @@ const InvestFarmvestHoldingHidRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assetpay': typeof AssetpayRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
   '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
@@ -416,6 +441,7 @@ export interface FileRoutesByFullPath {
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/assetpay/$planId': typeof AssetpayPlanIdRoute
   '/broker/rewards': typeof BrokerRewardsRoute
   '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
@@ -436,9 +462,11 @@ export interface FileRoutesByFullPath {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/admin/': typeof AdminIndexRoute
+  '/assetpay/': typeof AssetpayIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
   '/vault/': typeof VaultIndexRoute
+  '/assetpay/new/$id': typeof AssetpayNewIdRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -478,6 +506,7 @@ export interface FileRoutesByTo {
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/assetpay/$planId': typeof AssetpayPlanIdRoute
   '/broker/rewards': typeof BrokerRewardsRoute
   '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
@@ -498,9 +527,11 @@ export interface FileRoutesByTo {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/admin': typeof AdminIndexRoute
+  '/assetpay': typeof AssetpayIndexRoute
   '/invest': typeof InvestIndexRoute
   '/prichat': typeof PrichatIndexRoute
   '/vault': typeof VaultIndexRoute
+  '/assetpay/new/$id': typeof AssetpayNewIdRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -513,6 +544,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assetpay': typeof AssetpayRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
   '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
@@ -543,6 +575,7 @@ export interface FileRoutesById {
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/assetpay/$planId': typeof AssetpayPlanIdRoute
   '/broker/rewards': typeof BrokerRewardsRoute
   '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
@@ -563,9 +596,11 @@ export interface FileRoutesById {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/admin/': typeof AdminIndexRoute
+  '/assetpay/': typeof AssetpayIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
   '/vault/': typeof VaultIndexRoute
+  '/assetpay/new/$id': typeof AssetpayNewIdRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -579,6 +614,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assetpay'
     | '/broker'
     | '/desktop'
     | '/documents'
@@ -609,6 +645,7 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
+    | '/assetpay/$planId'
     | '/broker/rewards'
     | '/pay/$orderId'
     | '/prichat/$id'
@@ -629,9 +666,11 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/admin/'
+    | '/assetpay/'
     | '/invest/'
     | '/prichat/'
     | '/vault/'
+    | '/assetpay/new/$id'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -671,6 +710,7 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
+    | '/assetpay/$planId'
     | '/broker/rewards'
     | '/pay/$orderId'
     | '/prichat/$id'
@@ -691,9 +731,11 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/admin'
+    | '/assetpay'
     | '/invest'
     | '/prichat'
     | '/vault'
+    | '/assetpay/new/$id'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -705,6 +747,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/assetpay'
     | '/broker'
     | '/desktop'
     | '/documents'
@@ -735,6 +778,7 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
+    | '/assetpay/$planId'
     | '/broker/rewards'
     | '/pay/$orderId'
     | '/prichat/$id'
@@ -755,9 +799,11 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/admin/'
+    | '/assetpay/'
     | '/invest/'
     | '/prichat/'
     | '/vault/'
+    | '/assetpay/new/$id'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -770,6 +816,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssetpayRoute: typeof AssetpayRouteWithChildren
   BrokerRoute: typeof BrokerRouteWithChildren
   DesktopRoute: typeof DesktopRoute
   DocumentsRoute: typeof DocumentsRoute
@@ -967,6 +1014,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrokerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assetpay': {
+      id: '/assetpay'
+      path: '/assetpay'
+      fullPath: '/assetpay'
+      preLoaderRoute: typeof AssetpayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -994,6 +1048,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/invest/'
       preLoaderRoute: typeof InvestIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/assetpay/': {
+      id: '/assetpay/'
+      path: '/'
+      fullPath: '/assetpay/'
+      preLoaderRoute: typeof AssetpayIndexRouteImport
+      parentRoute: typeof AssetpayRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -1135,6 +1196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrokerRewardsRouteImport
       parentRoute: typeof BrokerRoute
     }
+    '/assetpay/$planId': {
+      id: '/assetpay/$planId'
+      path: '/$planId'
+      fullPath: '/assetpay/$planId'
+      preLoaderRoute: typeof AssetpayPlanIdRouteImport
+      parentRoute: typeof AssetpayRoute
+    }
     '/admin/vendors': {
       id: '/admin/vendors'
       path: '/admin/vendors'
@@ -1247,6 +1315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvestCheckoutIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assetpay/new/$id': {
+      id: '/assetpay/new/$id'
+      path: '/new/$id'
+      fullPath: '/assetpay/new/$id'
+      preLoaderRoute: typeof AssetpayNewIdRouteImport
+      parentRoute: typeof AssetpayRoute
+    }
     '/invest/farmvest/holding/$hid': {
       id: '/invest/farmvest/holding/$hid'
       path: '/invest/farmvest/holding/$hid'
@@ -1256,6 +1331,22 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AssetpayRouteChildren {
+  AssetpayPlanIdRoute: typeof AssetpayPlanIdRoute
+  AssetpayIndexRoute: typeof AssetpayIndexRoute
+  AssetpayNewIdRoute: typeof AssetpayNewIdRoute
+}
+
+const AssetpayRouteChildren: AssetpayRouteChildren = {
+  AssetpayPlanIdRoute: AssetpayPlanIdRoute,
+  AssetpayIndexRoute: AssetpayIndexRoute,
+  AssetpayNewIdRoute: AssetpayNewIdRoute,
+}
+
+const AssetpayRouteWithChildren = AssetpayRoute._addFileChildren(
+  AssetpayRouteChildren,
+)
 
 interface BrokerRouteChildren {
   BrokerRewardsRoute: typeof BrokerRewardsRoute
@@ -1353,6 +1444,7 @@ const VendorRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssetpayRoute: AssetpayRouteWithChildren,
   BrokerRoute: BrokerRouteWithChildren,
   DesktopRoute: DesktopRoute,
   DocumentsRoute: DocumentsRoute,

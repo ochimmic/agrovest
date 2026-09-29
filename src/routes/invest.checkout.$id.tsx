@@ -16,10 +16,14 @@ import { isUnlocked, refreshBalances, useVault } from "@/lib/wallet/store";
 import { sendToken } from "@/lib/wallet/send";
 import { createPayOrder, markPaidOnChain, type PayRail } from "@/lib/payments";
 import { useAppState } from "@/lib/store";
+import { amountDue, attachOrder, installmentLabel, useAssetPay } from "@/lib/assetpay";
+import { CalendarClock } from "lucide-react";
 
 const search = z.object({
   unit: z.enum(["plot", "acre", "hectare"]).default("plot"),
   qty: z.coerce.number().min(1).default(1),
+  plan: z.string().optional(),
+  inst: z.coerce.number().optional(),
 });
 
 export const Route = createFileRoute("/invest/checkout/$id")({
@@ -39,10 +43,13 @@ export const Route = createFileRoute("/invest/checkout/$id")({
 
 function Checkout() {
   const { id } = Route.useParams();
-  const { unit, qty } = Route.useSearch();
+  const { unit, qty, plan: planId, inst } = Route.useSearch();
   const nav = useNavigate();
   const asset = farmAssets.find((a) => a.id === id) ?? farmAssets[0]!;
-  const p = priceFor(unit, qty);
+  const plan = useAssetPay((s) => (planId ? s.plans.find((x) => x.id === planId) : undefined));
+  const installment = plan && inst != null ? plan.installments.find((i) => i.index === inst) : undefined;
+  const fullPrice = priceFor(unit, qty);
+  const p = installment ? { ...fullPrice, final: amountDue(installment) } : fullPrice;
   const [paying, setPaying] = useState(false);
   const [unlock, setUnlock] = useState(false);
   const [rail, setRail] = useState<PayRail>("crypto");
@@ -73,7 +80,9 @@ function Checkout() {
     category: asset.category,
     unit,
     qty,
+    ...(installment && plan ? { planId: plan.id, installment: installment.index } : {}),
   };
+  const link = (orderId: string) => { if (installment && plan) attachOrder(plan.id, installment.index, orderId); };
 
   async function payFromVault() {
     if (!token) return;
@@ -96,6 +105,7 @@ function Checkout() {
         note: `${asset.name} · ${order.reference}`,
       });
       markPaidOnChain(order.id, hash, network);
+      link(order.id);
       await refreshBalances();
       toast.success("Payment sent — awaiting AgroVest confirmation");
       void nav({ to: "/pay/$orderId", params: { orderId: order.id } });
@@ -116,6 +126,7 @@ function Checkout() {
       payerName: user?.name ?? "AgroVest user",
       purpose,
     });
+    link(order.id);
     void nav({ to: "/pay/$orderId", params: { orderId: order.id } }).then(() => {
       toast.success(`Ticket ${order.reference} created — use it as your transfer description.`);
     });
@@ -146,6 +157,15 @@ function Checkout() {
           <p className="text-xs text-muted-foreground">{qty} × {unit}</p>
         </div>
 
+        {installment ? (
+          <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
+            <p className="text-xs font-medium text-violet">AssetPay · {installmentLabel(installment.index)}</p>
+            <RowM k="Installment" usd={installment.amountUsd} />
+            {amountDue(installment) > installment.amountUsd && <RowM k="Late fee (5%)" usd={amountDue(installment) - installment.amountUsd} />}
+            <div className="border-t border-border my-1" />
+            <RowM k="Pay now" usd={p.final} bold />
+          </div>
+        ) : (
         <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
           <RowM k="Base" usd={p.base} />
           <RowM k="Platform fee (3%)" usd={p.platformFee} />
@@ -155,6 +175,22 @@ function Checkout() {
           <div className="border-t border-border my-1" />
           <RowM k="Total" usd={p.final} bold />
         </div>
+        )}
+
+        {!installment && (
+          <Link
+            to="/assetpay/new/$id"
+            params={{ id }}
+            search={{ unit, qty }}
+            className="flex items-center gap-3 rounded-3xl border border-violet/30 bg-violet-soft/30 p-4"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet text-white"><CalendarClock size={16} /></span>
+            <span className="flex-1">
+              <span className="block text-sm font-semibold text-foreground">Can't pay at once? Use AssetPay</span>
+              <span className="block text-[11px] text-muted-foreground">From 10% down, balance over 3, 6 or 12 months</span>
+            </span>
+          </Link>
+        )}
 
         <div className="rounded-3xl border border-border bg-card p-4">
           <h2 className="text-sm font-semibold text-foreground">Pay with</h2>
