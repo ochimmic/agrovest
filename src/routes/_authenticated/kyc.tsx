@@ -37,13 +37,16 @@ function Kyc() {
     );
   }
 
-  function next() {
-    if (step < steps.length - 1) setStep(step + 1);
-    else {
-      setState({ kyc: "approved" });
-      toast.success("KYC submitted — auto-approved for demo");
-      nav({ to: "/wallet/intro" });
+  async function next() {
+    if (step < steps.length - 1) { setStep(step + 1); return; }
+    setState({ kyc: "approved" });
+    const { data } = await supabase.auth.getUser();
+    if (data.user) {
+      await supabase.from("profiles").update({ kyc: "approved" }).eq("id", data.user.id);
+      await refreshProfile();
     }
+    toast.success("KYC submitted — auto-approved for demo");
+    nav({ to: "/wallet/intro" });
   }
 
   const S = steps[step];
