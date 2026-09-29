@@ -85,17 +85,29 @@ export function getPayOrder(id: string) {
 
 export function listPayOrders() { return s.orders; }
 
+const RAIL_TAG: Record<PayRail, string> = { crypto: "CRY", ngn: "NG", usd: "USD" };
+
+function makeTicket(rail: PayRail) {
+  const n = Math.floor(100000 + Math.random() * 900000);
+  return `AGV-${RAIL_TAG[rail]}-${n}`;
+}
+
 export function createPayOrder(input: {
   amountUsd: number;
   rate: number;
   token: string;
+  rail?: PayRail;
+  payerName?: string;
   purpose: PayPurpose;
 }): PayOrder {
   const now = new Date().toISOString();
   const id = `pay_${Date.now()}`;
+  const rail: PayRail = input.rail ?? "crypto";
   const order: PayOrder = {
     id,
-    reference: `AGV-${String(Date.now()).slice(-6)}`,
+    reference: makeTicket(rail),
+    rail,
+    payerName: input.payerName || "AgroVest user",
     amountUsd: input.amountUsd,
     rate: input.rate,
     token: input.token,
@@ -109,6 +121,15 @@ export function createPayOrder(input: {
   persist();
   emit();
   return order;
+}
+
+/** Buyer says they've completed a bank transfer — sends it to the admin queue. */
+export function markTransferNotified(id: string, note?: string) {
+  patch(
+    id,
+    { status: "payment_notified" },
+    note ?? "Buyer confirmed the bank transfer. Awaiting AgroVest verification.",
+  );
 }
 
 function patch(id: string, p: Partial<PayOrder>, note?: string) {
