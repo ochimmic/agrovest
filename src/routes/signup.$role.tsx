@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Check, MailCheck } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
@@ -56,6 +56,8 @@ function Signup() {
   const [pw, setPw] = useState("");
   const [accept, setAccept] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [ref, setRef] = useState("");
+  useEffect(() => { const r = new URLSearchParams(window.location.search).get("ref"); if (r) setRef(r.toUpperCase()); }, []);
   const [checkEmail, setCheckEmail] = useState(false);
 
   const req = requirements[role] ?? requirements.investor;
@@ -78,6 +80,7 @@ function Signup() {
         password: pw,
         country,
         role,
+        ref: ref.trim() || undefined,
       });
       if (needsConfirmation) {
         setCheckEmail(true);
@@ -143,6 +146,7 @@ function Signup() {
           <Field label="Email or phone" value={email} onChange={setEmail} placeholder="you@email.com" />
           <Field label="Password" type="password" value={pw} onChange={setPw} placeholder="••••••••" />
           <Field label="Country" value={country} onChange={setCountry} />
+          <Field label="Referral code (optional)" value={ref} onChange={(v: string) => setRef(v.toUpperCase())} />
         </div>
 
         <details className="mt-5 rounded-2xl border border-border bg-card p-4">

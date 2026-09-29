@@ -101,6 +101,53 @@ export type Database = {
         }
         Relationships: []
       }
+      investor_documents: {
+        Row: {
+          created_at: string
+          doc_type: string
+          due_note: string | null
+          file_path: string | null
+          holding_id: string
+          id: string
+          issued_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          doc_type: string
+          due_note?: string | null
+          file_path?: string | null
+          holding_id: string
+          id?: string
+          issued_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          doc_type?: string
+          due_note?: string | null
+          file_path?: string | null
+          holding_id?: string
+          id?: string
+          issued_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investor_documents_holding_id_fkey"
+            columns: ["holding_id"]
+            isOneToOne: false
+            referencedRelation: "holdings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kyc_submissions: {
         Row: {
           address: string
@@ -221,6 +268,45 @@ export type Database = {
         }
         Relationships: []
       }
+      payout_requests: {
+        Row: {
+          admin_note: string | null
+          amount_usd: number
+          created_at: string
+          details: Json
+          id: string
+          method: string
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          amount_usd: number
+          created_at?: string
+          details: Json
+          id?: string
+          method: string
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          admin_note?: string | null
+          amount_usd?: number
+          created_at?: string
+          details?: Json
+          id?: string
+          method?: string
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       portfolio_txs: {
         Row: {
           amount: number
@@ -266,7 +352,10 @@ export type Database = {
           full_name: string
           id: string
           kyc: Database["public"]["Enums"]["kyc_status"]
+          payout_method: Json | null
           phone: string | null
+          referral_code: string | null
+          referred_by: string | null
           updated_at: string
         }
         Insert: {
@@ -277,7 +366,10 @@ export type Database = {
           full_name?: string
           id: string
           kyc?: Database["public"]["Enums"]["kyc_status"]
+          payout_method?: Json | null
           phone?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
           updated_at?: string
         }
         Update: {
@@ -288,7 +380,10 @@ export type Database = {
           full_name?: string
           id?: string
           kyc?: Database["public"]["Enums"]["kyc_status"]
+          payout_method?: Json | null
           phone?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -333,12 +428,22 @@ export type Database = {
         Args: { p_decision: string; p_id: string; p_note: string }
         Returns: undefined
       }
+      gen_ref_code: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      my_referrals: {
+        Args: never
+        Returns: {
+          full_name: string
+          joined_at: string
+          kyc: Database["public"]["Enums"]["kyc_status"]
+          purchases: number
+        }[]
       }
       order_mark_onchain: {
         Args: { p_id: string; p_network: string; p_tx_hash: string }

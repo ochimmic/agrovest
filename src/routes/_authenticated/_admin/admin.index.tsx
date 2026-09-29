@@ -40,6 +40,22 @@ const queues = [
     tone: "from-violet to-[oklch(0.55_0.18_295)]",
   },
   {
+    to: "/admin/documents",
+    icon: FileCheck,
+    label: "Documents",
+    desc: "Upload signed ownership documents",
+    count: 0,
+    tone: "from-agro to-emerald-700",
+  },
+  {
+    to: "/admin/payouts",
+    icon: Gift,
+    label: "Broker payouts",
+    desc: "Settle payout requests",
+    count: 0,
+    tone: "from-violet to-[oklch(0.55_0.18_295)]",
+  },
+  {
     to: "/admin/vendors",
     icon: Store,
     label: "Vendor approvals",

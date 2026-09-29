@@ -125,6 +125,7 @@ export type SignUpInput = {
   country: string;
   phone?: string;
   role: Role;
+  ref?: string;
 };
 
 export async function signUpWithEmail(input: SignUpInput) {
@@ -138,6 +139,7 @@ export async function signUpWithEmail(input: SignUpInput) {
         country: input.country,
         phone: input.phone ?? null,
         role: input.role,
+        ref: input.ref ?? null,
       },
     },
   });
