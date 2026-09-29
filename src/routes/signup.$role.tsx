@@ -55,18 +55,74 @@ function Signup() {
   const [country, setCountry] = useState("Nigeria");
   const [pw, setPw] = useState("");
   const [accept, setAccept] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
 
   const req = requirements[role] ?? requirements.investor;
   const meta = labels[role] ?? labels.investor;
 
-  function submit() {
+  async function submit() {
     if (!name || !email || !pw || !accept) {
       toast.error("Please complete all required fields and accept the terms.");
       return;
     }
-    setState({ user: { name, email, country }, role, kyc: "pending" });
-    toast.success(`Welcome, ${name.split(" ")[0]}!`);
-    nav({ to: "/kyc" });
+    if (pw.length < 6) {
+      toast.error("Your password needs at least 6 characters.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const { needsConfirmation } = await signUpWithEmail({
+        fullName: name,
+        email,
+        password: pw,
+        country,
+        role,
+      });
+      if (needsConfirmation) {
+        setCheckEmail(true);
+        return;
+      }
+      toast.success(`Welcome, ${name.split(" ")[0]}!`);
+      nav({ to: "/kyc" });
+    } catch (e) {
+      toast.error(authErrorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function google() {
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) return toast.error("Google sign-up failed. Please try again.");
+      if (result.redirected) return;
+      nav({ to: "/kyc" });
+    } catch {
+      toast.error("Google sign-up failed. Please try again.");
+    }
+  }
+
+  if (checkEmail) {
+    return (
+      <MobileFrame>
+        <div className="flex-1 px-6 pt-16 text-center">
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-agro-soft text-agro">
+            <MailCheck size={26} />
+          </span>
+          <h1 className="mt-6 text-2xl font-semibold text-navy">Confirm your email</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            We sent a confirmation link to <span className="font-medium text-navy">{email}</span>.
+            Open it to activate your account, then sign in.
+          </p>
+          <AgroButton size="xl" className="mt-8" asChild>
+            <Link to="/login">Go to sign in</Link>
+          </AgroButton>
+        </div>
+      </MobileFrame>
+    );
   }
 
   return (
