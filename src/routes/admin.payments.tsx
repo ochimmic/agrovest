@@ -1,7 +1,7 @@
 import { LocalTime } from "@/components/ui/local-time";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Check, ExternalLink, Info, X } from "lucide-react";
+import { Bell, Check, ExternalLink, Info, X } from "lucide-react";
 import { toast } from "sonner";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AgroBadge } from "@/components/ui/agro-badge";
@@ -29,10 +29,17 @@ export const Route = createFileRoute("/admin/payments")({
 
 type Filter = "pending" | "all" | "confirmed";
 
+const RAIL_LABEL = {
+  crypto: "Crypto · AssetVault",
+  ngn: "Naira bank transfer",
+  usd: "US dollar transfer",
+} as const;
+
 function AdminPayments() {
   const purchases = usePayments((s) => s.orders);
   const deposits = useFarmRemit((s) => s.orders);
   const [filter, setFilter] = useState<Filter>("pending");
+  const [q, setQ] = useState("");
 
   const rows = useMemo(() => {
     const a = purchases.map((o) => ({
@@ -40,7 +47,8 @@ function AdminPayments() {
       kind: "Purchase" as const,
       purpose: `${o.purpose.qty} × ${o.purpose.unit} · ${o.purpose.assetName}`,
       amountUsd: o.amountUsd,
-      method: `AssetVault · ${o.token}`,
+      method: o.rail === "crypto" ? `${RAIL_LABEL.crypto} · ${o.token}` : RAIL_LABEL[o.rail ?? "crypto"],
+      payer: o.payerName ?? "AgroVest user",
       reference: o.reference,
       at: o.createdAt,
       status: o.status as string,
@@ -56,6 +64,7 @@ function AdminPayments() {
       purpose: o.purpose ? `Funds ${o.purpose.assetName}` : "Wallet top-up",
       amountUsd: o.amountUsd,
       method: `Bank transfer · ${o.virtualAccount?.accountNumber ?? "—"}`,
+      payer: "AgroVest user",
       reference: o.reference ?? o.id,
       at: o.createdAt,
       status: o.status as string,
@@ -65,11 +74,21 @@ function AdminPayments() {
       network: undefined as string | undefined,
       settled: o.status === "confirmed" || o.status === "cancelled",
     }));
-    const all = [...a, ...b].sort((x, y) => +new Date(y.at) - +new Date(x.at));
+    let all = [...a, ...b].sort((x, y) => +new Date(y.at) - +new Date(x.at));
+    const term = q.trim().toLowerCase();
+    if (term) {
+      all = all.filter(
+        (r) => r.reference.toLowerCase().includes(term) || r.payer.toLowerCase().includes(term),
+      );
+    }
     if (filter === "pending") return all.filter((r) => !r.settled);
     if (filter === "confirmed") return all.filter((r) => r.status === "confirmed");
     return all;
-  }, [purchases, deposits, filter]);
+  }, [purchases, deposits, filter, q]);
+
+  const alerts = purchases.filter(
+    (o) => o.status === "payment_notified" || o.status === "paid_onchain",
+  );
 
   function act(row: (typeof rows)[number], action: "confirm" | "reject" | "info") {
     if (action === "confirm") {
@@ -98,6 +117,33 @@ function AdminPayments() {
   return (
     <AdminShell title="Payments" subtitle="Manual confirmation queue">
       <div className="space-y-4">
+        {alerts.length > 0 && (
+          <div className="rounded-2xl border border-violet/30 bg-violet-soft/40 p-4">
+            <div className="flex items-center gap-2">
+              <Bell size={15} className="text-violet" />
+              <p className="text-sm font-semibold text-foreground">
+                {alerts.length} new payment{alerts.length > 1 ? "s" : ""} pending review
+              </p>
+            </div>
+            <ul className="mt-2 space-y-1">
+              {alerts.slice(0, 4).map((o) => (
+                <li key={o.id} className="text-[11px] text-foreground">
+                  <span className="font-semibold">#{o.reference}</span> · {o.payerName ?? "AgroVest user"} ·{" "}
+                  ${o.amountUsd.toLocaleString()} · {RAIL_LABEL[o.rail ?? "crypto"]} ·{" "}
+                  <LocalTime at={o.updatedAt} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search ticket ID or user name"
+          className="w-full rounded-full border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground"
+        />
+
         <div className="flex flex-wrap items-center gap-2">
           {(["pending", "all", "confirmed"] as Filter[]).map((f) => (
             <button
@@ -112,6 +158,7 @@ function AdminPayments() {
           ))}
           <span className="ml-auto text-xs text-muted-foreground">{pendingCount} awaiting action</span>
         </div>
+
 
         {rows.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
@@ -128,7 +175,7 @@ function AdminPayments() {
                       <AgroBadge size="xs" tone="neutral">{r.kind}</AgroBadge>
                       <AgroBadge size="xs" tone={r.tone}>{r.label}</AgroBadge>
                     </div>
-                    <p className="mt-1 truncate text-xs text-muted-foreground">{r.purpose}</p>
+                    <p className="mt-1 truncate text-xs text-muted-foreground">{r.payer} · {r.purpose}</p>
                     <p className="mt-0.5 text-[11px] text-muted-foreground">
                       {r.method} · <LocalTime at={r.at} />
                     </p>

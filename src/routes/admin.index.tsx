@@ -15,7 +15,9 @@ import {
   Wallet,
   Building2,
   ArrowUpRight,
+  Bell,
 } from "lucide-react";
+import { usePayments } from "@/lib/payments";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
 export const Route = createFileRoute("/admin/")({ component: Admin });
@@ -144,6 +146,35 @@ const CrosshairContext = createContext<CrosshairCtx>({
   length: 0,
 });
 
+function PaymentAlerts() {
+  const alerts = usePayments((s) =>
+    s.orders.filter((o) => o.status === "payment_notified" || o.status === "paid_onchain"),
+  );
+  if (alerts.length === 0) return null;
+  return (
+    <Link
+      to="/admin/payments"
+      className="block rounded-2xl border border-violet/30 bg-violet-soft/40 p-4"
+    >
+      <div className="flex items-center gap-2">
+        <Bell size={15} className="text-violet" />
+        <p className="text-sm font-semibold text-foreground">
+          New payment{alerts.length > 1 ? "s" : ""} pending review ({alerts.length})
+        </p>
+        <ChevronRight size={14} className="ml-auto text-muted-foreground" />
+      </div>
+      <ul className="mt-2 space-y-1">
+        {alerts.slice(0, 3).map((o) => (
+          <li key={o.id} className="text-[11px] text-foreground">
+            <span className="font-semibold">#{o.reference}</span> · {o.payerName ?? "AgroVest user"} · $
+            {o.amountUsd.toLocaleString()}
+          </li>
+        ))}
+      </ul>
+    </Link>
+  );
+}
+
 function Admin() {
   const navigate = useNavigate();
   // Auto-redirect to the wide desktop console on large viewports
@@ -202,6 +233,7 @@ function Admin() {
       </header>
 
       <div className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
+        <PaymentAlerts />
         <CrosshairContext.Provider value={{ index, setIndex, length }}>
           <section className="space-y-2.5">
             <div className="flex items-center justify-between px-1">
