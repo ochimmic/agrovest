@@ -10,9 +10,9 @@ import { Money } from "@/components/ui/money";
 import { NGN_PER_USD } from "@/lib/fx";
 import { toast } from "sonner";
 import { UnlockSheet } from "@/components/wallet/UnlockSheet";
-import { PAYABLE_SYMBOLS, TREASURY_ADDRESS } from "@/lib/wallet/chain";
+import { PAYABLE_SYMBOLS, TOKENS, TREASURY_ADDRESS } from "@/lib/wallet/chain";
 import { USD_ACCOUNT } from "@/lib/company";
-import { isUnlocked, refreshBalances, tokenList, useVault } from "@/lib/wallet/store";
+import { isUnlocked, refreshBalances, useVault } from "@/lib/wallet/store";
 import { sendToken } from "@/lib/wallet/send";
 import { createPayOrder, markPaidOnChain, type PayRail } from "@/lib/payments";
 import { useAppState } from "@/lib/store";
@@ -55,7 +55,7 @@ function Checkout() {
 
   const payable = useMemo(
     () =>
-      tokenList({ network, customTokens: custom }).filter(
+      [...TOKENS[network], ...custom].filter(
         (t) => (t.native || t.address) && PAYABLE_SYMBOLS.includes(t.symbol),
       ),
     [network, custom],
