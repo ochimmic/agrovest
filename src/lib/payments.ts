@@ -188,6 +188,7 @@ export function requestMoreInfo(id: string, note: string) {
 export const payStatusLabel: Record<PayStatus, string> = {
   awaiting_payment: "Awaiting payment",
   paid_onchain: "Payment sent",
+  payment_notified: "Transfer notified",
   admin_review: "Awaiting confirmation",
   confirmed: "Confirmed",
   rejected: "Rejected",
@@ -196,6 +197,7 @@ export const payStatusLabel: Record<PayStatus, string> = {
 export const payStatusTone: Record<PayStatus, "warn" | "violet" | "agro" | "danger"> = {
   awaiting_payment: "warn",
   paid_onchain: "violet",
+  payment_notified: "violet",
   admin_review: "warn",
   confirmed: "agro",
   rejected: "danger",
