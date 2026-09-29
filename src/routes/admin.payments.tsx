@@ -29,10 +29,17 @@ export const Route = createFileRoute("/admin/payments")({
 
 type Filter = "pending" | "all" | "confirmed";
 
+const RAIL_LABEL = {
+  crypto: "Crypto · AssetVault",
+  ngn: "Naira bank transfer",
+  usd: "US dollar transfer",
+} as const;
+
 function AdminPayments() {
   const purchases = usePayments((s) => s.orders);
   const deposits = useFarmRemit((s) => s.orders);
   const [filter, setFilter] = useState<Filter>("pending");
+  const [q, setQ] = useState("");
 
   const rows = useMemo(() => {
     const a = purchases.map((o) => ({
@@ -40,7 +47,8 @@ function AdminPayments() {
       kind: "Purchase" as const,
       purpose: `${o.purpose.qty} × ${o.purpose.unit} · ${o.purpose.assetName}`,
       amountUsd: o.amountUsd,
-      method: `AssetVault · ${o.token}`,
+      method: o.rail === "crypto" ? `${RAIL_LABEL.crypto} · ${o.token}` : RAIL_LABEL[o.rail ?? "crypto"],
+      payer: o.payerName ?? "AgroVest user",
       reference: o.reference,
       at: o.createdAt,
       status: o.status as string,
@@ -56,6 +64,7 @@ function AdminPayments() {
       purpose: o.purpose ? `Funds ${o.purpose.assetName}` : "Wallet top-up",
       amountUsd: o.amountUsd,
       method: `Bank transfer · ${o.virtualAccount?.accountNumber ?? "—"}`,
+      payer: "AgroVest user",
       reference: o.reference ?? o.id,
       at: o.createdAt,
       status: o.status as string,
@@ -65,11 +74,21 @@ function AdminPayments() {
       network: undefined as string | undefined,
       settled: o.status === "confirmed" || o.status === "cancelled",
     }));
-    const all = [...a, ...b].sort((x, y) => +new Date(y.at) - +new Date(x.at));
+    let all = [...a, ...b].sort((x, y) => +new Date(y.at) - +new Date(x.at));
+    const term = q.trim().toLowerCase();
+    if (term) {
+      all = all.filter(
+        (r) => r.reference.toLowerCase().includes(term) || r.payer.toLowerCase().includes(term),
+      );
+    }
     if (filter === "pending") return all.filter((r) => !r.settled);
     if (filter === "confirmed") return all.filter((r) => r.status === "confirmed");
     return all;
-  }, [purchases, deposits, filter]);
+  }, [purchases, deposits, filter, q]);
+
+  const alerts = purchases.filter(
+    (o) => o.status === "payment_notified" || o.status === "paid_onchain",
+  );
 
   function act(row: (typeof rows)[number], action: "confirm" | "reject" | "info") {
     if (action === "confirm") {
