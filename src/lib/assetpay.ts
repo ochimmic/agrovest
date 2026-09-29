@@ -9,7 +9,7 @@
 //    30 days overdue, refund of amount paid minus a 10% cancellation fee.
 import { useSyncExternalStore } from "react";
 import { addHolding } from "@/lib/store";
-import type { PayPurpose } from "@/lib/payments";
+import { registerInstallmentHooks, type PayPurpose } from "@/lib/payments";
 
 export const MIN_DEPOSIT_PCT = 10;
 export const PLAN_MONTHS = [3, 6, 12] as const;
@@ -215,3 +215,5 @@ export function cancelPlan(id: string, reason = "Cancelled by buyer.") {
 export function installmentLabel(i: number) {
   return i === 0 ? "Deposit" : `Installment ${i}`;
 }
+
+registerInstallmentHooks({ confirm: confirmInstallment, release: releaseOrder });
