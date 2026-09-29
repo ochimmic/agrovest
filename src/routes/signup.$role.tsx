@@ -1,12 +1,26 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, MailCheck } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
-import { setState, type Role } from "@/lib/store";
+import { type Role } from "@/lib/store";
+import { signUpWithEmail, authErrorMessage } from "@/lib/auth";
+import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/signup/$role")({ component: Signup });
+export const Route = createFileRoute("/signup/$role")({
+  head: () => ({
+    meta: [
+      { title: "Create your AgroVest account" },
+      { name: "description", content: "Open an AgroVest account to invest in verified farm estates, pay in naira, dollars or crypto, and track your holdings." },
+      { property: "og:title", content: "Create your AgroVest account" },
+      { property: "og:description", content: "Open an AgroVest account to invest in verified farm estates and track your holdings." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: Signup,
+});
 
 const requirements: Record<Role, string[]> = {
   investor: [
@@ -41,18 +55,74 @@ function Signup() {
   const [country, setCountry] = useState("Nigeria");
   const [pw, setPw] = useState("");
   const [accept, setAccept] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
 
   const req = requirements[role] ?? requirements.investor;
   const meta = labels[role] ?? labels.investor;
 
-  function submit() {
+  async function submit() {
     if (!name || !email || !pw || !accept) {
       toast.error("Please complete all required fields and accept the terms.");
       return;
     }
-    setState({ user: { name, email, country }, role, kyc: "pending" });
-    toast.success(`Welcome, ${name.split(" ")[0]}!`);
-    nav({ to: "/kyc" });
+    if (pw.length < 6) {
+      toast.error("Your password needs at least 6 characters.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const { needsConfirmation } = await signUpWithEmail({
+        fullName: name,
+        email,
+        password: pw,
+        country,
+        role,
+      });
+      if (needsConfirmation) {
+        setCheckEmail(true);
+        return;
+      }
+      toast.success(`Welcome, ${name.split(" ")[0]}!`);
+      nav({ to: "/kyc" });
+    } catch (e) {
+      toast.error(authErrorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function google() {
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) return toast.error("Google sign-up failed. Please try again.");
+      if (result.redirected) return;
+      nav({ to: "/kyc" });
+    } catch {
+      toast.error("Google sign-up failed. Please try again.");
+    }
+  }
+
+  if (checkEmail) {
+    return (
+      <MobileFrame>
+        <div className="flex-1 px-6 pt-16 text-center">
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-agro-soft text-agro">
+            <MailCheck size={26} />
+          </span>
+          <h1 className="mt-6 text-2xl font-semibold text-navy">Confirm your email</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            We sent a confirmation link to <span className="font-medium text-navy">{email}</span>.
+            Open it to activate your account, then sign in.
+          </p>
+          <AgroButton size="xl" className="mt-8" asChild>
+            <Link to="/login">Go to sign in</Link>
+          </AgroButton>
+        </div>
+      </MobileFrame>
+    );
   }
 
   return (
@@ -104,10 +174,17 @@ function Signup() {
         </label>
       </div>
 
-      <div className="px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 border-t border-border bg-background">
-        <AgroButton size="xl" onClick={submit}>
-          Continue to verification
+      <div className="px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 border-t border-border bg-background space-y-2">
+        <AgroButton size="xl" onClick={submit} disabled={busy}>
+          {busy ? "Creating account…" : "Continue to verification"}
         </AgroButton>
+        <button
+          type="button"
+          onClick={google}
+          className="h-11 w-full rounded-2xl border border-input bg-card text-sm font-medium text-navy transition hover:bg-secondary/60"
+        >
+          Continue with Google
+        </button>
       </div>
     </MobileFrame>
   );
