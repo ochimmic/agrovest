@@ -11,9 +11,13 @@ import { addHolding, addTx } from "@/lib/store";
 export type PayStatus =
   | "awaiting_payment"
   | "paid_onchain"
+  | "payment_notified"
   | "admin_review"
   | "confirmed"
   | "rejected";
+
+/** How the buyer is paying. */
+export type PayRail = "crypto" | "ngn" | "usd";
 
 export type PayPurpose = {
   kind: "investment" | "asset";
@@ -26,7 +30,10 @@ export type PayPurpose = {
 
 export type PayOrder = {
   id: string;
+  /** Unique ticket the admin uses to reconcile, e.g. AGV-NG-482013. */
   reference: string;
+  rail: PayRail;
+  payerName: string;
   amountUsd: number;
   rate: number;
   token: string;
