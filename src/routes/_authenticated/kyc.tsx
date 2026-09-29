@@ -4,6 +4,8 @@ import { ArrowLeft, ShieldCheck, ScanFace, IdCard, MapPin, CheckCircle2 } from "
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { setState, useAppState } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
+import { refreshProfile } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/kyc")({ component: Kyc });
