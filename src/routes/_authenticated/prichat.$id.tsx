@@ -10,7 +10,7 @@ import {
 } from "@/lib/farmremit";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/prichat/$id")({ component: OrderRoom });
+export const Route = createFileRoute("/_authenticated/_authenticated/prichat/$id")({ component: OrderRoom });
 
 
 

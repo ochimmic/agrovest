@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Award } from "lucide-react";
 import { AdminPage } from "@/components/admin/AdminShell";
 
-export const Route = createFileRoute("/admin/partners")({
+export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/partners")({
   component: () => (
     <AdminPage
       title="Partner approvals"

@@ -16,7 +16,7 @@ const search = z.object({
   qty: z.coerce.number().min(1).default(1),
 });
 
-export const Route = createFileRoute("/assetpay/new/$id")({
+export const Route = createFileRoute("/_authenticated/_authenticated/assetpay/new/$id")({
   head: () => ({
     meta: [
       { title: "Set up an AssetPay plan | AgroVest" },

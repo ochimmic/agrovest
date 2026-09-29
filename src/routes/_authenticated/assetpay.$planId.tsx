@@ -10,7 +10,7 @@ import {
   type InstallmentStatus,
 } from "@/lib/assetpay";
 
-export const Route = createFileRoute("/assetpay/$planId")({
+export const Route = createFileRoute("/_authenticated/_authenticated/assetpay/$planId")({
   head: () => ({
     meta: [
       { title: "AssetPay plan details | AgroVest" },

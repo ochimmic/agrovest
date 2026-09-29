@@ -26,7 +26,7 @@ const search = z.object({
   inst: z.coerce.number().optional(),
 });
 
-export const Route = createFileRoute("/invest/checkout/$id")({
+export const Route = createFileRoute("/_authenticated/_authenticated/invest/checkout/$id")({
   head: () => ({
     meta: [
       { title: "Secure checkout | AgroVest" },

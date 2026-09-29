@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Gift } from "lucide-react";
 import { AdminPage, ActionBtn } from "@/components/admin/AdminShell";
 
-export const Route = createFileRoute("/admin/rewards")({
+export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/rewards")({
   component: () => (
     <AdminPage
       title="Broker rewards"

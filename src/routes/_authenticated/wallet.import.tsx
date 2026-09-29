@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { persistWallet, walletFromPhrase, walletFromPrivateKey } from "@/lib/wallet/keystore";
 import { setAddress, setSigner } from "@/lib/wallet/store";
 
-export const Route = createFileRoute("/wallet/import")({ component: ImportWallet });
+export const Route = createFileRoute("/_authenticated/_authenticated/wallet/import")({ component: ImportWallet });
 
 function ImportWallet() {
   const nav = useNavigate();

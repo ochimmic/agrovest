@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus, Package, AlertTriangle, Wallet } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 
-export const Route = createFileRoute("/vendor")({ component: Vendor });
+export const Route = createFileRoute("/_authenticated/_authenticated/vendor")({ component: Vendor });
 
 function Vendor() {
   return (

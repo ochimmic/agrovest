@@ -8,7 +8,7 @@ import { useFarmRemit, createOrder, statusLabel, statusTone } from "@/lib/farmre
 import { NGN_PER_USD } from "@/lib/fx";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/prichat/")({ component: GoPay });
+export const Route = createFileRoute("/_authenticated/_authenticated/prichat/")({ component: GoPay });
 
 function GoPay() {
   const nav = useNavigate();

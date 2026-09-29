@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Megaphone } from "lucide-react";
 import { AdminPage } from "@/components/admin/AdminShell";
 
-export const Route = createFileRoute("/admin/consultants")({
+export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/consultants")({
   component: () => (
     <AdminPage
       title="Consultant certification"

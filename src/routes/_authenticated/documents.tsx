@@ -3,7 +3,7 @@ import { ArrowLeft, FileText, Download } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { documents } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/documents")({ component: Documents });
+export const Route = createFileRoute("/_authenticated/_authenticated/documents")({ component: Documents });
 
 const tag: Record<string, string> = {
   Issued: "bg-agro-soft text-agro",

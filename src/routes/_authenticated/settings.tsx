@@ -3,7 +3,7 @@ import { Sun, Moon, Monitor, Check } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { useTheme, type Theme } from "@/lib/theme";
 
-export const Route = createFileRoute("/settings")({ component: Settings });
+export const Route = createFileRoute("/_authenticated/_authenticated/settings")({ component: Settings });
 
 const themeOptions: { id: Theme; label: string; sub: string; Icon: any }[] = [
   { id: "light", label: "Light", sub: "Always light", Icon: Sun },

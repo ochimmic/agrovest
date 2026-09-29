@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/invest/farmvest/holding/$hid")({ component: HoldingDetail });
+export const Route = createFileRoute("/_authenticated/_authenticated/invest/farmvest/holding/$hid")({ component: HoldingDetail });
 
 function HoldingDetail() {
   const { hid } = Route.useParams();

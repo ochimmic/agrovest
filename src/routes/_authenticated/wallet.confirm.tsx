@@ -8,7 +8,7 @@ import { writeMeta } from "@/lib/wallet/keystore";
 import { shortAddr } from "@/lib/wallet/chain";
 import { useVault } from "@/lib/wallet/store";
 
-export const Route = createFileRoute("/wallet/confirm")({ component: ConfirmWallet });
+export const Route = createFileRoute("/_authenticated/_authenticated/wallet/confirm")({ component: ConfirmWallet });
 
 const checks = [
   "I wrote all 12 words down, in order.",

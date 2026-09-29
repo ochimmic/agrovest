@@ -3,7 +3,7 @@ import { MobileFrame } from "@/components/shell/MobileFrame";
 import { ChevronLeft, ScrollText, FileCheck, Store, FileText, Gift, AlertTriangle, Shield } from "lucide-react";
 import { useMemo, useState, type ComponentType } from "react";
 
-export const Route = createFileRoute("/admin/audit")({ component: Page });
+export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/audit")({ component: Page });
 
 type LogKind = "kyc" | "vendor" | "doc" | "reward" | "dispute" | "system";
 

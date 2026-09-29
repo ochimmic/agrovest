@@ -6,7 +6,7 @@ import { AgroButton } from "@/components/ui/agro-button";
 import { setState, useAppState } from "@/lib/store";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/kyc")({ component: Kyc });
+export const Route = createFileRoute("/_authenticated/_authenticated/kyc")({ component: Kyc });
 
 const steps = [
   { key: "identity", label: "Identity", icon: IdCard },

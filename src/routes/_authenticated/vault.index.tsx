@@ -12,7 +12,7 @@ import { fmtNgn } from "@/lib/fx";
 import { NETWORKS, shortAddr, txUrl } from "@/lib/wallet/chain";
 import { refreshBalances, tokenList, useVault } from "@/lib/wallet/store";
 
-export const Route = createFileRoute("/vault/")({
+export const Route = createFileRoute("/_authenticated/_authenticated/vault/")({
   head: () => ({
     meta: [
       { title: "AssetVault — Your BSC wallet | AgroVest" },

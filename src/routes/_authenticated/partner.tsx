@@ -4,7 +4,7 @@ import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { useAppState } from "@/lib/store";
 
-export const Route = createFileRoute("/partner")({ component: Partner });
+export const Route = createFileRoute("/_authenticated/_authenticated/partner")({ component: Partner });
 
 const requirements = [
   { t: "KYC fully approved", done: true },

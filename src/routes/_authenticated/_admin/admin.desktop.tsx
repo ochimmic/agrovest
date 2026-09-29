@@ -29,7 +29,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export const Route = createFileRoute("/admin/desktop")({ component: DesktopAdmin });
+export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/desktop")({ component: DesktopAdmin });
 
 /* ---------------------------------------------------------- */
 /* Viewport gate                                              */

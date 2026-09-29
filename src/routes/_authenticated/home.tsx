@@ -11,7 +11,7 @@ import {
   BscBadge, NonCustodialBadge, CustodyBackedBadge, RiskBadge, AgroBadge,
 } from "@/components/ui/agro-badge";
 
-export const Route = createFileRoute("/home")({ component: Home });
+export const Route = createFileRoute("/_authenticated/_authenticated/home")({ component: Home });
 
 function Home() {
   const user = useAppState((s) => s.user);

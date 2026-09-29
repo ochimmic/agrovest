@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { Bell } from "lucide-react";
 
-export const Route = createFileRoute("/notifications")({ component: Notifs });
+export const Route = createFileRoute("/_authenticated/_authenticated/notifications")({ component: Notifs });
 function Notifs() {
   const items = [
     { t: "Custody receipt issued", s: "Cross River Palm — Issued", time: "2m" },

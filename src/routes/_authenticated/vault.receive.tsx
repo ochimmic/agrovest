@@ -6,7 +6,7 @@ import { QrCode } from "@/components/wallet/QrCode";
 import { NETWORKS, addressUrl } from "@/lib/wallet/chain";
 import { useVault } from "@/lib/wallet/store";
 
-export const Route = createFileRoute("/vault/receive")({
+export const Route = createFileRoute("/_authenticated/_authenticated/vault/receive")({
   head: () => ({
     meta: [
       { title: "Receive crypto — AssetVault | AgroVest" },

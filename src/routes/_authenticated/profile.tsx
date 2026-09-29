@@ -6,7 +6,7 @@ import { AppShell } from "@/components/shell/AppShell";
 import { useAppState, reset } from "@/lib/store";
 import { RoleBadge, KycBadge, NonCustodialBadge, BscBadge } from "@/components/ui/agro-badge";
 
-export const Route = createFileRoute("/profile")({ component: Profile });
+export const Route = createFileRoute("/_authenticated/_authenticated/profile")({ component: Profile });
 
 function Profile() {
   const user = useAppState((s) => s.user);

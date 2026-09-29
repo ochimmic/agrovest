@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AlertTriangle } from "lucide-react";
 import { AdminPage, ActionBtn } from "@/components/admin/AdminShell";
 
-export const Route = createFileRoute("/admin/disputes")({
+export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/disputes")({
   component: () => (
     <AdminPage
       title="Disputes"

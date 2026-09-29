@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { properties } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/vendor/listings")({ component: Listings });
+export const Route = createFileRoute("/_authenticated/_authenticated/vendor/listings")({ component: Listings });
 function Listings() {
   return (
     <MobileFrame>
