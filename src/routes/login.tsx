@@ -8,9 +8,6 @@ import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    redirect: typeof s['redirect'] === "string" ? (s['redirect'] as string) : undefined,
-  }),
   head: () => ({
     meta: [
       { title: "Sign in — AgroVest" },
@@ -36,7 +33,10 @@ function safePath(v: string | undefined) {
 }
 
 function Login() {
-  const { redirect } = Route.useSearch();
+  const redirect =
+    typeof window === "undefined"
+      ? undefined
+      : (new URLSearchParams(window.location.search).get("redirect") ?? undefined);
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [busy, setBusy] = useState(false);
