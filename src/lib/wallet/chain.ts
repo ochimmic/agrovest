@@ -33,7 +33,7 @@ export const NETWORKS: Record<NetworkId, NetworkConfig> = {
   },
 };
 
-export const DEFAULT_NETWORK: NetworkId = "bsc-testnet";
+export const DEFAULT_NETWORK: NetworkId = "bsc-mainnet";
 
 export type TokenConfig = {
   symbol: string;
@@ -52,20 +52,19 @@ export const TOKENS: Record<NetworkId, TokenConfig[]> = {
   "bsc-mainnet": [
     { symbol: "BNB", name: "BNB", decimals: 18, address: "", native: true, usd: 612.4 },
     { symbol: "USDT", name: "Tether USD", decimals: 18, address: "0x55d398326f99059fF775485246999027B3197955", usd: 1 },
-    // Supply the real BEP-20 addresses here when the tokens are deployed.
-    { symbol: "cUSD", name: "Clyst USD", decimals: 18, address: "", usd: 1 },
-    { symbol: "CLYST", name: "Clyst", decimals: 18, address: "", usd: 0.42 },
+    { symbol: "CLYST", name: "Clyst", decimals: 18, address: "0xd9C15c88BA928DA13BBBA96DF5054290ed76d3cD", usd: 0.42 },
   ],
   "bsc-testnet": [
     { symbol: "tBNB", name: "Test BNB", decimals: 18, address: "", native: true, usd: 612.4 },
     { symbol: "USDT", name: "Tether USD (test)", decimals: 18, address: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd", usd: 1 },
-    { symbol: "cUSD", name: "Clyst USD", decimals: 18, address: "", usd: 1 },
-    { symbol: "CLYST", name: "Clyst", decimals: 18, address: "", usd: 0.42 },
   ],
 };
 
-/** Where in-app payments are sent. */
-export const TREASURY_ADDRESS = "0x000000000000000000000000000000000000dEaD";
+/** Tokens accepted for AgroVest purchases. */
+export const PAYABLE_SYMBOLS = ["USDT", "BNB", "tBNB", "CLYST"];
+
+/** Where in-app payments are sent — one BSC treasury for BNB, USDT and $CLYST. */
+export const TREASURY_ADDRESS = "0x69f4d2fabde49656e24a65f06106ccbc2f64e295";
 
 export const ERC20_ABI = [
   "function balanceOf(address) view returns (uint256)",
