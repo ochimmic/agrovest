@@ -1,7 +1,7 @@
 import { LocalTime } from "@/components/ui/local-time";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Check, ExternalLink, Info, X } from "lucide-react";
+import { Bell, Check, ExternalLink, Info, X } from "lucide-react";
 import { toast } from "sonner";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AgroBadge } from "@/components/ui/agro-badge";
@@ -175,7 +175,7 @@ function AdminPayments() {
                       <AgroBadge size="xs" tone="neutral">{r.kind}</AgroBadge>
                       <AgroBadge size="xs" tone={r.tone}>{r.label}</AgroBadge>
                     </div>
-                    <p className="mt-1 truncate text-xs text-muted-foreground">{r.purpose}</p>
+                    <p className="mt-1 truncate text-xs text-muted-foreground">{r.payer} · {r.purpose}</p>
                     <p className="mt-0.5 text-[11px] text-muted-foreground">
                       {r.method} · <LocalTime at={r.at} />
                     </p>
