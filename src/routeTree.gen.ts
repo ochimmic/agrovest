@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as ForgotRouteImport } from './routes/forgot'
@@ -91,6 +92,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const RoleSelectRoute = RoleSelectRouteImport.update({
   id: '/role-select',
   path: '/role-select',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -456,6 +462,7 @@ export interface FileRoutesByFullPath {
   '/forgot': typeof ForgotRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/services': typeof ServicesRouteWithChildren
   '/welcome': typeof WelcomeRoute
@@ -524,6 +531,7 @@ export interface FileRoutesByTo {
   '/forgot': typeof ForgotRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/services': typeof ServicesRouteWithChildren
   '/welcome': typeof WelcomeRoute
@@ -591,6 +599,7 @@ export interface FileRoutesById {
   '/forgot': typeof ForgotRoute
   '/legal': typeof LegalRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/services': typeof ServicesRouteWithChildren
   '/welcome': typeof WelcomeRoute
@@ -662,6 +671,7 @@ export interface FileRouteTypes {
     | '/forgot'
     | '/legal'
     | '/login'
+    | '/reset-password'
     | '/role-select'
     | '/services'
     | '/welcome'
@@ -730,6 +740,7 @@ export interface FileRouteTypes {
     | '/forgot'
     | '/legal'
     | '/login'
+    | '/reset-password'
     | '/role-select'
     | '/services'
     | '/welcome'
@@ -796,6 +807,7 @@ export interface FileRouteTypes {
     | '/forgot'
     | '/legal'
     | '/login'
+    | '/reset-password'
     | '/role-select'
     | '/services'
     | '/welcome'
@@ -867,6 +879,7 @@ export interface RootRouteChildren {
   ForgotRoute: typeof ForgotRoute
   LegalRoute: typeof LegalRoute
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   RoleSelectRoute: typeof RoleSelectRoute
   ServicesRoute: typeof ServicesRouteWithChildren
   WelcomeRoute: typeof WelcomeRoute
@@ -899,6 +912,13 @@ declare module '@tanstack/react-router' {
       path: '/role-select'
       fullPath: '/role-select'
       preLoaderRoute: typeof RoleSelectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1570,6 +1590,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotRoute: ForgotRoute,
   LegalRoute: LegalRoute,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   RoleSelectRoute: RoleSelectRoute,
   ServicesRoute: ServicesRouteWithChildren,
   WelcomeRoute: WelcomeRoute,

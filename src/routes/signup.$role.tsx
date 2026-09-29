@@ -1,12 +1,26 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, MailCheck } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
-import { setState, type Role } from "@/lib/store";
+import { type Role } from "@/lib/store";
+import { signUpWithEmail, authErrorMessage } from "@/lib/auth";
+import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/signup/$role")({ component: Signup });
+export const Route = createFileRoute("/signup/$role")({
+  head: () => ({
+    meta: [
+      { title: "Create your AgroVest account" },
+      { name: "description", content: "Open an AgroVest account to invest in verified farm estates, pay in naira, dollars or crypto, and track your holdings." },
+      { property: "og:title", content: "Create your AgroVest account" },
+      { property: "og:description", content: "Open an AgroVest account to invest in verified farm estates and track your holdings." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: Signup,
+});
 
 const requirements: Record<Role, string[]> = {
   investor: [
