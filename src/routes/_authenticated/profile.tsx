@@ -3,7 +3,9 @@ import {
   ShieldCheck, FileText, Settings, Lock, LogOut, ChevronRight, Award,
   HelpCircle, Scale, Wallet, CalendarClock } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
-import { useAppState, reset } from "@/lib/store";
+import { useAppState } from "@/lib/store";
+import { useAuth, isAdmin, signOutEverywhere } from "@/lib/auth";
+import { useQueryClient } from "@tanstack/react-query";
 import { RoleBadge, KycBadge, NonCustodialBadge, BscBadge } from "@/components/ui/agro-badge";
 
 export const Route = createFileRoute("/_authenticated/profile")({ component: Profile });
@@ -12,6 +14,9 @@ function Profile() {
   const user = useAppState((s) => s.user);
   const role = useAppState((s) => s.role);
   const kyc = useAppState((s) => s.kyc);
+  const auth = useAuth();
+  const admin = isAdmin(auth);
+  const queryClient = useQueryClient();
   const nav = useNavigate();
 
   return (
