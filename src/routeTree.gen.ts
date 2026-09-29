@@ -56,6 +56,7 @@ import { Route as ServicesMpRouteImport } from './routes/services.mp'
 import { Route as PrichatIdRouteImport } from './routes/prichat.$id'
 import { Route as PayOrderIdRouteImport } from './routes/pay.$orderId'
 import { Route as BrokerRewardsRouteImport } from './routes/broker.rewards'
+import { Route as AssetpayPlanIdRouteImport } from './routes/assetpay.$planId'
 import { Route as AdminVendorsRouteImport } from './routes/admin.vendors'
 import { Route as AdminRewardsRouteImport } from './routes/admin.rewards'
 import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
@@ -72,6 +73,7 @@ import { Route as InvestSuccessIdRouteImport } from './routes/invest.success.$id
 import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
 import { Route as InvestFarmvestIdRouteImport } from './routes/invest.farmvest.$id'
 import { Route as InvestCheckoutIdRouteImport } from './routes/invest.checkout.$id'
+import { Route as AssetpayNewIdRouteImport } from './routes/assetpay.new.$id'
 import { Route as InvestFarmvestHoldingHidRouteImport } from './routes/invest.farmvest.holding.$hid'
 
 const WelcomeRoute = WelcomeRouteImport.update({
@@ -309,6 +311,11 @@ const BrokerRewardsRoute = BrokerRewardsRouteImport.update({
   path: '/rewards',
   getParentRoute: () => BrokerRoute,
 } as any)
+const AssetpayPlanIdRoute = AssetpayPlanIdRouteImport.update({
+  id: '/$planId',
+  path: '/$planId',
+  getParentRoute: () => AssetpayRoute,
+} as any)
 const AdminVendorsRoute = AdminVendorsRouteImport.update({
   id: '/admin/vendors',
   path: '/admin/vendors',
@@ -389,6 +396,11 @@ const InvestCheckoutIdRoute = InvestCheckoutIdRouteImport.update({
   path: '/invest/checkout/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssetpayNewIdRoute = AssetpayNewIdRouteImport.update({
+  id: '/new/$id',
+  path: '/new/$id',
+  getParentRoute: () => AssetpayRoute,
+} as any)
 const InvestFarmvestHoldingHidRoute =
   InvestFarmvestHoldingHidRouteImport.update({
     id: '/invest/farmvest/holding/$hid',
@@ -429,6 +441,7 @@ export interface FileRoutesByFullPath {
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/assetpay/$planId': typeof AssetpayPlanIdRoute
   '/broker/rewards': typeof BrokerRewardsRoute
   '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
@@ -453,6 +466,7 @@ export interface FileRoutesByFullPath {
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
   '/vault/': typeof VaultIndexRoute
+  '/assetpay/new/$id': typeof AssetpayNewIdRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -492,6 +506,7 @@ export interface FileRoutesByTo {
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/assetpay/$planId': typeof AssetpayPlanIdRoute
   '/broker/rewards': typeof BrokerRewardsRoute
   '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
@@ -516,6 +531,7 @@ export interface FileRoutesByTo {
   '/invest': typeof InvestIndexRoute
   '/prichat': typeof PrichatIndexRoute
   '/vault': typeof VaultIndexRoute
+  '/assetpay/new/$id': typeof AssetpayNewIdRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -559,6 +575,7 @@ export interface FileRoutesById {
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/rewards': typeof AdminRewardsRoute
   '/admin/vendors': typeof AdminVendorsRoute
+  '/assetpay/$planId': typeof AssetpayPlanIdRoute
   '/broker/rewards': typeof BrokerRewardsRoute
   '/pay/$orderId': typeof PayOrderIdRoute
   '/prichat/$id': typeof PrichatIdRoute
@@ -583,6 +600,7 @@ export interface FileRoutesById {
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
   '/vault/': typeof VaultIndexRoute
+  '/assetpay/new/$id': typeof AssetpayNewIdRoute
   '/invest/checkout/$id': typeof InvestCheckoutIdRoute
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
@@ -627,6 +645,7 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
+    | '/assetpay/$planId'
     | '/broker/rewards'
     | '/pay/$orderId'
     | '/prichat/$id'
@@ -651,6 +670,7 @@ export interface FileRouteTypes {
     | '/invest/'
     | '/prichat/'
     | '/vault/'
+    | '/assetpay/new/$id'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -690,6 +710,7 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
+    | '/assetpay/$planId'
     | '/broker/rewards'
     | '/pay/$orderId'
     | '/prichat/$id'
@@ -714,6 +735,7 @@ export interface FileRouteTypes {
     | '/invest'
     | '/prichat'
     | '/vault'
+    | '/assetpay/new/$id'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -756,6 +778,7 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/rewards'
     | '/admin/vendors'
+    | '/assetpay/$planId'
     | '/broker/rewards'
     | '/pay/$orderId'
     | '/prichat/$id'
@@ -780,6 +803,7 @@ export interface FileRouteTypes {
     | '/invest/'
     | '/prichat/'
     | '/vault/'
+    | '/assetpay/new/$id'
     | '/invest/checkout/$id'
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
@@ -1172,6 +1196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrokerRewardsRouteImport
       parentRoute: typeof BrokerRoute
     }
+    '/assetpay/$planId': {
+      id: '/assetpay/$planId'
+      path: '/$planId'
+      fullPath: '/assetpay/$planId'
+      preLoaderRoute: typeof AssetpayPlanIdRouteImport
+      parentRoute: typeof AssetpayRoute
+    }
     '/admin/vendors': {
       id: '/admin/vendors'
       path: '/admin/vendors'
@@ -1284,6 +1315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvestCheckoutIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assetpay/new/$id': {
+      id: '/assetpay/new/$id'
+      path: '/new/$id'
+      fullPath: '/assetpay/new/$id'
+      preLoaderRoute: typeof AssetpayNewIdRouteImport
+      parentRoute: typeof AssetpayRoute
+    }
     '/invest/farmvest/holding/$hid': {
       id: '/invest/farmvest/holding/$hid'
       path: '/invest/farmvest/holding/$hid'
@@ -1295,11 +1333,15 @@ declare module '@tanstack/react-router' {
 }
 
 interface AssetpayRouteChildren {
+  AssetpayPlanIdRoute: typeof AssetpayPlanIdRoute
   AssetpayIndexRoute: typeof AssetpayIndexRoute
+  AssetpayNewIdRoute: typeof AssetpayNewIdRoute
 }
 
 const AssetpayRouteChildren: AssetpayRouteChildren = {
+  AssetpayPlanIdRoute: AssetpayPlanIdRoute,
   AssetpayIndexRoute: AssetpayIndexRoute,
+  AssetpayNewIdRoute: AssetpayNewIdRoute,
 }
 
 const AssetpayRouteWithChildren = AssetpayRoute._addFileChildren(
