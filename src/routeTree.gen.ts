@@ -30,10 +30,12 @@ import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as DesktopRouteImport } from './routes/desktop'
 import { Route as BrokerRouteImport } from './routes/broker'
+import { Route as AssetpayRouteImport } from './routes/assetpay'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VaultIndexRouteImport } from './routes/vault.index'
 import { Route as PrichatIndexRouteImport } from './routes/prichat.index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
+import { Route as AssetpayIndexRouteImport } from './routes/assetpay.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as WalletSecurityRouteImport } from './routes/wallet.security'
 import { Route as WalletIntroRouteImport } from './routes/wallet.intro'
@@ -177,6 +179,11 @@ const BrokerRoute = BrokerRouteImport.update({
   path: '/broker',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssetpayRoute = AssetpayRouteImport.update({
+  id: '/assetpay',
+  path: '/assetpay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -196,6 +203,11 @@ const InvestIndexRoute = InvestIndexRouteImport.update({
   id: '/invest/',
   path: '/invest/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AssetpayIndexRoute = AssetpayIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AssetpayRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
@@ -386,6 +398,7 @@ const InvestFarmvestHoldingHidRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assetpay': typeof AssetpayRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
   '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
@@ -436,6 +449,7 @@ export interface FileRoutesByFullPath {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/admin/': typeof AdminIndexRoute
+  '/assetpay/': typeof AssetpayIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
   '/vault/': typeof VaultIndexRoute
@@ -498,6 +512,7 @@ export interface FileRoutesByTo {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/admin': typeof AdminIndexRoute
+  '/assetpay': typeof AssetpayIndexRoute
   '/invest': typeof InvestIndexRoute
   '/prichat': typeof PrichatIndexRoute
   '/vault': typeof VaultIndexRoute
@@ -513,6 +528,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assetpay': typeof AssetpayRouteWithChildren
   '/broker': typeof BrokerRouteWithChildren
   '/desktop': typeof DesktopRoute
   '/documents': typeof DocumentsRoute
@@ -563,6 +579,7 @@ export interface FileRoutesById {
   '/wallet/intro': typeof WalletIntroRoute
   '/wallet/security': typeof WalletSecurityRoute
   '/admin/': typeof AdminIndexRoute
+  '/assetpay/': typeof AssetpayIndexRoute
   '/invest/': typeof InvestIndexRoute
   '/prichat/': typeof PrichatIndexRoute
   '/vault/': typeof VaultIndexRoute
@@ -579,6 +596,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assetpay'
     | '/broker'
     | '/desktop'
     | '/documents'
@@ -629,6 +647,7 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/admin/'
+    | '/assetpay/'
     | '/invest/'
     | '/prichat/'
     | '/vault/'
@@ -691,6 +710,7 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/admin'
+    | '/assetpay'
     | '/invest'
     | '/prichat'
     | '/vault'
@@ -705,6 +725,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/assetpay'
     | '/broker'
     | '/desktop'
     | '/documents'
@@ -755,6 +776,7 @@ export interface FileRouteTypes {
     | '/wallet/intro'
     | '/wallet/security'
     | '/admin/'
+    | '/assetpay/'
     | '/invest/'
     | '/prichat/'
     | '/vault/'
@@ -770,6 +792,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssetpayRoute: typeof AssetpayRouteWithChildren
   BrokerRoute: typeof BrokerRouteWithChildren
   DesktopRoute: typeof DesktopRoute
   DocumentsRoute: typeof DocumentsRoute
@@ -967,6 +990,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrokerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assetpay': {
+      id: '/assetpay'
+      path: '/assetpay'
+      fullPath: '/assetpay'
+      preLoaderRoute: typeof AssetpayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -994,6 +1024,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/invest/'
       preLoaderRoute: typeof InvestIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/assetpay/': {
+      id: '/assetpay/'
+      path: '/'
+      fullPath: '/assetpay/'
+      preLoaderRoute: typeof AssetpayIndexRouteImport
+      parentRoute: typeof AssetpayRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -1257,6 +1294,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AssetpayRouteChildren {
+  AssetpayIndexRoute: typeof AssetpayIndexRoute
+}
+
+const AssetpayRouteChildren: AssetpayRouteChildren = {
+  AssetpayIndexRoute: AssetpayIndexRoute,
+}
+
+const AssetpayRouteWithChildren = AssetpayRoute._addFileChildren(
+  AssetpayRouteChildren,
+)
+
 interface BrokerRouteChildren {
   BrokerRewardsRoute: typeof BrokerRewardsRoute
 }
@@ -1353,6 +1402,7 @@ const VendorRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssetpayRoute: AssetpayRouteWithChildren,
   BrokerRoute: BrokerRouteWithChildren,
   DesktopRoute: DesktopRoute,
   DocumentsRoute: DocumentsRoute,
