@@ -1,19 +1,21 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
-import { ArrowLeft, Check, Lock, Wallet, Building2 } from "lucide-react";
+import { ArrowLeft, Check, Lock, Wallet, Building2, DollarSign } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
+import { AgroBadge } from "@/components/ui/agro-badge";
 import { farmAssets, priceFor } from "@/lib/mock-data";
 import { Money } from "@/components/ui/money";
-import { createOrder } from "@/lib/farmremit";
 import { NGN_PER_USD } from "@/lib/fx";
 import { toast } from "sonner";
 import { UnlockSheet } from "@/components/wallet/UnlockSheet";
-import { TREASURY_ADDRESS } from "@/lib/wallet/chain";
+import { PAYABLE_SYMBOLS, TREASURY_ADDRESS } from "@/lib/wallet/chain";
+import { USD_ACCOUNT } from "@/lib/company";
 import { isUnlocked, refreshBalances, tokenList, useVault } from "@/lib/wallet/store";
 import { sendToken } from "@/lib/wallet/send";
-import { createPayOrder, markPaidOnChain } from "@/lib/payments";
+import { createPayOrder, markPaidOnChain, type PayRail } from "@/lib/payments";
+import { useAppState } from "@/lib/store";
 
 const search = z.object({
   unit: z.enum(["plot", "acre", "hectare"]).default("plot"),
@@ -21,11 +23,19 @@ const search = z.object({
 });
 
 export const Route = createFileRoute("/invest/checkout/$id")({
+  head: () => ({
+    meta: [
+      { title: "Secure checkout | AgroVest" },
+      { name: "description", content: "Pay for your AgroVest farmland with crypto from your AssetVault, a naira bank transfer, or a US dollar transfer." },
+      { property: "og:title", content: "Secure checkout | AgroVest" },
+      { property: "og:description", content: "Three ways to pay: crypto, naira or US dollars — confirmed by an AgroVest admin." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   validateSearch: search,
   component: Checkout,
 });
-
-type Method = "wallet" | "bank";
 
 function Checkout() {
   const { id } = Route.useParams();
@@ -35,15 +45,19 @@ function Checkout() {
   const p = priceFor(unit, qty);
   const [paying, setPaying] = useState(false);
   const [unlock, setUnlock] = useState(false);
-  const [method, setMethod] = useState<Method>("wallet");
+  const [rail, setRail] = useState<PayRail>("crypto");
 
+  const user = useAppState((s) => s.user);
   const network = useVault((s) => s.network);
   const custom = useVault((s) => s.customTokens);
   const balances = useVault((s) => s.balances);
   const address = useVault((s) => s.address);
 
   const payable = useMemo(
-    () => tokenList({ network, customTokens: custom } as any).filter((t) => t.native || t.address),
+    () =>
+      tokenList({ network, customTokens: custom }).filter(
+        (t) => (t.native || t.address) && PAYABLE_SYMBOLS.includes(t.symbol),
+      ),
     [network, custom],
   );
   const [symbol, setSymbol] = useState(payable[0]?.symbol ?? "");
@@ -51,6 +65,15 @@ function Checkout() {
   const tokenAmount = token && token.usd > 0 ? p.final / token.usd : 0;
   const bal = balances[token?.symbol ?? ""]?.formatted ?? 0;
   const insufficient = tokenAmount > bal;
+
+  const purpose = {
+    kind: "investment" as const,
+    assetId: asset.id,
+    assetName: asset.name,
+    category: asset.category,
+    unit,
+    qty,
+  };
 
   async function payFromVault() {
     if (!token) return;
@@ -60,14 +83,9 @@ function Checkout() {
       amountUsd: p.final,
       rate: NGN_PER_USD,
       token: token.symbol,
-      purpose: {
-        kind: "investment",
-        assetId: asset.id,
-        assetName: asset.name,
-        category: asset.category,
-        unit,
-        qty,
-      },
+      rail: "crypto",
+      payerName: user?.name ?? "AgroVest user",
+      purpose,
     });
     try {
       const hash = await sendToken({
@@ -89,24 +107,28 @@ function Checkout() {
   }
 
   function pay() {
-    if (method === "wallet") { void payFromVault(); return; }
-    // Bank transfer → fund the wallet through a One-Time Account order.
-    const order = createOrder({
+    if (rail === "crypto") { void payFromVault(); return; }
+    const order = createPayOrder({
       amountUsd: p.final,
       rate: NGN_PER_USD,
-      purpose: {
-        kind: "investment",
-        assetId: asset.id,
-        assetName: asset.name,
-        category: asset.category,
-        unit,
-        qty,
-      },
+      token: rail === "ngn" ? "NGN" : "USD",
+      rail,
+      payerName: user?.name ?? "AgroVest user",
+      purpose,
     });
-    void nav({ to: "/prichat/$id", params: { id: order.id }, hash: "one-time-account" }).then(() => {
-      toast.success(`Bank transfer order ${order.reference} opened — use the one-time account number below.`);
+    void nav({ to: "/pay/$orderId", params: { orderId: order.id } }).then(() => {
+      toast.success(`Ticket ${order.reference} created — use it as your transfer description.`);
     });
   }
+
+  const usdBlocked = rail === "usd" && !USD_ACCOUNT.available;
+  const ctaLabel = paying
+    ? "Sending…"
+    : rail === "crypto"
+      ? `Pay $${p.final.toLocaleString()} · ≈ ₦${Math.round(p.final * NGN_PER_USD).toLocaleString()}`
+      : rail === "ngn"
+        ? `Get transfer details · ₦${Math.round(p.final * NGN_PER_USD).toLocaleString()}`
+        : `Get transfer details · $${p.final.toLocaleString()}`;
 
   return (
     <MobileFrame>
@@ -139,26 +161,39 @@ function Checkout() {
           <div className="mt-3 space-y-2">
             <PayOption
               icon={<Wallet size={16} />}
-              label="AssetVault balance"
-              sub="Deducted on-chain from your BSC wallet"
-              active={method === "wallet"}
-              onClick={() => setMethod("wallet")}
+              label="Crypto — AssetVault"
+              sub="USDT, BNB or $CLYST sent to the AgroVest treasury"
+              active={rail === "crypto"}
+              onClick={() => setRail("crypto")}
             />
             <PayOption
               icon={<Building2 size={16} />}
-              label="Fund by bank transfer"
-              sub="Pay NGN to a One-Time account number · admin confirms, then cUSD lands in your AssetVault"
-              active={method === "bank"}
-              onClick={() => setMethod("bank")}
+              label="Naira bank transfer"
+              sub="Transfer to AgroVest's Fidelity Bank account"
+              active={rail === "ngn"}
+              onClick={() => setRail("ngn")}
+            />
+            <PayOption
+              icon={<DollarSign size={16} />}
+              label="US dollar transfer"
+              sub="Direct transfer to the AgroVest domiciliary account"
+              active={rail === "usd"}
+              onClick={() => setRail("usd")}
+              badge={!USD_ACCOUNT.available ? "Coming soon" : undefined}
             />
           </div>
 
-          {method === "wallet" && (
+          {rail === "crypto" && (
             <div className="mt-3 rounded-2xl bg-secondary p-3">
               {!address ? (
                 <p className="text-xs text-muted-foreground">
                   No AssetVault on this device yet.{" "}
                   <Link to="/wallet/intro" className="font-medium text-violet">Set one up</Link>.
+                </p>
+              ) : payable.length === 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  No payable token on {network}. Switch network in{" "}
+                  <Link to="/vault/settings" className="font-medium text-violet">AssetVault settings</Link>.
                 </p>
               ) : (
                 <>
@@ -182,12 +217,19 @@ function Checkout() {
                   </p>
                   {insufficient && (
                     <p className="mt-1 text-[11px] text-destructive">
-                      Not enough {token?.symbol}.{" "}
-                      <Link to="/prichat" className="font-medium underline">Fund your wallet</Link>.
+                      Not enough {token?.symbol}. Choose another token or pay by bank transfer.
                     </p>
                   )}
                 </>
               )}
+            </div>
+          )}
+
+          {rail !== "crypto" && (
+            <div className="mt-3 rounded-2xl bg-secondary p-3 text-[11px] text-muted-foreground">
+              {usdBlocked
+                ? "The AgroVest dollar domiciliary account is being finalised. Pay in naira or crypto for now."
+                : "You'll get the account details and a unique ticket ID on the next screen. Use the ticket ID as your transfer description."}
             </div>
           )}
         </div>
@@ -195,8 +237,8 @@ function Checkout() {
         <div className="flex items-start gap-2 rounded-2xl bg-violet-soft/40 border border-violet/20 p-3 text-xs text-foreground">
           <Lock size={14} className="mt-0.5 text-violet" />
           <p>
-            Your payment goes on-chain immediately, but your holding is only created once an AgroVest
-            admin confirms it. You'll receive your Custody Receipt and Contract at that point.
+            Your holding is only created once an AgroVest admin confirms the payment. You'll receive your
+            Custody Receipt and Contract at that point.
           </p>
         </div>
       </main>
@@ -205,13 +247,13 @@ function Checkout() {
         <AgroButton
           size="xl"
           onClick={pay}
-          disabled={paying || (method === "wallet" && (!address || insufficient))}
+          disabled={
+            paying ||
+            usdBlocked ||
+            (rail === "crypto" && (!address || !token || insufficient))
+          }
         >
-          {paying
-            ? "Sending…"
-            : method === "wallet"
-              ? `Pay $${p.final.toLocaleString()} · ≈ ₦${(p.final * NGN_PER_USD).toLocaleString()}`
-              : `Open bank transfer · ₦${(p.final * NGN_PER_USD).toLocaleString()}`}
+          {ctaLabel}
         </AgroButton>
       </div>
 
@@ -232,13 +274,14 @@ function RowM({ k, usd, bold, accent, muted }: { k: string; usd: number; bold?: 
 }
 
 function PayOption({
-  icon, label, sub, active, onClick,
+  icon, label, sub, active, onClick, badge,
 }: {
   icon: React.ReactNode;
   label: string;
   sub: string;
   active?: boolean;
   onClick?: () => void;
+  badge?: string;
 }) {
   return (
     <button
@@ -254,7 +297,10 @@ function PayOption({
         {active ? <Check size={16} /> : icon}
       </span>
       <div className="flex-1">
-        <p className="text-sm font-medium text-foreground">{label}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-medium text-foreground">{label}</p>
+          {badge && <AgroBadge size="xs" tone="warn">{badge}</AgroBadge>}
+        </div>
         <p className="text-[11px] text-muted-foreground">{sub}</p>
       </div>
     </button>
