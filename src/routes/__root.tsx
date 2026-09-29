@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "sonner";
 import { initTheme } from "@/lib/theme";
 import { initAuth } from "@/lib/auth";
+import { startCloudSync, stopCloudSync } from "@/lib/cloud-sync";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
@@ -135,7 +136,13 @@ function RootComponent() {
   useEffect(() => { initTheme(); }, []);
   useEffect(() => {
     initAuth();
-    const { data } = supabase.auth.onAuthStateChange((event) => {
+    let syncedFor: string | null = null;
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      const uid = session?.user.id ?? null;
+      if (uid !== syncedFor) {
+        syncedFor = uid;
+        setTimeout(() => (uid ? startCloudSync() : stopCloudSync()), 0);
+      }
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
