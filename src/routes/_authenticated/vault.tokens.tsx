@@ -8,7 +8,7 @@ import { AgroButton } from "@/components/ui/agro-button";
 import { ERC20_ABI, TOKENS } from "@/lib/wallet/chain";
 import { addCustomToken, provider, removeCustomToken, useVault } from "@/lib/wallet/store";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/vault/tokens")({
+export const Route = createFileRoute("/_authenticated/vault/tokens")({
   head: () => ({
     meta: [
       { title: "Manage tokens — AssetVault | AgroVest" },

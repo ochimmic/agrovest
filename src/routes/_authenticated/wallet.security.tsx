@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ShieldCheck, Check } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/wallet/security")({ component: Security });
+export const Route = createFileRoute("/_authenticated/wallet/security")({ component: Security });
 
 const checks = [
   { t: "Recovery phrase saved offline", done: true },

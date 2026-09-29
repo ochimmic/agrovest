@@ -14,7 +14,7 @@ import {
 } from "@/lib/payments";
 import { advance, useFarmRemit } from "@/lib/farmremit";
 
-export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/payments")({
+export const Route = createFileRoute("/_authenticated/_admin/admin/payments")({
   head: () => ({
     meta: [
       { title: "Payments queue — Admin | AgroVest" },

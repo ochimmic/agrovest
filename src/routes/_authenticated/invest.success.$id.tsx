@@ -9,7 +9,7 @@ const search = z.object({
   kind: z.enum(["farm", "property"]).default("farm"),
 });
 
-export const Route = createFileRoute("/_authenticated/_authenticated/invest/success/$id")({
+export const Route = createFileRoute("/_authenticated/invest/success/$id")({
   validateSearch: search,
   component: Success,
 });

@@ -3,7 +3,7 @@ import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/support/dispute")({ component: Dispute });
+export const Route = createFileRoute("/_authenticated/support/dispute")({ component: Dispute });
 function Dispute() {
   return (
     <MobileFrame>

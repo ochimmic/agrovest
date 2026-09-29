@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FileCheck } from "lucide-react";
 import { AdminPage } from "@/components/admin/AdminShell";
 
-export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/kyc")({
+export const Route = createFileRoute("/_authenticated/_admin/admin/kyc")({
   component: () => (
     <AdminPage
       title="KYC queue"

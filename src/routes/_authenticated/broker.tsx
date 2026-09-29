@@ -4,7 +4,7 @@ import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/broker")({ component: Broker });
+export const Route = createFileRoute("/_authenticated/broker")({ component: Broker });
 
 const tag: Record<string, string> = {
   invited: "bg-secondary text-secondary-foreground",

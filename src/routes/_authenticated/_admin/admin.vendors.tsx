@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Store } from "lucide-react";
 import { AdminPage } from "@/components/admin/AdminShell";
 
-export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/vendors")({
+export const Route = createFileRoute("/_authenticated/_admin/admin/vendors")({
   component: () => (
     <AdminPage
       title="Vendor approvals"

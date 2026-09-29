@@ -20,7 +20,7 @@ import {
 import { usePayments } from "@/lib/payments";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 
-export const Route = createFileRoute("/_authenticated/_admin/_authenticated/_admin/admin/")({ component: Admin });
+export const Route = createFileRoute("/_authenticated/_admin/admin/")({ component: Admin });
 
 const queues = [
   {

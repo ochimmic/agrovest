@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/broker/rewards")({ component: Rewards });
+export const Route = createFileRoute("/_authenticated/broker/rewards")({ component: Rewards });
 function Rewards() {
   const tiers = [
     { t: "Bronze", req: "5 verified leads", done: true },

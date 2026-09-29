@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/vendor/disputes")({ component: Disputes });
+export const Route = createFileRoute("/_authenticated/vendor/disputes")({ component: Disputes });
 function Disputes() {
   return (
     <MobileFrame>

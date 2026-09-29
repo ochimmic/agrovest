@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { Headphones, AlertTriangle, MessageCircle } from "lucide-react";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/support")({ component: Support });
+export const Route = createFileRoute("/_authenticated/support")({ component: Support });
 function Support() {
   return (
     <MobileFrame>

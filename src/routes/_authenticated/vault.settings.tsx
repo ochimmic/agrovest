@@ -7,7 +7,7 @@ import { setAddress, setNetwork, setSigner, useVault } from "@/lib/wallet/store"
 import { clearVault, readMeta } from "@/lib/wallet/keystore";
 import { setState } from "@/lib/store";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/vault/settings")({
+export const Route = createFileRoute("/_authenticated/vault/settings")({
   head: () => ({
     meta: [
       { title: "Wallet settings — AssetVault | AgroVest" },

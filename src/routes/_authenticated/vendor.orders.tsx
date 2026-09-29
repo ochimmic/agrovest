@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/vendor/orders")({ component: Orders });
+export const Route = createFileRoute("/_authenticated/vendor/orders")({ component: Orders });
 function Orders() {
   const orders = [
     { id: "o1", buyer: "Jane M.", item: "Lekki Residence", total: 145000, status: "Processing" },

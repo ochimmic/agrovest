@@ -3,7 +3,7 @@ import { Wallet, Download, ShieldCheck } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/wallet/intro")({ component: WalletIntro });
+export const Route = createFileRoute("/_authenticated/wallet/intro")({ component: WalletIntro });
 
 function WalletIntro() {
   return (

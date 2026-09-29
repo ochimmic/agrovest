@@ -6,7 +6,7 @@ import { Money } from "@/components/ui/money";
 import { LocalTime } from "@/components/ui/local-time";
 import { amountDue, installmentStatus, nextInstallment, paidUsd, useAssetPay } from "@/lib/assetpay";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/assetpay/")({
+export const Route = createFileRoute("/_authenticated/assetpay/")({
   head: () => ({
     meta: [
       { title: "AssetPay installment plans | AgroVest" },

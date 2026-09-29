@@ -12,7 +12,7 @@ import { NGN_ACCOUNT, USD_ACCOUNT, SUPPORT_PHONE } from "@/lib/company";
 import { NGN_PER_USD } from "@/lib/fx";
 import { markTransferNotified, payStatusLabel, payStatusTone, usePayments } from "@/lib/payments";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/pay/$orderId")({
+export const Route = createFileRoute("/_authenticated/pay/$orderId")({
   head: () => ({
     meta: [
       { title: "Payment status | AgroVest" },

@@ -11,7 +11,7 @@ import { isUnlocked, refreshBalances, tokenList, useVault } from "@/lib/wallet/s
 import { estimateGas, sendToken } from "@/lib/wallet/send";
 import { fmtNgn } from "@/lib/fx";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/vault/send")({
+export const Route = createFileRoute("/_authenticated/vault/send")({
   head: () => ({
     meta: [
       { title: "Send crypto — AssetVault | AgroVest" },

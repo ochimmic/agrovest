@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 
-export const Route = createFileRoute("/_authenticated/_authenticated/security")({ component: Sec });
+export const Route = createFileRoute("/_authenticated/security")({ component: Sec });
 function Sec() {
   return (
     <MobileFrame>
