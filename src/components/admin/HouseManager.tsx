@@ -125,8 +125,8 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
             </div>
             <div className="grid grid-cols-2 gap-1.5 text-xs">
               {([["verified", "Verified by AgroVest"], ["survey_ok", "Survey plan checked"], ["structural_ok", "Structural inspection"], ["title_search_ok", "Title search passed"]] as const).map(([k, l]) => (
-                <label key={k} className="flex items-center gap-2 rounded-xl border border-border px-2.5 py-2">
-                  <input type="checkbox" checked={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.checked })} />{l}
+                <label key={k} className="flex items-center gap-2 rounded-xl border border-border bg-secondary px-2.5 py-2 text-foreground cursor-pointer">
+                  <input type="checkbox" className="h-4 w-4 accent-agro" checked={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.checked })} />{l}
                 </label>
               ))}
             </div>
