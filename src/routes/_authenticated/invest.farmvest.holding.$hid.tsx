@@ -52,7 +52,7 @@ function HoldingDetail() {
   const txHash = `0x${holding.id.replace(/[^a-f0-9]/gi, "").padEnd(8, "a").slice(0, 8)}…${holding.id.slice(-4)}`;
 
   const schedule = [
-    { y: "Y1–2", pct: "0%", note: "Maturation", tone: "muted" as const },
+    { y: "Y1–2", pct: "0%", note: "Maturation", tone: "muted" as "muted" | "warn" | "agro" },
     { y: "Y3", pct: "30%", note: "Maturity begins", tone: "agro" as const },
     { y: "Y4", pct: "40%", note: "Annual ROI", tone: "agro" as const },
     { y: "Y5+", pct: "50% / yr", note: "Every year after", tone: "agro" as const },
