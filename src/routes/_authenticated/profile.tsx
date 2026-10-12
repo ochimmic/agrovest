@@ -49,7 +49,7 @@ function Profile() {
         <Section title="Wallet">
           <Row to="/vault" icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" />
           <Row to="/vault/settings" icon={Lock} label="Wallet settings" sub="Network, lock & recovery" />
-          <Row to="/assetpay" icon={CalendarClock} label="BuyByBit" sub="Installment plans" />
+          <Row to="/buybybit" icon={CalendarClock} label="BuyByBit" sub="Installment plans" />
           <Row to="/prichat" icon={FileText} label="Deposit history" sub="Bank transfers to AgroVest" />
         </Section>
 

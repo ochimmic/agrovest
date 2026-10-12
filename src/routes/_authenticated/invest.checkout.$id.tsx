@@ -192,7 +192,7 @@ function Checkout() {
 
         {!installment && !isHouse && (
           <Link
-            to="/assetpay/new/$id"
+            to="/buybybit/new/$id"
             params={{ id }}
             search={{ unit, qty }}
             className="flex items-center gap-3 rounded-3xl border border-violet/30 bg-violet-soft/30 p-4"

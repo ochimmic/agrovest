@@ -6,7 +6,7 @@ import { Money } from "@/components/ui/money";
 import { LocalTime } from "@/components/ui/local-time";
 import { amountDue, installmentStatus, nextInstallment, paidUsd, useAssetPay } from "@/lib/assetpay";
 
-export const Route = createFileRoute("/_authenticated/assetpay/")({
+export const Route = createFileRoute("/_authenticated/buybybit/")({
   head: () => ({
     meta: [
       { title: "BuyByBit installment plans | AgroVest" },
@@ -55,7 +55,7 @@ function AssetPayHome() {
             const pct = Math.round((paid / p.totalUsd) * 100);
             const st = next ? installmentStatus(next) : null;
             return (
-              <Link key={p.id} to="/assetpay/$planId" params={{ planId: p.id }} className="block rounded-3xl border border-border bg-card p-4">
+              <Link key={p.id} to="/buybybit/$planId" params={{ planId: p.id }} className="block rounded-3xl border border-border bg-card p-4">
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-semibold text-foreground truncate">{p.purpose.assetName}</p>
                   <AgroBadge size="xs" tone={TONE[p.status]}>{p.status}</AgroBadge>

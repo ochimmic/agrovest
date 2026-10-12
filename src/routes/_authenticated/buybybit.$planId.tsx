@@ -10,7 +10,7 @@ import {
   type InstallmentStatus,
 } from "@/lib/assetpay";
 
-export const Route = createFileRoute("/_authenticated/assetpay/$planId")({
+export const Route = createFileRoute("/_authenticated/buybybit/$planId")({
   head: () => ({
     meta: [
       { title: "BuyByBit plan details | AgroVest" },
@@ -54,7 +54,7 @@ function PlanDetail() {
   return (
     <MobileFrame>
       <header className="flex items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
-        <Link to="/assetpay" className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><ArrowLeft size={18} /></Link>
+        <Link to="/buybybit" className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><ArrowLeft size={18} /></Link>
         <h1 className="text-base font-semibold text-foreground">Plan details</h1>
       </header>
       <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">

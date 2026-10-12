@@ -16,7 +16,7 @@ const search = z.object({
   qty: z.coerce.number().min(0.5).default(1),
 });
 
-export const Route = createFileRoute("/_authenticated/assetpay/new/$id")({
+export const Route = createFileRoute("/_authenticated/buybybit/new/$id")({
   head: () => ({
     meta: [
       { title: "Set up a BuyByBit plan | AgroVest" },
