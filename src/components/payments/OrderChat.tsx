@@ -39,7 +39,7 @@ export function OrderChat({ orderId, asAdmin = false }: { orderId: string; asAdm
       if (!u.user) throw new Error("Please sign in again");
       const attachment_path = file ? await uploadPrivate("payment-receipts", file, `chat-${orderId}`) : null;
       const { error } = await supabase.from("order_messages").insert({
-        order_id: orderId, sender_id: u.user.id, from_admin: asAdmin, body: body || "Sent a receipt", attachment_path,
+        order_id: orderId, sender_id: u.user.id, from_admin: asAdmin, body: body || (asAdmin ? "Sent a file" : "Sent a receipt"), attachment_path,
       });
       if (error) throw error;
       setText(""); void load();
@@ -70,14 +70,10 @@ export function OrderChat({ orderId, asAdmin = false }: { orderId: string; asAdm
         <div ref={endRef} />
       </div>
       <div className="mt-3 flex items-center gap-2">
-        {!asAdmin && (
-          <>
-            <input ref={fileRef} type="file" accept={ACCEPT} className="hidden"
-              onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void send(f); }} />
-            <button type="button" aria-label="Attach receipt" disabled={busy} onClick={() => fileRef.current?.click()}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground"><Paperclip size={16} /></button>
-          </>
-        )}
+        <input ref={fileRef} type="file" accept={ACCEPT} className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; if (f) void send(f); }} />
+        <button type="button" aria-label={asAdmin ? "Attach file" : "Attach receipt"} disabled={busy} onClick={() => fileRef.current?.click()}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground"><Paperclip size={16} /></button>
         <input value={text} onChange={(e) => setText(e.target.value)} maxLength={2000} placeholder="Type a message"
           onKeyDown={(e) => { if (e.key === "Enter") void send(); }}
           className="flex-1 rounded-full border border-border bg-background px-4 py-2 text-sm" />

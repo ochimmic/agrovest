@@ -49,6 +49,7 @@ function Profile() {
         <Section title="Wallet">
           <Row to="/vault" icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" />
           <Row to="/vault/settings" icon={Lock} label="Wallet settings" sub="Network, lock & recovery" />
+          <Row to="/orders" icon={FileText} label="My orders & payment chat" sub="Send receipts · chat with AgroVest" />
           <Row to="/buybybit" icon={CalendarClock} label="BuyByBit" sub="Installment plans" />
           <Row to="/calculator" icon={FileText} label="Calculator & converter" sub="Land size, price, ROI, ₦ ⇄ $" />
         </Section>
