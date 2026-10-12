@@ -22,8 +22,8 @@ export type PayPurpose = {
   kind: "investment" | "asset";
   assetId: string;
   assetName: string;
-  category: "palm" | "cocoa" | "latex";
-  unit: "plot" | "acre" | "hectare";
+  category: "palm" | "cocoa" | "latex" | "property";
+  unit: "plot" | "acre" | "hectare" | "house";
   qty: number;
   /** Set when this payment is one installment of an AssetPay plan. */
   planId?: string;

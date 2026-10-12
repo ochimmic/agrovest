@@ -82,8 +82,8 @@ function Checkout() {
     kind: "investment" as const,
     assetId: isHouse ? id : asset.id,
     assetName: isHouse ? house?.title ?? "House" : asset.name,
-    category: isHouse ? "property" : asset.category,
-    unit: isHouse ? "house" : unit,
+    category: isHouse ? ("property" as const) : asset.category,
+    unit: isHouse ? ("house" as const) : unit,
     qty: isHouse ? 1 : qty,
     ...(installment && plan ? { planId: plan.id, installment: installment.index } : {}),
   };
