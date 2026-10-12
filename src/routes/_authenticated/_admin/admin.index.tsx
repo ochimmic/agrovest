@@ -24,6 +24,14 @@ export const Route = createFileRoute("/_authenticated/_admin/admin/")({ componen
 
 const queues = [
   {
+    to: "/admin/properties",
+    icon: Building2,
+    label: "Houses (Buy Assets)",
+    desc: "Add houses, prices, photos & disclaimers",
+    count: 0,
+    tone: "from-agro to-emerald-700",
+  },
+  {
     to: "/admin/payments",
     icon: Wallet,
     label: "Payments",
