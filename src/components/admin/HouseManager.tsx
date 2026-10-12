@@ -61,12 +61,12 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
     toast.success("House deleted"); reload(); onChange?.();
   }
 
-  const input = "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm";
+  const input = "w-full rounded-xl border border-border bg-secondary px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground";
   const ngnVal = form ? Number(form.market_price_ngn.replace(/,/g, "")) || 0 : 0;
   const preview = housePrice({ market_price_ngn: ngnVal });
   return (
     <div>
-      <button onClick={() => { setFile(null); setForm({ ...blank }); }} className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-agro px-4 py-2 text-sm font-medium text-white"><Plus size={15} />Add house</button>
+      <button onClick={() => { setFile(null); setForm({ ...blank }); }} className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-agro px-4 py-2 text-sm font-medium text-[oklch(0.18_0.01_250)]"><Plus size={15} />Add house</button>
 
       {houses === null ? <Skeleton className="h-40 w-full rounded-2xl" /> : houses.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">No houses yet.</p>
@@ -135,7 +135,7 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
             <select className={input} value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>
               <option value="draft">Draft (hidden)</option><option value="active">Listed</option><option value="sold">Sold</option>
             </select>
-            <button disabled={busy} onClick={() => void save()} className="w-full rounded-full bg-agro py-2.5 text-sm font-medium text-white disabled:opacity-50">{busy ? "Saving…" : "Save house"}</button>
+            <button disabled={busy} onClick={() => void save()} className="w-full rounded-full bg-agro py-2.5 text-sm font-medium text-[oklch(0.18_0.01_250)] disabled:opacity-50">{busy ? "Saving…" : "Save house"}</button>
           </div>
         </div>
       )}
