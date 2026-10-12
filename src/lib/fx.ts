@@ -9,7 +9,8 @@ let source: "fallback" | "live" = "fallback";
 let updatedAt: string | null = null;
 
 const listeners = new Set<() => void>();
-let snapshot = { rate: NGN_PER_USD, source, updatedAt };
+type FxSnap = { rate: number; source: "fallback" | "live"; updatedAt: string | null };
+let snapshot: FxSnap = { rate: NGN_PER_USD, source, updatedAt };
 const REFRESH_MS = 10 * 60_000;
 let started = false;
 
