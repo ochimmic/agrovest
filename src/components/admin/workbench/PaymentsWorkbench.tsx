@@ -179,11 +179,9 @@ export function PaymentsWorkbench({ embedded = false }: { embedded?: boolean }) 
                         <FileText size={11} /> View receipt
                       </button>
                     )}
-                    {r.kind === "Purchase" && (
-                      <button onClick={() => setChat(chat === r.id ? null : r.id)} className="mt-1 mr-3 inline-flex items-center gap-1 text-[11px] font-medium text-violet">
-                        {chat === r.id ? "Hide chat" : "Chat"}
-                      </button>
-                    )}
+                    <button onClick={() => setChat(chat === r.id ? null : r.id)} className="mt-1 mr-3 inline-flex items-center gap-1 text-[11px] font-medium text-violet">
+                      {chat === r.id ? "Hide chat" : "Chat with buyer"}
+                    </button>
                     {r.hash && (
                       <a
                         href={txUrl((r.network ?? "bsc-testnet") as NetworkId, r.hash)}
@@ -201,7 +199,9 @@ export function PaymentsWorkbench({ embedded = false }: { embedded?: boolean }) 
                   </div>
                 </div>
 
-                {chat === r.id && <div className="mt-3"><OrderChat orderId={r.id} asAdmin /></div>}
+                {chat === r.id && (r.kind === "Purchase"
+                  ? <div className="mt-3"><OrderChat orderId={r.id} asAdmin /></div>
+                  : <p className="mt-3 rounded-xl bg-muted p-3 text-xs text-muted-foreground">This is a sample deposit saved only on this device, so there is no buyer to chat with. Real purchases have live chat here and in Payment chat.</p>)}
                 {!r.settled && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     <button
