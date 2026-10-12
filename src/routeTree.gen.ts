@@ -9,124 +9,80 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as CalculatorRouteImport } from './routes/calculator'
-import { Route as DesktopRouteImport } from './routes/desktop'
-import { Route as ExploreRouteImport } from './routes/explore'
-import { Route as ForgotRouteImport } from './routes/forgot'
-import { Route as LegalRouteImport } from './routes/legal'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as RoleSelectRouteImport } from './routes/role-select'
-import { Route as ServicesRouteImport } from './routes/services'
 import { Route as WelcomeRouteImport } from './routes/welcome'
-import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/_admin/route'
-import { Route as AuthenticatedBrokerRouteImport } from './routes/_authenticated/broker'
-import { Route as AuthenticatedBuybybitRouteImport } from './routes/_authenticated/buybybit'
-import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
-import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
-import { Route as AuthenticatedKycRouteImport } from './routes/_authenticated/kyc'
-import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
-import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
-import { Route as AuthenticatedPrichatRouteImport } from './routes/_authenticated/prichat'
-import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedSecurityRouteImport } from './routes/_authenticated/security'
-import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
-import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
-import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as RoleSelectRouteImport } from './routes/role-select'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LegalRouteImport } from './routes/legal'
+import { Route as ForgotRouteImport } from './routes/forgot'
+import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as DesktopRouteImport } from './routes/desktop'
+import { Route as CalculatorRouteImport } from './routes/calculator'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
-import { Route as ServicesMpRouteImport } from './routes/services.mp'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
-import { Route as AuthenticatedAssetpayIndexRouteImport } from './routes/_authenticated/assetpay.index'
-import { Route as AuthenticatedAssetpayPlanIdRouteImport } from './routes/_authenticated/assetpay.$planId'
-import { Route as AuthenticatedBrokerRewardsRouteImport } from './routes/_authenticated/broker.rewards'
-import { Route as AuthenticatedBuybybitIndexRouteImport } from './routes/_authenticated/buybybit.index'
-import { Route as AuthenticatedBuybybitPlanIdRouteImport } from './routes/_authenticated/buybybit.$planId'
-import { Route as AuthenticatedPayOrderIdRouteImport } from './routes/_authenticated/pay.$orderId'
-import { Route as AuthenticatedPrichatIndexRouteImport } from './routes/_authenticated/prichat.index'
-import { Route as AuthenticatedPrichatIdRouteImport } from './routes/_authenticated/prichat.$id'
-import { Route as AuthenticatedSupportDisputeRouteImport } from './routes/_authenticated/support.dispute'
-import { Route as AuthenticatedVaultIndexRouteImport } from './routes/_authenticated/vault.index'
-import { Route as AuthenticatedVaultReceiveRouteImport } from './routes/_authenticated/vault.receive'
-import { Route as AuthenticatedVaultSendRouteImport } from './routes/_authenticated/vault.send'
-import { Route as AuthenticatedVaultSettingsRouteImport } from './routes/_authenticated/vault.settings'
-import { Route as AuthenticatedVaultTokensRouteImport } from './routes/_authenticated/vault.tokens'
-import { Route as AuthenticatedWalletConfirmRouteImport } from './routes/_authenticated/wallet.confirm'
-import { Route as AuthenticatedWalletCreateRouteImport } from './routes/_authenticated/wallet.create'
-import { Route as AuthenticatedWalletImportRouteImport } from './routes/_authenticated/wallet.import'
-import { Route as AuthenticatedWalletIntroRouteImport } from './routes/_authenticated/wallet.intro'
-import { Route as AuthenticatedWalletSecurityRouteImport } from './routes/_authenticated/wallet.security'
-import { Route as InvestFarmvestIndexRouteImport } from './routes/invest.farmvest.index'
-import { Route as InvestFarmvestIdRouteImport } from './routes/invest.farmvest.$id'
+import { Route as ServicesMpRouteImport } from './routes/services.mp'
+import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
+import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedSecurityRouteImport } from './routes/_authenticated/security'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedPrichatRouteImport } from './routes/_authenticated/prichat'
+import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
+import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedKycRouteImport } from './routes/_authenticated/kyc'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
+import { Route as AuthenticatedDocumentsRouteImport } from './routes/_authenticated/documents'
+import { Route as AuthenticatedBuybybitRouteImport } from './routes/_authenticated/buybybit'
+import { Route as AuthenticatedBrokerRouteImport } from './routes/_authenticated/broker'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/_admin/route'
 import { Route as InvestPropertyIndexRouteImport } from './routes/invest.property.index'
-import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
+import { Route as InvestFarmvestIndexRouteImport } from './routes/invest.farmvest.index'
+import { Route as AuthenticatedVaultIndexRouteImport } from './routes/_authenticated/vault.index'
+import { Route as AuthenticatedPrichatIndexRouteImport } from './routes/_authenticated/prichat.index'
+import { Route as AuthenticatedBuybybitIndexRouteImport } from './routes/_authenticated/buybybit.index'
+import { Route as AuthenticatedAssetpayIndexRouteImport } from './routes/_authenticated/assetpay.index'
 import { Route as ServicesMpIdRouteImport } from './routes/services.mp.$id'
+import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
+import { Route as InvestFarmvestIdRouteImport } from './routes/invest.farmvest.$id'
+import { Route as AuthenticatedWalletSecurityRouteImport } from './routes/_authenticated/wallet.security'
+import { Route as AuthenticatedWalletIntroRouteImport } from './routes/_authenticated/wallet.intro'
+import { Route as AuthenticatedWalletImportRouteImport } from './routes/_authenticated/wallet.import'
+import { Route as AuthenticatedWalletCreateRouteImport } from './routes/_authenticated/wallet.create'
+import { Route as AuthenticatedWalletConfirmRouteImport } from './routes/_authenticated/wallet.confirm'
+import { Route as AuthenticatedVaultTokensRouteImport } from './routes/_authenticated/vault.tokens'
+import { Route as AuthenticatedVaultSettingsRouteImport } from './routes/_authenticated/vault.settings'
+import { Route as AuthenticatedVaultSendRouteImport } from './routes/_authenticated/vault.send'
+import { Route as AuthenticatedVaultReceiveRouteImport } from './routes/_authenticated/vault.receive'
+import { Route as AuthenticatedSupportDisputeRouteImport } from './routes/_authenticated/support.dispute'
+import { Route as AuthenticatedPrichatIdRouteImport } from './routes/_authenticated/prichat.$id'
+import { Route as AuthenticatedPayOrderIdRouteImport } from './routes/_authenticated/pay.$orderId'
+import { Route as AuthenticatedBuybybitPlanIdRouteImport } from './routes/_authenticated/buybybit.$planId'
+import { Route as AuthenticatedBrokerRewardsRouteImport } from './routes/_authenticated/broker.rewards'
+import { Route as AuthenticatedAssetpayPlanIdRouteImport } from './routes/_authenticated/assetpay.$planId'
 import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_authenticated/_admin/admin.index'
-import { Route as AuthenticatedAdminAdminAuditRouteImport } from './routes/_authenticated/_admin/admin.audit'
-import { Route as AuthenticatedAdminAdminConsultantsRouteImport } from './routes/_authenticated/_admin/admin.consultants'
-import { Route as AuthenticatedAdminAdminDesktopRouteImport } from './routes/_authenticated/_admin/admin.desktop'
-import { Route as AuthenticatedAdminAdminDisputesRouteImport } from './routes/_authenticated/_admin/admin.disputes'
-import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin.documents'
-import { Route as AuthenticatedAdminAdminKycRouteImport } from './routes/_authenticated/_admin/admin.kyc'
-import { Route as AuthenticatedAdminAdminPartnersRouteImport } from './routes/_authenticated/_admin/admin.partners'
-import { Route as AuthenticatedAdminAdminPaymentsRouteImport } from './routes/_authenticated/_admin/admin.payments'
-import { Route as AuthenticatedAdminAdminPayoutsRouteImport } from './routes/_authenticated/_admin/admin.payouts'
-import { Route as AuthenticatedAdminAdminPropertiesRouteImport } from './routes/_authenticated/_admin/admin.properties'
-import { Route as AuthenticatedAdminAdminRewardsRouteImport } from './routes/_authenticated/_admin/admin.rewards'
-import { Route as AuthenticatedAssetpayNewIdRouteImport } from './routes/_authenticated/assetpay.new.$id'
-import { Route as AuthenticatedBuybybitNewIdRouteImport } from './routes/_authenticated/buybybit.new.$id'
-import { Route as AuthenticatedInvestCheckoutIdRouteImport } from './routes/_authenticated/invest.checkout.$id'
 import { Route as AuthenticatedInvestSuccessIdRouteImport } from './routes/_authenticated/invest.success.$id'
+import { Route as AuthenticatedInvestCheckoutIdRouteImport } from './routes/_authenticated/invest.checkout.$id'
+import { Route as AuthenticatedBuybybitNewIdRouteImport } from './routes/_authenticated/buybybit.new.$id'
+import { Route as AuthenticatedAssetpayNewIdRouteImport } from './routes/_authenticated/assetpay.new.$id'
+import { Route as AuthenticatedAdminAdminRewardsRouteImport } from './routes/_authenticated/_admin/admin.rewards'
+import { Route as AuthenticatedAdminAdminPropertiesRouteImport } from './routes/_authenticated/_admin/admin.properties'
+import { Route as AuthenticatedAdminAdminPayoutsRouteImport } from './routes/_authenticated/_admin/admin.payouts'
+import { Route as AuthenticatedAdminAdminPaymentsRouteImport } from './routes/_authenticated/_admin/admin.payments'
+import { Route as AuthenticatedAdminAdminPartnersRouteImport } from './routes/_authenticated/_admin/admin.partners'
+import { Route as AuthenticatedAdminAdminKycRouteImport } from './routes/_authenticated/_admin/admin.kyc'
+import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin.documents'
+import { Route as AuthenticatedAdminAdminDisputesRouteImport } from './routes/_authenticated/_admin/admin.disputes'
+import { Route as AuthenticatedAdminAdminDesktopRouteImport } from './routes/_authenticated/_admin/admin.desktop'
+import { Route as AuthenticatedAdminAdminConsultantsRouteImport } from './routes/_authenticated/_admin/admin.consultants'
+import { Route as AuthenticatedAdminAdminAuditRouteImport } from './routes/_authenticated/_admin/admin.audit'
 import { Route as AuthenticatedInvestFarmvestHoldingHidRouteImport } from './routes/_authenticated/invest.farmvest.holding.$hid'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalculatorRoute = CalculatorRouteImport.update({
-  id: '/calculator',
-  path: '/calculator',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DesktopRoute = DesktopRouteImport.update({
-  id: '/desktop',
-  path: '/desktop',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ExploreRoute = ExploreRouteImport.update({
-  id: '/explore',
-  path: '/explore',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForgotRoute = ForgotRouteImport.update({
-  id: '/forgot',
-  path: '/forgot',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LegalRoute = LegalRouteImport.update({
-  id: '/legal',
-  path: '/legal',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RoleSelectRoute = RoleSelectRouteImport.update({
-  id: '/role-select',
-  path: '/role-select',
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -134,38 +90,103 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WelcomeRoute = WelcomeRouteImport.update({
-  id: '/welcome',
-  path: '/welcome',
+const RoleSelectRoute = RoleSelectRouteImport.update({
+  id: '/role-select',
+  path: '/role-select',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
-  id: '/_admin',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalRoute = LegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotRoute = ForgotRouteImport.update({
+  id: '/forgot',
+  path: '/forgot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreRoute = ExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DesktopRoute = DesktopRouteImport.update({
+  id: '/desktop',
+  path: '/desktop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestIndexRoute = InvestIndexRouteImport.update({
+  id: '/invest/',
+  path: '/invest/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoleRoute = SignupRoleRouteImport.update({
+  id: '/signup/$role',
+  path: '/signup/$role',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesMpRoute = ServicesMpRouteImport.update({
+  id: '/mp',
+  path: '/mp',
+  getParentRoute: () => ServicesRoute,
+} as any)
+const AuthenticatedVaultRoute = AuthenticatedVaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedBrokerRoute = AuthenticatedBrokerRouteImport.update({
-  id: '/broker',
-  path: '/broker',
+const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedBuybybitRoute = AuthenticatedBuybybitRouteImport.update({
-  id: '/buybybit',
-  path: '/buybybit',
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedDocumentsRoute = AuthenticatedDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
+const AuthenticatedSecurityRoute = AuthenticatedSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedKycRoute = AuthenticatedKycRouteImport.update({
-  id: '/kyc',
-  path: '/kyc',
+const AuthenticatedPrichatRoute = AuthenticatedPrichatRouteImport.update({
+  id: '/prichat',
+  path: '/prichat',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
+  id: '/partner',
+  path: '/partner',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedNotificationsRoute =
@@ -174,90 +195,49 @@ const AuthenticatedNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
-  id: '/partner',
-  path: '/partner',
+const AuthenticatedKycRoute = AuthenticatedKycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedPrichatRoute = AuthenticatedPrichatRouteImport.update({
-  id: '/prichat',
-  path: '/prichat',
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
+const AuthenticatedDocumentsRoute = AuthenticatedDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedSecurityRoute = AuthenticatedSecurityRouteImport.update({
-  id: '/security',
-  path: '/security',
+const AuthenticatedBuybybitRoute = AuthenticatedBuybybitRouteImport.update({
+  id: '/buybybit',
+  path: '/buybybit',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+const AuthenticatedBrokerRoute = AuthenticatedBrokerRouteImport.update({
+  id: '/broker',
+  path: '/broker',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedSupportRoute = AuthenticatedSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/_admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedVaultRoute = AuthenticatedVaultRouteImport.update({
-  id: '/vault',
-  path: '/vault',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const InvestIndexRoute = InvestIndexRouteImport.update({
-  id: '/invest/',
-  path: '/invest/',
+const InvestPropertyIndexRoute = InvestPropertyIndexRouteImport.update({
+  id: '/invest/property/',
+  path: '/invest/property/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicesMpRoute = ServicesMpRouteImport.update({
-  id: '/mp',
-  path: '/mp',
-  getParentRoute: () => ServicesRoute,
-} as any)
-const SignupRoleRoute = SignupRoleRouteImport.update({
-  id: '/signup/$role',
-  path: '/signup/$role',
+const InvestFarmvestIndexRoute = InvestFarmvestIndexRouteImport.update({
+  id: '/invest/farmvest/',
+  path: '/invest/farmvest/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAssetpayIndexRoute =
-  AuthenticatedAssetpayIndexRouteImport.update({
-    id: '/assetpay/',
-    path: '/assetpay/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAssetpayPlanIdRoute =
-  AuthenticatedAssetpayPlanIdRouteImport.update({
-    id: '/assetpay/$planId',
-    path: '/assetpay/$planId',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedBrokerRewardsRoute =
-  AuthenticatedBrokerRewardsRouteImport.update({
-    id: '/rewards',
-    path: '/rewards',
-    getParentRoute: () => AuthenticatedBrokerRoute,
-  } as any)
-const AuthenticatedBuybybitIndexRoute =
-  AuthenticatedBuybybitIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedBuybybitRoute,
-  } as any)
-const AuthenticatedBuybybitPlanIdRoute =
-  AuthenticatedBuybybitPlanIdRouteImport.update({
-    id: '/$planId',
-    path: '/$planId',
-    getParentRoute: () => AuthenticatedBuybybitRoute,
-  } as any)
-const AuthenticatedPayOrderIdRoute = AuthenticatedPayOrderIdRouteImport.update({
-  id: '/pay/$orderId',
-  path: '/pay/$orderId',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const AuthenticatedVaultIndexRoute = AuthenticatedVaultIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedVaultRoute,
 } as any)
 const AuthenticatedPrichatIndexRoute =
   AuthenticatedPrichatIndexRouteImport.update({
@@ -265,61 +245,37 @@ const AuthenticatedPrichatIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedPrichatRoute,
   } as any)
-const AuthenticatedPrichatIdRoute = AuthenticatedPrichatIdRouteImport.update({
+const AuthenticatedBuybybitIndexRoute =
+  AuthenticatedBuybybitIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedBuybybitRoute,
+  } as any)
+const AuthenticatedAssetpayIndexRoute =
+  AuthenticatedAssetpayIndexRouteImport.update({
+    id: '/assetpay/',
+    path: '/assetpay/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const ServicesMpIdRoute = ServicesMpIdRouteImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => AuthenticatedPrichatRoute,
+  getParentRoute: () => ServicesMpRoute,
 } as any)
-const AuthenticatedSupportDisputeRoute =
-  AuthenticatedSupportDisputeRouteImport.update({
-    id: '/dispute',
-    path: '/dispute',
-    getParentRoute: () => AuthenticatedSupportRoute,
-  } as any)
-const AuthenticatedVaultIndexRoute = AuthenticatedVaultIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthenticatedVaultRoute,
+const InvestPropertyIdRoute = InvestPropertyIdRouteImport.update({
+  id: '/invest/property/$id',
+  path: '/invest/property/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedVaultReceiveRoute =
-  AuthenticatedVaultReceiveRouteImport.update({
-    id: '/receive',
-    path: '/receive',
-    getParentRoute: () => AuthenticatedVaultRoute,
-  } as any)
-const AuthenticatedVaultSendRoute = AuthenticatedVaultSendRouteImport.update({
-  id: '/send',
-  path: '/send',
-  getParentRoute: () => AuthenticatedVaultRoute,
+const InvestFarmvestIdRoute = InvestFarmvestIdRouteImport.update({
+  id: '/invest/farmvest/$id',
+  path: '/invest/farmvest/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedVaultSettingsRoute =
-  AuthenticatedVaultSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => AuthenticatedVaultRoute,
-  } as any)
-const AuthenticatedVaultTokensRoute =
-  AuthenticatedVaultTokensRouteImport.update({
-    id: '/tokens',
-    path: '/tokens',
-    getParentRoute: () => AuthenticatedVaultRoute,
-  } as any)
-const AuthenticatedWalletConfirmRoute =
-  AuthenticatedWalletConfirmRouteImport.update({
-    id: '/wallet/confirm',
-    path: '/wallet/confirm',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedWalletCreateRoute =
-  AuthenticatedWalletCreateRouteImport.update({
-    id: '/wallet/create',
-    path: '/wallet/create',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedWalletImportRoute =
-  AuthenticatedWalletImportRouteImport.update({
-    id: '/wallet/import',
-    path: '/wallet/import',
+const AuthenticatedWalletSecurityRoute =
+  AuthenticatedWalletSecurityRouteImport.update({
+    id: '/wallet/security',
+    path: '/wallet/security',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedWalletIntroRoute =
@@ -328,113 +284,97 @@ const AuthenticatedWalletIntroRoute =
     path: '/wallet/intro',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedWalletSecurityRoute =
-  AuthenticatedWalletSecurityRouteImport.update({
-    id: '/wallet/security',
-    path: '/wallet/security',
+const AuthenticatedWalletImportRoute =
+  AuthenticatedWalletImportRouteImport.update({
+    id: '/wallet/import',
+    path: '/wallet/import',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const InvestFarmvestIndexRoute = InvestFarmvestIndexRouteImport.update({
-  id: '/invest/farmvest/',
-  path: '/invest/farmvest/',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedWalletCreateRoute =
+  AuthenticatedWalletCreateRouteImport.update({
+    id: '/wallet/create',
+    path: '/wallet/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWalletConfirmRoute =
+  AuthenticatedWalletConfirmRouteImport.update({
+    id: '/wallet/confirm',
+    path: '/wallet/confirm',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedVaultTokensRoute =
+  AuthenticatedVaultTokensRouteImport.update({
+    id: '/tokens',
+    path: '/tokens',
+    getParentRoute: () => AuthenticatedVaultRoute,
+  } as any)
+const AuthenticatedVaultSettingsRoute =
+  AuthenticatedVaultSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedVaultRoute,
+  } as any)
+const AuthenticatedVaultSendRoute = AuthenticatedVaultSendRouteImport.update({
+  id: '/send',
+  path: '/send',
+  getParentRoute: () => AuthenticatedVaultRoute,
 } as any)
-const InvestFarmvestIdRoute = InvestFarmvestIdRouteImport.update({
-  id: '/invest/farmvest/$id',
-  path: '/invest/farmvest/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InvestPropertyIndexRoute = InvestPropertyIndexRouteImport.update({
-  id: '/invest/property/',
-  path: '/invest/property/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InvestPropertyIdRoute = InvestPropertyIdRouteImport.update({
-  id: '/invest/property/$id',
-  path: '/invest/property/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServicesMpIdRoute = ServicesMpIdRouteImport.update({
+const AuthenticatedVaultReceiveRoute =
+  AuthenticatedVaultReceiveRouteImport.update({
+    id: '/receive',
+    path: '/receive',
+    getParentRoute: () => AuthenticatedVaultRoute,
+  } as any)
+const AuthenticatedSupportDisputeRoute =
+  AuthenticatedSupportDisputeRouteImport.update({
+    id: '/dispute',
+    path: '/dispute',
+    getParentRoute: () => AuthenticatedSupportRoute,
+  } as any)
+const AuthenticatedPrichatIdRoute = AuthenticatedPrichatIdRouteImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => ServicesMpRoute,
+  getParentRoute: () => AuthenticatedPrichatRoute,
 } as any)
+const AuthenticatedPayOrderIdRoute = AuthenticatedPayOrderIdRouteImport.update({
+  id: '/pay/$orderId',
+  path: '/pay/$orderId',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedBuybybitPlanIdRoute =
+  AuthenticatedBuybybitPlanIdRouteImport.update({
+    id: '/$planId',
+    path: '/$planId',
+    getParentRoute: () => AuthenticatedBuybybitRoute,
+  } as any)
+const AuthenticatedBrokerRewardsRoute =
+  AuthenticatedBrokerRewardsRouteImport.update({
+    id: '/rewards',
+    path: '/rewards',
+    getParentRoute: () => AuthenticatedBrokerRoute,
+  } as any)
+const AuthenticatedAssetpayPlanIdRoute =
+  AuthenticatedAssetpayPlanIdRouteImport.update({
+    id: '/assetpay/$planId',
+    path: '/assetpay/$planId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminAdminIndexRoute =
   AuthenticatedAdminAdminIndexRouteImport.update({
     id: '/admin/',
     path: '/admin/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminAdminAuditRoute =
-  AuthenticatedAdminAdminAuditRouteImport.update({
-    id: '/admin/audit',
-    path: '/admin/audit',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
+const AuthenticatedInvestSuccessIdRoute =
+  AuthenticatedInvestSuccessIdRouteImport.update({
+    id: '/invest/success/$id',
+    path: '/invest/success/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAdminAdminConsultantsRoute =
-  AuthenticatedAdminAdminConsultantsRouteImport.update({
-    id: '/admin/consultants',
-    path: '/admin/consultants',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminDesktopRoute =
-  AuthenticatedAdminAdminDesktopRouteImport.update({
-    id: '/admin/desktop',
-    path: '/admin/desktop',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminDisputesRoute =
-  AuthenticatedAdminAdminDisputesRouteImport.update({
-    id: '/admin/disputes',
-    path: '/admin/disputes',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminDocumentsRoute =
-  AuthenticatedAdminAdminDocumentsRouteImport.update({
-    id: '/admin/documents',
-    path: '/admin/documents',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminKycRoute =
-  AuthenticatedAdminAdminKycRouteImport.update({
-    id: '/admin/kyc',
-    path: '/admin/kyc',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminPartnersRoute =
-  AuthenticatedAdminAdminPartnersRouteImport.update({
-    id: '/admin/partners',
-    path: '/admin/partners',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminPaymentsRoute =
-  AuthenticatedAdminAdminPaymentsRouteImport.update({
-    id: '/admin/payments',
-    path: '/admin/payments',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminPayoutsRoute =
-  AuthenticatedAdminAdminPayoutsRouteImport.update({
-    id: '/admin/payouts',
-    path: '/admin/payouts',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminPropertiesRoute =
-  AuthenticatedAdminAdminPropertiesRouteImport.update({
-    id: '/admin/properties',
-    path: '/admin/properties',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminAdminRewardsRoute =
-  AuthenticatedAdminAdminRewardsRouteImport.update({
-    id: '/admin/rewards',
-    path: '/admin/rewards',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAssetpayNewIdRoute =
-  AuthenticatedAssetpayNewIdRouteImport.update({
-    id: '/assetpay/new/$id',
-    path: '/assetpay/new/$id',
+const AuthenticatedInvestCheckoutIdRoute =
+  AuthenticatedInvestCheckoutIdRouteImport.update({
+    id: '/invest/checkout/$id',
+    path: '/invest/checkout/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedBuybybitNewIdRoute =
@@ -443,17 +383,77 @@ const AuthenticatedBuybybitNewIdRoute =
     path: '/new/$id',
     getParentRoute: () => AuthenticatedBuybybitRoute,
   } as any)
-const AuthenticatedInvestCheckoutIdRoute =
-  AuthenticatedInvestCheckoutIdRouteImport.update({
-    id: '/invest/checkout/$id',
-    path: '/invest/checkout/$id',
+const AuthenticatedAssetpayNewIdRoute =
+  AuthenticatedAssetpayNewIdRouteImport.update({
+    id: '/assetpay/new/$id',
+    path: '/assetpay/new/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedInvestSuccessIdRoute =
-  AuthenticatedInvestSuccessIdRouteImport.update({
-    id: '/invest/success/$id',
-    path: '/invest/success/$id',
-    getParentRoute: () => AuthenticatedRouteRoute,
+const AuthenticatedAdminAdminRewardsRoute =
+  AuthenticatedAdminAdminRewardsRouteImport.update({
+    id: '/admin/rewards',
+    path: '/admin/rewards',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminPropertiesRoute =
+  AuthenticatedAdminAdminPropertiesRouteImport.update({
+    id: '/admin/properties',
+    path: '/admin/properties',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminPayoutsRoute =
+  AuthenticatedAdminAdminPayoutsRouteImport.update({
+    id: '/admin/payouts',
+    path: '/admin/payouts',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminPaymentsRoute =
+  AuthenticatedAdminAdminPaymentsRouteImport.update({
+    id: '/admin/payments',
+    path: '/admin/payments',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminPartnersRoute =
+  AuthenticatedAdminAdminPartnersRouteImport.update({
+    id: '/admin/partners',
+    path: '/admin/partners',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminKycRoute =
+  AuthenticatedAdminAdminKycRouteImport.update({
+    id: '/admin/kyc',
+    path: '/admin/kyc',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminDocumentsRoute =
+  AuthenticatedAdminAdminDocumentsRouteImport.update({
+    id: '/admin/documents',
+    path: '/admin/documents',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminDisputesRoute =
+  AuthenticatedAdminAdminDisputesRouteImport.update({
+    id: '/admin/disputes',
+    path: '/admin/disputes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminDesktopRoute =
+  AuthenticatedAdminAdminDesktopRouteImport.update({
+    id: '/admin/desktop',
+    path: '/admin/desktop',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminConsultantsRoute =
+  AuthenticatedAdminAdminConsultantsRouteImport.update({
+    id: '/admin/consultants',
+    path: '/admin/consultants',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminAuditRoute =
+  AuthenticatedAdminAdminAuditRouteImport.update({
+    id: '/admin/audit',
+    path: '/admin/audit',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedInvestFarmvestHoldingHidRoute =
   AuthenticatedInvestFarmvestHoldingHidRouteImport.update({
@@ -907,74 +907,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calculator': {
-      id: '/calculator'
-      path: '/calculator'
-      fullPath: '/calculator'
-      preLoaderRoute: typeof CalculatorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/desktop': {
-      id: '/desktop'
-      path: '/desktop'
-      fullPath: '/desktop'
-      preLoaderRoute: typeof DesktopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/explore': {
-      id: '/explore'
-      path: '/explore'
-      fullPath: '/explore'
-      preLoaderRoute: typeof ExploreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forgot': {
-      id: '/forgot'
-      path: '/forgot'
-      fullPath: '/forgot'
-      preLoaderRoute: typeof ForgotRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/legal': {
-      id: '/legal'
-      path: '/legal'
-      fullPath: '/legal'
-      preLoaderRoute: typeof LegalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/role-select': {
-      id: '/role-select'
-      path: '/role-select'
-      fullPath: '/role-select'
-      preLoaderRoute: typeof RoleSelectRouteImport
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -984,116 +921,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/welcome': {
-      id: '/welcome'
-      path: '/welcome'
-      fullPath: '/welcome'
-      preLoaderRoute: typeof WelcomeRouteImport
+    '/role-select': {
+      id: '/role-select'
+      path: '/role-select'
+      fullPath: '/role-select'
+      preLoaderRoute: typeof RoleSelectRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/_admin': {
-      id: '/_authenticated/_admin'
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal': {
+      id: '/legal'
+      path: '/legal'
+      fullPath: '/legal'
+      preLoaderRoute: typeof LegalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot': {
+      id: '/forgot'
+      path: '/forgot'
+      fullPath: '/forgot'
+      preLoaderRoute: typeof ForgotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore': {
+      id: '/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/desktop': {
+      id: '/desktop'
+      path: '/desktop'
+      fullPath: '/desktop'
+      preLoaderRoute: typeof DesktopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/broker': {
-      id: '/_authenticated/broker'
-      path: '/broker'
-      fullPath: '/broker'
-      preLoaderRoute: typeof AuthenticatedBrokerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/buybybit': {
-      id: '/_authenticated/buybybit'
-      path: '/buybybit'
-      fullPath: '/buybybit'
-      preLoaderRoute: typeof AuthenticatedBuybybitRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/documents': {
-      id: '/_authenticated/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof AuthenticatedDocumentsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/home': {
-      id: '/_authenticated/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof AuthenticatedHomeRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/kyc': {
-      id: '/_authenticated/kyc'
-      path: '/kyc'
-      fullPath: '/kyc'
-      preLoaderRoute: typeof AuthenticatedKycRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/notifications': {
-      id: '/_authenticated/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/partner': {
-      id: '/_authenticated/partner'
-      path: '/partner'
-      fullPath: '/partner'
-      preLoaderRoute: typeof AuthenticatedPartnerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/prichat': {
-      id: '/_authenticated/prichat'
-      path: '/prichat'
-      fullPath: '/prichat'
-      preLoaderRoute: typeof AuthenticatedPrichatRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/security': {
-      id: '/_authenticated/security'
-      path: '/security'
-      fullPath: '/security'
-      preLoaderRoute: typeof AuthenticatedSecurityRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/settings': {
-      id: '/_authenticated/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/support': {
-      id: '/_authenticated/support'
-      path: '/support'
-      fullPath: '/support'
-      preLoaderRoute: typeof AuthenticatedSupportRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/vault': {
-      id: '/_authenticated/vault'
-      path: '/vault'
-      fullPath: '/vault'
-      preLoaderRoute: typeof AuthenticatedVaultRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/invest/': {
       id: '/invest/'
       path: '/invest'
       fullPath: '/invest/'
       preLoaderRoute: typeof InvestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup/$role': {
+      id: '/signup/$role'
+      path: '/signup/$role'
+      fullPath: '/signup/$role'
+      preLoaderRoute: typeof SignupRoleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/mp': {
@@ -1103,75 +1012,117 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesMpRouteImport
       parentRoute: typeof ServicesRoute
     }
-    '/signup/$role': {
-      id: '/signup/$role'
-      path: '/signup/$role'
-      fullPath: '/signup/$role'
-      preLoaderRoute: typeof SignupRoleRouteImport
+    '/_authenticated/vault': {
+      id: '/_authenticated/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof AuthenticatedVaultRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/support': {
+      id: '/_authenticated/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof AuthenticatedSupportRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/security': {
+      id: '/_authenticated/security'
+      path: '/security'
+      fullPath: '/security'
+      preLoaderRoute: typeof AuthenticatedSecurityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/prichat': {
+      id: '/_authenticated/prichat'
+      path: '/prichat'
+      fullPath: '/prichat'
+      preLoaderRoute: typeof AuthenticatedPrichatRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/partner': {
+      id: '/_authenticated/partner'
+      path: '/partner'
+      fullPath: '/partner'
+      preLoaderRoute: typeof AuthenticatedPartnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notifications': {
+      id: '/_authenticated/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kyc': {
+      id: '/_authenticated/kyc'
+      path: '/kyc'
+      fullPath: '/kyc'
+      preLoaderRoute: typeof AuthenticatedKycRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/documents': {
+      id: '/_authenticated/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof AuthenticatedDocumentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/buybybit': {
+      id: '/_authenticated/buybybit'
+      path: '/buybybit'
+      fullPath: '/buybybit'
+      preLoaderRoute: typeof AuthenticatedBuybybitRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/broker': {
+      id: '/_authenticated/broker'
+      path: '/broker'
+      fullPath: '/broker'
+      preLoaderRoute: typeof AuthenticatedBrokerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/_admin': {
+      id: '/_authenticated/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/invest/property/': {
+      id: '/invest/property/'
+      path: '/invest/property'
+      fullPath: '/invest/property/'
+      preLoaderRoute: typeof InvestPropertyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/assetpay/': {
-      id: '/_authenticated/assetpay/'
-      path: '/assetpay'
-      fullPath: '/assetpay/'
-      preLoaderRoute: typeof AuthenticatedAssetpayIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/assetpay/$planId': {
-      id: '/_authenticated/assetpay/$planId'
-      path: '/assetpay/$planId'
-      fullPath: '/assetpay/$planId'
-      preLoaderRoute: typeof AuthenticatedAssetpayPlanIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/broker/rewards': {
-      id: '/_authenticated/broker/rewards'
-      path: '/rewards'
-      fullPath: '/broker/rewards'
-      preLoaderRoute: typeof AuthenticatedBrokerRewardsRouteImport
-      parentRoute: typeof AuthenticatedBrokerRoute
-    }
-    '/_authenticated/buybybit/': {
-      id: '/_authenticated/buybybit/'
-      path: '/'
-      fullPath: '/buybybit/'
-      preLoaderRoute: typeof AuthenticatedBuybybitIndexRouteImport
-      parentRoute: typeof AuthenticatedBuybybitRoute
-    }
-    '/_authenticated/buybybit/$planId': {
-      id: '/_authenticated/buybybit/$planId'
-      path: '/$planId'
-      fullPath: '/buybybit/$planId'
-      preLoaderRoute: typeof AuthenticatedBuybybitPlanIdRouteImport
-      parentRoute: typeof AuthenticatedBuybybitRoute
-    }
-    '/_authenticated/pay/$orderId': {
-      id: '/_authenticated/pay/$orderId'
-      path: '/pay/$orderId'
-      fullPath: '/pay/$orderId'
-      preLoaderRoute: typeof AuthenticatedPayOrderIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/prichat/': {
-      id: '/_authenticated/prichat/'
-      path: '/'
-      fullPath: '/prichat/'
-      preLoaderRoute: typeof AuthenticatedPrichatIndexRouteImport
-      parentRoute: typeof AuthenticatedPrichatRoute
-    }
-    '/_authenticated/prichat/$id': {
-      id: '/_authenticated/prichat/$id'
-      path: '/$id'
-      fullPath: '/prichat/$id'
-      preLoaderRoute: typeof AuthenticatedPrichatIdRouteImport
-      parentRoute: typeof AuthenticatedPrichatRoute
-    }
-    '/_authenticated/support/dispute': {
-      id: '/_authenticated/support/dispute'
-      path: '/dispute'
-      fullPath: '/support/dispute'
-      preLoaderRoute: typeof AuthenticatedSupportDisputeRouteImport
-      parentRoute: typeof AuthenticatedSupportRoute
+    '/invest/farmvest/': {
+      id: '/invest/farmvest/'
+      path: '/invest/farmvest'
+      fullPath: '/invest/farmvest/'
+      preLoaderRoute: typeof InvestFarmvestIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/vault/': {
       id: '/_authenticated/vault/'
@@ -1180,74 +1131,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVaultIndexRouteImport
       parentRoute: typeof AuthenticatedVaultRoute
     }
-    '/_authenticated/vault/receive': {
-      id: '/_authenticated/vault/receive'
-      path: '/receive'
-      fullPath: '/vault/receive'
-      preLoaderRoute: typeof AuthenticatedVaultReceiveRouteImport
-      parentRoute: typeof AuthenticatedVaultRoute
+    '/_authenticated/prichat/': {
+      id: '/_authenticated/prichat/'
+      path: '/'
+      fullPath: '/prichat/'
+      preLoaderRoute: typeof AuthenticatedPrichatIndexRouteImport
+      parentRoute: typeof AuthenticatedPrichatRoute
     }
-    '/_authenticated/vault/send': {
-      id: '/_authenticated/vault/send'
-      path: '/send'
-      fullPath: '/vault/send'
-      preLoaderRoute: typeof AuthenticatedVaultSendRouteImport
-      parentRoute: typeof AuthenticatedVaultRoute
+    '/_authenticated/buybybit/': {
+      id: '/_authenticated/buybybit/'
+      path: '/'
+      fullPath: '/buybybit/'
+      preLoaderRoute: typeof AuthenticatedBuybybitIndexRouteImport
+      parentRoute: typeof AuthenticatedBuybybitRoute
     }
-    '/_authenticated/vault/settings': {
-      id: '/_authenticated/vault/settings'
-      path: '/settings'
-      fullPath: '/vault/settings'
-      preLoaderRoute: typeof AuthenticatedVaultSettingsRouteImport
-      parentRoute: typeof AuthenticatedVaultRoute
-    }
-    '/_authenticated/vault/tokens': {
-      id: '/_authenticated/vault/tokens'
-      path: '/tokens'
-      fullPath: '/vault/tokens'
-      preLoaderRoute: typeof AuthenticatedVaultTokensRouteImport
-      parentRoute: typeof AuthenticatedVaultRoute
-    }
-    '/_authenticated/wallet/confirm': {
-      id: '/_authenticated/wallet/confirm'
-      path: '/wallet/confirm'
-      fullPath: '/wallet/confirm'
-      preLoaderRoute: typeof AuthenticatedWalletConfirmRouteImport
+    '/_authenticated/assetpay/': {
+      id: '/_authenticated/assetpay/'
+      path: '/assetpay'
+      fullPath: '/assetpay/'
+      preLoaderRoute: typeof AuthenticatedAssetpayIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/wallet/create': {
-      id: '/_authenticated/wallet/create'
-      path: '/wallet/create'
-      fullPath: '/wallet/create'
-      preLoaderRoute: typeof AuthenticatedWalletCreateRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/services/mp/$id': {
+      id: '/services/mp/$id'
+      path: '/$id'
+      fullPath: '/services/mp/$id'
+      preLoaderRoute: typeof ServicesMpIdRouteImport
+      parentRoute: typeof ServicesMpRoute
     }
-    '/_authenticated/wallet/import': {
-      id: '/_authenticated/wallet/import'
-      path: '/wallet/import'
-      fullPath: '/wallet/import'
-      preLoaderRoute: typeof AuthenticatedWalletImportRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/wallet/intro': {
-      id: '/_authenticated/wallet/intro'
-      path: '/wallet/intro'
-      fullPath: '/wallet/intro'
-      preLoaderRoute: typeof AuthenticatedWalletIntroRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/wallet/security': {
-      id: '/_authenticated/wallet/security'
-      path: '/wallet/security'
-      fullPath: '/wallet/security'
-      preLoaderRoute: typeof AuthenticatedWalletSecurityRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/invest/farmvest/': {
-      id: '/invest/farmvest/'
-      path: '/invest/farmvest'
-      fullPath: '/invest/farmvest/'
-      preLoaderRoute: typeof InvestFarmvestIndexRouteImport
+    '/invest/property/$id': {
+      id: '/invest/property/$id'
+      path: '/invest/property/$id'
+      fullPath: '/invest/property/$id'
+      preLoaderRoute: typeof InvestPropertyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/invest/farmvest/$id': {
@@ -1257,26 +1173,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvestFarmvestIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/invest/property/': {
-      id: '/invest/property/'
-      path: '/invest/property'
-      fullPath: '/invest/property/'
-      preLoaderRoute: typeof InvestPropertyIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/wallet/security': {
+      id: '/_authenticated/wallet/security'
+      path: '/wallet/security'
+      fullPath: '/wallet/security'
+      preLoaderRoute: typeof AuthenticatedWalletSecurityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/invest/property/$id': {
-      id: '/invest/property/$id'
-      path: '/invest/property/$id'
-      fullPath: '/invest/property/$id'
-      preLoaderRoute: typeof InvestPropertyIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_authenticated/wallet/intro': {
+      id: '/_authenticated/wallet/intro'
+      path: '/wallet/intro'
+      fullPath: '/wallet/intro'
+      preLoaderRoute: typeof AuthenticatedWalletIntroRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/services/mp/$id': {
-      id: '/services/mp/$id'
+    '/_authenticated/wallet/import': {
+      id: '/_authenticated/wallet/import'
+      path: '/wallet/import'
+      fullPath: '/wallet/import'
+      preLoaderRoute: typeof AuthenticatedWalletImportRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/wallet/create': {
+      id: '/_authenticated/wallet/create'
+      path: '/wallet/create'
+      fullPath: '/wallet/create'
+      preLoaderRoute: typeof AuthenticatedWalletCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/wallet/confirm': {
+      id: '/_authenticated/wallet/confirm'
+      path: '/wallet/confirm'
+      fullPath: '/wallet/confirm'
+      preLoaderRoute: typeof AuthenticatedWalletConfirmRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/vault/tokens': {
+      id: '/_authenticated/vault/tokens'
+      path: '/tokens'
+      fullPath: '/vault/tokens'
+      preLoaderRoute: typeof AuthenticatedVaultTokensRouteImport
+      parentRoute: typeof AuthenticatedVaultRoute
+    }
+    '/_authenticated/vault/settings': {
+      id: '/_authenticated/vault/settings'
+      path: '/settings'
+      fullPath: '/vault/settings'
+      preLoaderRoute: typeof AuthenticatedVaultSettingsRouteImport
+      parentRoute: typeof AuthenticatedVaultRoute
+    }
+    '/_authenticated/vault/send': {
+      id: '/_authenticated/vault/send'
+      path: '/send'
+      fullPath: '/vault/send'
+      preLoaderRoute: typeof AuthenticatedVaultSendRouteImport
+      parentRoute: typeof AuthenticatedVaultRoute
+    }
+    '/_authenticated/vault/receive': {
+      id: '/_authenticated/vault/receive'
+      path: '/receive'
+      fullPath: '/vault/receive'
+      preLoaderRoute: typeof AuthenticatedVaultReceiveRouteImport
+      parentRoute: typeof AuthenticatedVaultRoute
+    }
+    '/_authenticated/support/dispute': {
+      id: '/_authenticated/support/dispute'
+      path: '/dispute'
+      fullPath: '/support/dispute'
+      preLoaderRoute: typeof AuthenticatedSupportDisputeRouteImport
+      parentRoute: typeof AuthenticatedSupportRoute
+    }
+    '/_authenticated/prichat/$id': {
+      id: '/_authenticated/prichat/$id'
       path: '/$id'
-      fullPath: '/services/mp/$id'
-      preLoaderRoute: typeof ServicesMpIdRouteImport
-      parentRoute: typeof ServicesMpRoute
+      fullPath: '/prichat/$id'
+      preLoaderRoute: typeof AuthenticatedPrichatIdRouteImport
+      parentRoute: typeof AuthenticatedPrichatRoute
+    }
+    '/_authenticated/pay/$orderId': {
+      id: '/_authenticated/pay/$orderId'
+      path: '/pay/$orderId'
+      fullPath: '/pay/$orderId'
+      preLoaderRoute: typeof AuthenticatedPayOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/buybybit/$planId': {
+      id: '/_authenticated/buybybit/$planId'
+      path: '/$planId'
+      fullPath: '/buybybit/$planId'
+      preLoaderRoute: typeof AuthenticatedBuybybitPlanIdRouteImport
+      parentRoute: typeof AuthenticatedBuybybitRoute
+    }
+    '/_authenticated/broker/rewards': {
+      id: '/_authenticated/broker/rewards'
+      path: '/rewards'
+      fullPath: '/broker/rewards'
+      preLoaderRoute: typeof AuthenticatedBrokerRewardsRouteImport
+      parentRoute: typeof AuthenticatedBrokerRoute
+    }
+    '/_authenticated/assetpay/$planId': {
+      id: '/_authenticated/assetpay/$planId'
+      path: '/assetpay/$planId'
+      fullPath: '/assetpay/$planId'
+      preLoaderRoute: typeof AuthenticatedAssetpayPlanIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/_admin/admin/': {
       id: '/_authenticated/_admin/admin/'
@@ -1285,88 +1285,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/_admin/admin/audit': {
-      id: '/_authenticated/_admin/admin/audit'
-      path: '/admin/audit'
-      fullPath: '/admin/audit'
-      preLoaderRoute: typeof AuthenticatedAdminAdminAuditRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
+    '/_authenticated/invest/success/$id': {
+      id: '/_authenticated/invest/success/$id'
+      path: '/invest/success/$id'
+      fullPath: '/invest/success/$id'
+      preLoaderRoute: typeof AuthenticatedInvestSuccessIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/_admin/admin/consultants': {
-      id: '/_authenticated/_admin/admin/consultants'
-      path: '/admin/consultants'
-      fullPath: '/admin/consultants'
-      preLoaderRoute: typeof AuthenticatedAdminAdminConsultantsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/desktop': {
-      id: '/_authenticated/_admin/admin/desktop'
-      path: '/admin/desktop'
-      fullPath: '/admin/desktop'
-      preLoaderRoute: typeof AuthenticatedAdminAdminDesktopRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/disputes': {
-      id: '/_authenticated/_admin/admin/disputes'
-      path: '/admin/disputes'
-      fullPath: '/admin/disputes'
-      preLoaderRoute: typeof AuthenticatedAdminAdminDisputesRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/documents': {
-      id: '/_authenticated/_admin/admin/documents'
-      path: '/admin/documents'
-      fullPath: '/admin/documents'
-      preLoaderRoute: typeof AuthenticatedAdminAdminDocumentsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/kyc': {
-      id: '/_authenticated/_admin/admin/kyc'
-      path: '/admin/kyc'
-      fullPath: '/admin/kyc'
-      preLoaderRoute: typeof AuthenticatedAdminAdminKycRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/partners': {
-      id: '/_authenticated/_admin/admin/partners'
-      path: '/admin/partners'
-      fullPath: '/admin/partners'
-      preLoaderRoute: typeof AuthenticatedAdminAdminPartnersRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/payments': {
-      id: '/_authenticated/_admin/admin/payments'
-      path: '/admin/payments'
-      fullPath: '/admin/payments'
-      preLoaderRoute: typeof AuthenticatedAdminAdminPaymentsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/payouts': {
-      id: '/_authenticated/_admin/admin/payouts'
-      path: '/admin/payouts'
-      fullPath: '/admin/payouts'
-      preLoaderRoute: typeof AuthenticatedAdminAdminPayoutsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/properties': {
-      id: '/_authenticated/_admin/admin/properties'
-      path: '/admin/properties'
-      fullPath: '/admin/properties'
-      preLoaderRoute: typeof AuthenticatedAdminAdminPropertiesRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/_admin/admin/rewards': {
-      id: '/_authenticated/_admin/admin/rewards'
-      path: '/admin/rewards'
-      fullPath: '/admin/rewards'
-      preLoaderRoute: typeof AuthenticatedAdminAdminRewardsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/assetpay/new/$id': {
-      id: '/_authenticated/assetpay/new/$id'
-      path: '/assetpay/new/$id'
-      fullPath: '/assetpay/new/$id'
-      preLoaderRoute: typeof AuthenticatedAssetpayNewIdRouteImport
+    '/_authenticated/invest/checkout/$id': {
+      id: '/_authenticated/invest/checkout/$id'
+      path: '/invest/checkout/$id'
+      fullPath: '/invest/checkout/$id'
+      preLoaderRoute: typeof AuthenticatedInvestCheckoutIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/buybybit/new/$id': {
@@ -1376,19 +1306,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBuybybitNewIdRouteImport
       parentRoute: typeof AuthenticatedBuybybitRoute
     }
-    '/_authenticated/invest/checkout/$id': {
-      id: '/_authenticated/invest/checkout/$id'
-      path: '/invest/checkout/$id'
-      fullPath: '/invest/checkout/$id'
-      preLoaderRoute: typeof AuthenticatedInvestCheckoutIdRouteImport
+    '/_authenticated/assetpay/new/$id': {
+      id: '/_authenticated/assetpay/new/$id'
+      path: '/assetpay/new/$id'
+      fullPath: '/assetpay/new/$id'
+      preLoaderRoute: typeof AuthenticatedAssetpayNewIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/invest/success/$id': {
-      id: '/_authenticated/invest/success/$id'
-      path: '/invest/success/$id'
-      fullPath: '/invest/success/$id'
-      preLoaderRoute: typeof AuthenticatedInvestSuccessIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/_authenticated/_admin/admin/rewards': {
+      id: '/_authenticated/_admin/admin/rewards'
+      path: '/admin/rewards'
+      fullPath: '/admin/rewards'
+      preLoaderRoute: typeof AuthenticatedAdminAdminRewardsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/properties': {
+      id: '/_authenticated/_admin/admin/properties'
+      path: '/admin/properties'
+      fullPath: '/admin/properties'
+      preLoaderRoute: typeof AuthenticatedAdminAdminPropertiesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/payouts': {
+      id: '/_authenticated/_admin/admin/payouts'
+      path: '/admin/payouts'
+      fullPath: '/admin/payouts'
+      preLoaderRoute: typeof AuthenticatedAdminAdminPayoutsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/payments': {
+      id: '/_authenticated/_admin/admin/payments'
+      path: '/admin/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AuthenticatedAdminAdminPaymentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/partners': {
+      id: '/_authenticated/_admin/admin/partners'
+      path: '/admin/partners'
+      fullPath: '/admin/partners'
+      preLoaderRoute: typeof AuthenticatedAdminAdminPartnersRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/kyc': {
+      id: '/_authenticated/_admin/admin/kyc'
+      path: '/admin/kyc'
+      fullPath: '/admin/kyc'
+      preLoaderRoute: typeof AuthenticatedAdminAdminKycRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/documents': {
+      id: '/_authenticated/_admin/admin/documents'
+      path: '/admin/documents'
+      fullPath: '/admin/documents'
+      preLoaderRoute: typeof AuthenticatedAdminAdminDocumentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/disputes': {
+      id: '/_authenticated/_admin/admin/disputes'
+      path: '/admin/disputes'
+      fullPath: '/admin/disputes'
+      preLoaderRoute: typeof AuthenticatedAdminAdminDisputesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/desktop': {
+      id: '/_authenticated/_admin/admin/desktop'
+      path: '/admin/desktop'
+      fullPath: '/admin/desktop'
+      preLoaderRoute: typeof AuthenticatedAdminAdminDesktopRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/consultants': {
+      id: '/_authenticated/_admin/admin/consultants'
+      path: '/admin/consultants'
+      fullPath: '/admin/consultants'
+      preLoaderRoute: typeof AuthenticatedAdminAdminConsultantsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/audit': {
+      id: '/_authenticated/_admin/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAdminAuditRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/invest/farmvest/holding/$hid': {
       id: '/_authenticated/invest/farmvest/holding/$hid'
