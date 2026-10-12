@@ -254,7 +254,7 @@ function FarmVest() {
                   <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px]">
                     <Stat k="Yield" v={a.expectedYield} accent />
                     <Stat k="Apprec." v={a.appreciation} />
-                    <Stat k="Plot" v={`$${a.pricePerPlot}`} />
+                    <Stat k="Plot" v="₦1.15M" />
                   </div>
                   {cs && (
                     <button

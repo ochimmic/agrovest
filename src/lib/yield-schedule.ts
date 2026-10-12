@@ -1,13 +1,9 @@
-// FarmVest yield schedule (locked product rule)
+// FarmVest yield schedule (locked product rule, set by AgroVest)
 //
-// Years 1–2: maturation, no yield accrued.
-// Year 3:    20% yield — accrued but LOCKED (cannot be withdrawn).
-// Year 4:    30% yield — withdrawable.
-// Year 5:    40% yield — withdrawable.
-// Year 6+:   50% yield per year — withdrawable, in perpetuity.
-//
-// The Year 3 amount remains in the holding and can be withdrawn from Year 4
-// onward together with that year's distribution.
+// Years 1–2: maturation, no ROI.
+// Year 3:    30% annual ROI (maturity begins between the 3rd and 4th year).
+// Year 4:    40% annual ROI.
+// Year 5+:   50% annual ROI, every year after.
 
 export type YieldYear = {
   year: number;
@@ -18,14 +14,13 @@ export type YieldYear = {
 
 export function yieldPctForYear(year: number): number {
   if (year < 3) return 0;
-  if (year === 3) return 0.20;
-  if (year === 4) return 0.30;
-  if (year === 5) return 0.40;
-  return 0.50; // Year 6 and beyond
+  if (year === 3) return 0.30;
+  if (year === 4) return 0.40;
+  return 0.50; // Year 5 and beyond
 }
 
 export function isWithdrawable(year: number): boolean {
-  return year >= 4;
+  return year >= 3;
 }
 
 export function buildSchedule(years: number): YieldYear[] {
@@ -38,9 +33,7 @@ export function buildSchedule(years: number): YieldYear[] {
       note:
         y < 3
           ? "Maturation period"
-          : y === 3
-            ? "Accrued · locked"
-            : y >= 6
+          : y >= 5
               ? "Steady-state"
               : "Withdrawable",
     };
@@ -69,16 +62,14 @@ export function buildYieldSeries(principal: number, years: number): number[] {
 }
 
 // Withdrawable cumulative amount at end of a given year.
-// Year 3 yield is unlocked together with Year 4's distribution.
 export function withdrawableByYear(principal: number, year: number): number {
   let amt = 0;
   for (let y = 1; y <= year; y++) {
     if (isWithdrawable(y)) amt += principal * yieldPctForYear(y);
   }
-  if (year >= 4) amt += principal * yieldPctForYear(3); // Y3 unlocks at Y4
   return amt;
 }
 
-export const YIELD_HEADLINE = "20–50% / yr (Y3–Y6+)";
+export const YIELD_HEADLINE = "30–50% / yr (from Y3)";
 export const YIELD_DESCRIPTION =
-  "Yield begins in Year 3 at 20% and steps up by 10% each year to 50% in Year 6, then stays at 50% per year. Year 3 yield accrues but is locked; withdrawals start from Year 4.";
+  "Maturity begins between the 3rd and 4th year: 30% annual ROI in Year 3, 40% in Year 4, then 50% every year from Year 5 onward.";
