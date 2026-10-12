@@ -19,6 +19,7 @@ import { useAppState } from "@/lib/store";
 import { amountDue, attachOrder, installmentLabel, useAssetPay } from "@/lib/assetpay";
 import { CalendarClock } from "lucide-react";
 import { useHouse, housePrice } from "@/lib/properties";
+import { useLivePrices } from "@/lib/clyst-price";
 
 const search = z.object({
   unit: z.enum(["plot", "acre", "hectare"]).default("plot"),
@@ -72,6 +73,8 @@ function Checkout() {
       ),
     [network, custom],
   );
+  const { prices } = useLivePrices(); // keeps BNB/CLYST prices live
+  void prices;
   const [symbol, setSymbol] = useState(payable[0]?.symbol ?? "");
   const token = payable.find((t) => t.symbol === symbol) ?? payable[0];
   const tokenAmount = token && token.usd > 0 ? p.final / token.usd : 0;
@@ -190,11 +193,11 @@ function Checkout() {
         </div>
         )}
 
-        {!installment && !isHouse && (
+        {!installment && (!isHouse || house?.status === "active") && (
           <Link
             to="/buybybit/new/$id"
             params={{ id }}
-            search={{ unit, qty }}
+            search={isHouse ? { kind: "property" } : { unit, qty }}
             className="flex items-center gap-3 rounded-3xl border border-violet/30 bg-violet-soft/30 p-4"
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet text-white"><CalendarClock size={16} /></span>

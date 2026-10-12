@@ -2,3 +2,4 @@
 - Order status changes and holding creation only happen through SECURITY DEFINER RPCs (order_mark_*, admin_*); a trigger blocks buyers from marking installments paid. Why: financial records must not be forgeable from the browser.
 - Buy Assets houses live in the cloud `properties` table (NGN price is source of truth, photos in private `property-images` bucket via signed URLs) and are edited at /admin/properties. Why: AgroVest is the sole seller and admins must manage listings without code changes.
 - Broker commissions are credited by a DB trigger when a referred investor's order is confirmed (FarmVest 5%, property 2%); payout requests are validated against available balance and the emergency fee is computed server-side. Why: money owed must not be forgeable from the browser.
+- BNB and $CLYST USD prices come live from PancakeSwap V2 pools (src/lib/clyst-price.ts), which overwrite the TOKENS defaults at runtime. Why: crypto checkout amounts must match market price.

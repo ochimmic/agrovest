@@ -129,7 +129,7 @@ function PlanDetail() {
           <Link
             to="/invest/checkout/$id"
             params={{ id: plan.purpose.assetId }}
-            search={{ unit: plan.purpose.unit === "house" ? "plot" : plan.purpose.unit, qty: plan.purpose.qty, plan: plan.id, inst: next.index }}
+            search={{ unit: plan.purpose.unit === "house" ? "plot" : plan.purpose.unit, qty: plan.purpose.qty, plan: plan.id, inst: next.index, ...(plan.purpose.unit === "house" ? { kind: "property" as const } : {}) }}
           >
             <AgroButton size="xl">Pay {installmentLabel(next.index).toLowerCase()} · ${amountDue(next).toLocaleString()}</AgroButton>
           </Link>
