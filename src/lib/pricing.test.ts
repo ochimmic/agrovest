@@ -36,7 +36,7 @@ describe("Buy Assets", () => {
   });
 });
 
-describe("Buy By Bit & brokers", () => {
+describe("BuyByBit & brokers", () => {
   it("forfeiture is 30%", () => expect(CANCEL_FEE_PCT).toBe(30));
   it("tiers", () => {
     expect(tierFor(0).name).toBe("Bronze");

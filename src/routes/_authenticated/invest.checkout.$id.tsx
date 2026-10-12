@@ -164,7 +164,7 @@ function Checkout() {
 
         {installment ? (
           <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
-            <p className="text-xs font-medium text-violet">Buy By Bit · {installmentLabel(installment.index)}</p>
+            <p className="text-xs font-medium text-violet">BuyByBit · {installmentLabel(installment.index)}</p>
             <RowM k="Installment" usd={installment.amountUsd} />
             {amountDue(installment) > installment.amountUsd && <RowM k="Late fee (5%)" usd={amountDue(installment) - installment.amountUsd} />}
             <div className="border-t border-border my-1" />
@@ -199,7 +199,7 @@ function Checkout() {
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet text-white"><CalendarClock size={16} /></span>
             <span className="flex-1">
-              <span className="block text-sm font-semibold text-foreground">Can't pay at once? Use Buy By Bit</span>
+              <span className="block text-sm font-semibold text-foreground">Can't pay at once? Use BuyByBit</span>
               <span className="block text-[11px] text-muted-foreground">From 10% down, balance over 3, 6 or 12 months</span>
             </span>
           </Link>

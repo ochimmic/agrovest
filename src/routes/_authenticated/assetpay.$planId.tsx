@@ -13,9 +13,9 @@ import {
 export const Route = createFileRoute("/_authenticated/assetpay/$planId")({
   head: () => ({
     meta: [
-      { title: "Buy By Bit plan details | AgroVest" },
+      { title: "BuyByBit plan details | AgroVest" },
       { name: "description", content: "Track your AgroVest installment plan, due dates and payments." },
-      { property: "og:title", content: "Buy By Bit plan details | AgroVest" },
+      { property: "og:title", content: "BuyByBit plan details | AgroVest" },
       { property: "og:description", content: "See what's paid, what's next and pay your next installment." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
