@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Money } from "@/components/ui/money";
 import {
   CustodyBackedBadge, OnChainBadge, BscBadge, ProjectedBadge,
-  NotAdviceBadge, RiskBadge, ComingSoonBadge, EscrowReserveBadge,
+  NotAdviceBadge, RiskBadge, ComingSoonBadge, 
 } from "@/components/ui/agro-badge";
 
 
@@ -109,7 +109,8 @@ function Detail() {
               ))}
             </div>
             <p className="mt-2 text-[11px] text-muted-foreground">
-              6 plots = 1 acre · 2.5 acres = 1 hectare (15 plots) · ₦950,000 + ₦200,000 management fee per plot
+              6 plots = 1 acre · 2.5 acres = 1 hectare (15 plots) · ₦950,000 + ₦200,000 management fee per plot ·{" "}
+              <Link to="/calculator" className="font-medium text-violet">Land calculator</Link>
             </p>
 
             <div className="mt-4 flex items-center justify-between rounded-2xl bg-secondary p-3">

@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Bell, Check, ExternalLink, FileText, Info, X } from "lucide-react";
 import { openPrivate } from "@/lib/uploads";
+import { OrderChat } from "@/components/payments/OrderChat";
 import { toast } from "sonner";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AgroBadge } from "@/components/ui/agro-badge";
@@ -41,6 +42,7 @@ function AdminPayments() {
   const purchases = usePayments((s) => s.orders);
   const deposits = useFarmRemit((s) => s.orders);
   const [filter, setFilter] = useState<Filter>("pending");
+  const [chat, setChat] = useState<string | null>(null);
   const [q, setQ] = useState("");
 
   const rows = useMemo(() => {
@@ -191,6 +193,11 @@ function AdminPayments() {
                         <FileText size={11} /> View receipt
                       </button>
                     )}
+                    {r.kind === "Purchase" && (
+                      <button onClick={() => setChat(chat === r.id ? null : r.id)} className="mt-1 mr-3 inline-flex items-center gap-1 text-[11px] font-medium text-violet">
+                        {chat === r.id ? "Hide chat" : "Chat"}
+                      </button>
+                    )}
                     {r.hash && (
                       <a
                         href={txUrl((r.network ?? "bsc-testnet") as NetworkId, r.hash)}
@@ -208,6 +215,7 @@ function AdminPayments() {
                   </div>
                 </div>
 
+                {chat === r.id && <div className="mt-3"><OrderChat orderId={r.id} asAdmin /></div>}
                 {!r.settled && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     <button
