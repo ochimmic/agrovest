@@ -47,7 +47,7 @@ function AdminPayments() {
     const a = purchases.map((o) => ({
       id: o.id,
       kind: "Purchase" as const,
-      purpose: `${o.purpose.planId ? `AssetPay ${o.purpose.installment === 0 ? "deposit" : `#${o.purpose.installment}`} · ` : ""}${o.purpose.qty} × ${o.purpose.unit} · ${o.purpose.assetName}`,
+      purpose: `${o.purpose.planId ? `Buy By Bit ${o.purpose.installment === 0 ? "deposit" : `#${o.purpose.installment}`} · ` : ""}${o.purpose.qty} × ${o.purpose.unit} · ${o.purpose.assetName}`,
       amountUsd: o.amountUsd,
       method: o.rail === "crypto" ? `${RAIL_LABEL.crypto} · ${o.token}` : RAIL_LABEL[o.rail ?? "crypto"],
       payer: o.payerName ?? "AgroVest user",
