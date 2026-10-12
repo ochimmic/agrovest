@@ -205,6 +205,44 @@ export type Database = {
         }
         Relationships: []
       }
+      order_messages: {
+        Row: {
+          attachment_path: string | null
+          body: string
+          created_at: string
+          from_admin: boolean
+          id: string
+          order_id: string
+          sender_id: string
+        }
+        Insert: {
+          attachment_path?: string | null
+          body?: string
+          created_at?: string
+          from_admin?: boolean
+          id?: string
+          order_id: string
+          sender_id?: string
+        }
+        Update: {
+          attachment_path?: string | null
+          body?: string
+          created_at?: string
+          from_admin?: boolean
+          id?: string
+          order_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_messages_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "pay_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pay_orders: {
         Row: {
           amount_usd: number
