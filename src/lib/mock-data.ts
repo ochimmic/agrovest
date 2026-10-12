@@ -25,8 +25,8 @@ export const farmAssets: FarmAsset[] = [
     category: "palm",
     location: "Abeokuta, Ogun State, Nigeria",
     unitsAvailable: 412,
-    pricePerPlot: 1000,
-    expectedYield: "20–50% / yr (Y3–Y6+)",
+    pricePerPlot: 741.94,
+    expectedYield: "30–50% / yr (from Y3)",
     appreciation: "+18% / 3yr",
     risk: "Conservative",
     status: "Active",
@@ -41,8 +41,8 @@ export const farmAssets: FarmAsset[] = [
     category: "cocoa",
     location: "Ondo, Nigeria",
     unitsAvailable: 287,
-    pricePerPlot: 1000,
-    expectedYield: "20–50% / yr (Y3–Y6+)",
+    pricePerPlot: 741.94,
+    expectedYield: "30–50% / yr (from Y3)",
     appreciation: "+22% / 3yr",
     risk: "Moderate",
     status: "Coming soon",
@@ -58,8 +58,8 @@ export const farmAssets: FarmAsset[] = [
     category: "latex",
     location: "Edo, Nigeria",
     unitsAvailable: 156,
-    pricePerPlot: 1000,
-    expectedYield: "20–50% / yr (Y3–Y6+)",
+    pricePerPlot: 741.94,
+    expectedYield: "30–50% / yr (from Y3)",
     appreciation: "+15% / 3yr",
     risk: "Low",
     status: "Coming soon",
@@ -89,28 +89,6 @@ export const documents = [
   { id: "d3", title: "Custody Receipt — Ondo Cocoa", status: "Pending" as const, date: "2025-09-02" },
 ];
 
-// Fee structure (locked):
-//   Platform fee   = 3% of base
-//   Escrow reserve = 20% of base (held in escrow, released on milestones)
-//   Network fee    = 0.5% on bundle units (acre / hectare) only
-// 1 plot = $1,000; 6 plots = 1 acre ($5,880 after discount); 15 plots = 1 hectare ($14,700).
-export const FEES = { platformPct: 0.03, escrowReservePct: 0.2, networkPct: 0.005 } as const;
-
-export function priceFor(unit: "plot" | "acre" | "hectare", qty: number) {
-  const base = unit === "plot" ? 1000 * qty : unit === "acre" ? 6000 * qty : 15000 * qty;
-  const platformFee = Math.round(base * FEES.platformPct);
-  const networkFee = unit === "plot" ? 0 : Math.round(base * FEES.networkPct);
-  const escrowReserve = Math.round(base * FEES.escrowReservePct);
-  const subtotal = base + platformFee + networkFee;
-  const discount =
-    unit === "acre" ? subtotal - 5880 * qty : unit === "hectare" ? subtotal - 14700 * qty : 0;
-  const final = subtotal - Math.max(discount, 0);
-  return { base, platformFee, networkFee, escrowReserve, subtotal, discount: Math.max(discount, 0), final };
-}
-
-export function propertyFees(price: number) {
-  const platformFee = Math.round(price * FEES.platformPct);
-  const escrowReserve = Math.round(price * FEES.escrowReservePct);
-  const total = price + platformFee;
-  return { price, platformFee, escrowReserve, total };
-}
+import { landPrice, propertyPrice, type LandUnit } from "@/lib/pricing";
+export function priceFor(unit: LandUnit, qty: number) { return landPrice(unit, qty); }
+export function propertyFees(price: number) { return propertyPrice(price); }
