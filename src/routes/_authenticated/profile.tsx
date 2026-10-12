@@ -50,7 +50,7 @@ function Profile() {
           <Row to="/vault" icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" />
           <Row to="/vault/settings" icon={Lock} label="Wallet settings" sub="Network, lock & recovery" />
           <Row to="/buybybit" icon={CalendarClock} label="BuyByBit" sub="Installment plans" />
-          <Row to="/prichat" icon={FileText} label="Deposit history" sub="Bank transfers to AgroVest" />
+          <Row to="/calculator" icon={FileText} label="Calculator & converter" sub="Land size, price, ROI, ₦ ⇄ $" />
         </Section>
 
         <Section title="Account">
