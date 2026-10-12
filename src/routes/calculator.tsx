@@ -6,6 +6,7 @@ import { convertLand, landPrice, toPlots, type LandUnit } from "@/lib/pricing";
 import { yieldPctForYear } from "@/lib/yield-schedule";
 import { NGN_PER_USD } from "@/lib/fx";
 import { farmAssets } from "@/lib/mock-data";
+import { useLivePrices, fmtClyst } from "@/lib/clyst-price";
 
 export const Route = createFileRoute("/calculator")({
   head: () => ({
@@ -44,6 +45,7 @@ function Calc() {
 }
 
 function Fx() {
+  const { prices, error } = useLivePrices();
   const [ngnStr, setNgn] = useState("1150000");
   const [usdStr, setUsd] = useState(String(Math.round(1150000 / NGN_PER_USD * 100) / 100));
   return (
@@ -60,6 +62,19 @@ function Fx() {
             className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-3 text-lg font-semibold text-foreground" />
         </label>
         <p className="text-[11px] text-muted-foreground">Platform rate: ₦{NGN_PER_USD.toLocaleString()} = $1 (indicative).</p>
+      </section>
+      <section className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
+        <h2 className="font-semibold text-foreground">$CLYST equivalent</h2>
+        {prices ? (
+          <>
+            <Row k="Amount in $CLYST" v={`${fmtClyst((Number(usdStr) || 0) / prices.clystUsd)} CLYST`} bold />
+            <Row k="1 CLYST" v={`$${prices.clystUsd.toPrecision(4)} · ₦${(prices.clystUsd * NGN_PER_USD).toPrecision(4)}`} />
+            <Row k="1 BNB" v={`$${prices.bnbUsd.toFixed(2)}`} />
+            <p className="text-[10px] text-muted-foreground">Live from the PancakeSwap CLYST/BNB pool · refreshes every minute. Prices move; the amount is fixed when you pay.</p>
+          </>
+        ) : (
+          <p className="text-xs text-muted-foreground">{error ? "Couldn't reach PancakeSwap right now. Try again shortly." : "Loading live price…"}</p>
+        )}
       </section>
     </main>
   );

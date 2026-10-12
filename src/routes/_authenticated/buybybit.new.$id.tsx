@@ -6,6 +6,7 @@ import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
 import { Money } from "@/components/ui/money";
 import { farmAssets, priceFor } from "@/lib/mock-data";
+import { useHouse, housePrice } from "@/lib/properties";
 import {
   CANCEL_AFTER_DAYS, CANCEL_FEE_PCT, GRACE_DAYS, LATE_FEE_PCT, MIN_DEPOSIT_PCT, PLAN_MONTHS,
   buildSchedule, createPlan, installmentLabel,
@@ -14,13 +15,14 @@ import {
 const search = z.object({
   unit: z.enum(["plot", "acre", "hectare"]).default("plot"),
   qty: z.coerce.number().min(0.5).default(1),
+  kind: z.enum(["farm", "property"]).default("farm"),
 });
 
 export const Route = createFileRoute("/_authenticated/buybybit/new/$id")({
   head: () => ({
     meta: [
       { title: "Set up a BuyByBit plan | AgroVest" },
-      { name: "description", content: "Choose your deposit and plan length to own AgroVest farmland in installments." },
+      { name: "description", content: "Choose your deposit and plan length to own AgroVest farmland or a house in installments." },
       { property: "og:title", content: "Set up a BuyByBit plan | AgroVest" },
       { property: "og:description", content: "From 10% down, balance over 3, 6 or 12 months." },
       { property: "og:type", content: "website" },
@@ -33,36 +35,43 @@ export const Route = createFileRoute("/_authenticated/buybybit/new/$id")({
 
 function NewPlan() {
   const { id } = Route.useParams();
-  const { unit, qty } = Route.useSearch();
+  const { unit, qty, kind } = Route.useSearch();
   const nav = useNavigate();
+  const isHouse = kind === "property";
+  const house = useHouse(isHouse ? id : "__none__");
   const asset = farmAssets.find((a) => a.id === id) ?? farmAssets[0]!;
-  const total = priceFor(unit, qty).final;
+  const total = isHouse ? (house ? housePrice(house).total : 0) : priceFor(unit, qty).final;
+  const name = isHouse ? house?.title ?? "House" : asset.name;
+  const back = isHouse ? { kind: "property" as const } : { unit, qty };
   const [deposit, setDeposit] = useState(20);
   const [months, setMonths] = useState<number>(6);
   const [agree, setAgree] = useState(false);
   const schedule = useMemo(() => buildSchedule(total, deposit, months), [total, deposit, months]);
 
   function start() {
+    if (!total) return;
     const plan = createPlan({
-      purpose: { assetId: asset.id, assetName: asset.name, category: asset.category, unit, qty },
+      purpose: isHouse
+        ? { assetId: id, assetName: name, category: "property" as const, unit: "house" as const, qty: 1 }
+        : { assetId: asset.id, assetName: asset.name, category: asset.category, unit, qty },
       totalUsd: total,
       depositPct: deposit,
       months,
     });
-    void nav({ to: "/invest/checkout/$id", params: { id }, search: { unit, qty, plan: plan.id, inst: 0 } });
+    void nav({ to: "/invest/checkout/$id", params: { id }, search: { ...back, plan: plan.id, inst: 0 } });
   }
 
   return (
     <MobileFrame>
       <header className="flex items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
-        <Link to="/invest/checkout/$id" params={{ id }} search={{ unit, qty }} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><ArrowLeft size={18} /></Link>
+        <Link to="/invest/checkout/$id" params={{ id }} search={back} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><ArrowLeft size={18} /></Link>
         <h1 className="text-base font-semibold text-foreground">BuyByBit plan</h1>
       </header>
       <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
         <div className="rounded-3xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Paying for</p>
-          <p className="font-semibold text-foreground">{asset.name}</p>
-          <p className="text-xs text-muted-foreground">{qty} × {unit}</p>
+          <p className="font-semibold text-foreground">{name}</p>
+          <p className="text-xs text-muted-foreground">{isHouse ? `${house?.location ?? ""} · price incl. 3% escrow` : `${qty} × ${unit}`}</p>
           <div className="mt-2"><Money usd={total} layout="inline" size="md" /></div>
         </div>
 
@@ -118,7 +127,7 @@ function NewPlan() {
         </label>
       </main>
       <div className="border-t border-border p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <AgroButton size="xl" disabled={!agree} onClick={start}>
+        <AgroButton size="xl" disabled={!agree || !total} onClick={start}>
           Start plan · pay ${schedule[0]!.amountUsd.toLocaleString()} deposit
         </AgroButton>
       </div>
