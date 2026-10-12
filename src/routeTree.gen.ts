@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as StaffRouteImport } from './routes/staff'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -31,6 +32,7 @@ import { Route as AuthenticatedSecurityRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedPrichatRouteImport } from './routes/_authenticated/prichat'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
+import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedKycRouteImport } from './routes/_authenticated/kyc'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
@@ -83,6 +85,11 @@ import { Route as AuthenticatedInvestFarmvestHoldingHidRouteImport } from './rou
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StaffRoute = StaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -187,6 +194,11 @@ const AuthenticatedPrichatRoute = AuthenticatedPrichatRouteImport.update({
 const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
   id: '/partner',
   path: '/partner',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedNotificationsRoute =
@@ -473,6 +485,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/services': typeof ServicesRouteWithChildren
+  '/staff': typeof StaffRoute
   '/welcome': typeof WelcomeRoute
   '/broker': typeof AuthenticatedBrokerRouteWithChildren
   '/buybybit': typeof AuthenticatedBuybybitRouteWithChildren
@@ -480,6 +493,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof AuthenticatedHomeRoute
   '/kyc': typeof AuthenticatedKycRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
+  '/orders': typeof AuthenticatedOrdersRoute
   '/partner': typeof AuthenticatedPartnerRoute
   '/prichat': typeof AuthenticatedPrichatRouteWithChildren
   '/profile': typeof AuthenticatedProfileRoute
@@ -543,12 +557,14 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/services': typeof ServicesRouteWithChildren
+  '/staff': typeof StaffRoute
   '/welcome': typeof WelcomeRoute
   '/broker': typeof AuthenticatedBrokerRouteWithChildren
   '/documents': typeof AuthenticatedDocumentsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/kyc': typeof AuthenticatedKycRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
+  '/orders': typeof AuthenticatedOrdersRoute
   '/partner': typeof AuthenticatedPartnerRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/security': typeof AuthenticatedSecurityRoute
@@ -612,6 +628,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/services': typeof ServicesRouteWithChildren
+  '/staff': typeof StaffRoute
   '/welcome': typeof WelcomeRoute
   '/_authenticated/_admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/broker': typeof AuthenticatedBrokerRouteWithChildren
@@ -620,6 +637,7 @@ export interface FileRoutesById {
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/kyc': typeof AuthenticatedKycRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
+  '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/partner': typeof AuthenticatedPartnerRoute
   '/_authenticated/prichat': typeof AuthenticatedPrichatRouteWithChildren
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -685,6 +703,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/role-select'
     | '/services'
+    | '/staff'
     | '/welcome'
     | '/broker'
     | '/buybybit'
@@ -692,6 +711,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/kyc'
     | '/notifications'
+    | '/orders'
     | '/partner'
     | '/prichat'
     | '/profile'
@@ -755,12 +775,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/role-select'
     | '/services'
+    | '/staff'
     | '/welcome'
     | '/broker'
     | '/documents'
     | '/home'
     | '/kyc'
     | '/notifications'
+    | '/orders'
     | '/partner'
     | '/profile'
     | '/security'
@@ -823,6 +845,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/role-select'
     | '/services'
+    | '/staff'
     | '/welcome'
     | '/_authenticated/_admin'
     | '/_authenticated/broker'
@@ -831,6 +854,7 @@ export interface FileRouteTypes {
     | '/_authenticated/home'
     | '/_authenticated/kyc'
     | '/_authenticated/notifications'
+    | '/_authenticated/orders'
     | '/_authenticated/partner'
     | '/_authenticated/prichat'
     | '/_authenticated/profile'
@@ -896,6 +920,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   RoleSelectRoute: typeof RoleSelectRoute
   ServicesRoute: typeof ServicesRouteWithChildren
+  StaffRoute: typeof StaffRoute
   WelcomeRoute: typeof WelcomeRoute
   SignupRoleRoute: typeof SignupRoleRoute
   InvestIndexRoute: typeof InvestIndexRoute
@@ -912,6 +937,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/staff': {
+      id: '/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof StaffRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -1059,6 +1091,13 @@ declare module '@tanstack/react-router' {
       path: '/partner'
       fullPath: '/partner'
       preLoaderRoute: typeof AuthenticatedPartnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/orders': {
+      id: '/_authenticated/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof AuthenticatedOrdersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/notifications': {
@@ -1518,6 +1557,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedKycRoute: typeof AuthenticatedKycRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
+  AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRoute
   AuthenticatedPrichatRoute: typeof AuthenticatedPrichatRouteWithChildren
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -1547,6 +1587,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedKycRoute: AuthenticatedKycRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
+  AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRoute,
   AuthenticatedPrichatRoute: AuthenticatedPrichatRouteWithChildren,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
@@ -1608,6 +1649,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   RoleSelectRoute: RoleSelectRoute,
   ServicesRoute: ServicesRouteWithChildren,
+  StaffRoute: StaffRoute,
   WelcomeRoute: WelcomeRoute,
   SignupRoleRoute: SignupRoleRoute,
   InvestIndexRoute: InvestIndexRoute,

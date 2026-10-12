@@ -3,8 +3,13 @@ import {
   ShieldCheck, ArrowRight, Sprout, LineChart, Wallet, GraduationCap,
   AlertTriangle, FileText, Headphones, Sparkles, Lock,
   Activity, ShoppingBag, Building2, Gift, ArrowDownLeft, ArrowUpRight, RefreshCw, Calculator,
+  CalendarClock, MessageCircle,
 } from "lucide-react";
-import { NGN_PER_USD, useFxRate } from "@/lib/fx";
+import { useEffect, useState } from "react";
+import { NGN_PER_USD, useFxRate, fmtUsd } from "@/lib/fx";
+import { usePayments } from "@/lib/payments";
+import { supabase } from "@/integrations/supabase/client";
+import { PLOT_LAND_NGN, PLOT_MGMT_FEE_NGN } from "@/lib/pricing";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
 import { farmAssets } from "@/lib/mock-data";
@@ -22,8 +27,18 @@ function Home() {
   const holdings = useAppState((s) => s.holdings);
   const wallet = useAppState((s) => s.wallet);
   const txs = useAppState((s) => s.txs);
+  const openOrders = usePayments((s) => s.orders.filter((o) => o.status !== "confirmed" && o.status !== "rejected").length);
+  const [commission, setCommission] = useState(0);
 
-  const portfolioValue = holdings.reduce((sum, h) => sum + h.invested, 0);
+  useEffect(() => {
+    if (role !== "broker") return;
+    void supabase.rpc("my_commission_balance").then(({ data }) => {
+      const row = Array.isArray(data) ? data[0] : data;
+      setCommission(Number(row?.earned ?? 0));
+    });
+  }, [role]);
+
+  const portfolioValue = role === "broker" ? commission : holdings.reduce((sum, h) => sum + h.invested, 0);
   const first = user?.name?.split(" ")[0] ?? "Investor";
 
   return (
