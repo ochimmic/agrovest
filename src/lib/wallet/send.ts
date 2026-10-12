@@ -29,6 +29,17 @@ export async function sendToken(opts: {
   const wallet = s.connect(provider());
   const value = parseUnits(opts.amount, opts.token.decimals);
 
+  // Gas check: every BSC transfer needs BNB for fees.
+  const fee = await provider().getFeeData();
+  const gasCost = (fee.gasPrice ?? parseUnits("3", "gwei")) * (opts.token.native ? 21_000n : 60_000n);
+  const bnbBal = await provider().getBalance(wallet.address);
+  const needed = opts.token.native ? gasCost + value : gasCost;
+  if (bnbBal < needed) {
+    throw new Error(
+      `Not enough BNB for network fees. You need about ${Number(formatEther(needed)).toFixed(5)} BNB but have ${Number(formatEther(bnbBal)).toFixed(5)} BNB. Add a little BNB to your AssetVault and try again.`,
+    );
+  }
+
   let hash: string;
   if (opts.token.native) {
     const tx = await wallet.sendTransaction({ to: opts.to, value });
