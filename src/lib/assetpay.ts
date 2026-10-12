@@ -1,4 +1,4 @@
-// Buy By Bit (formerly AssetPay) — installment ("pay small-small") plans for FarmVest and Buy Assets.
+// BuyByBit (formerly AssetPay) — installment ("pay small-small") plans for FarmVest and Buy Assets.
 //
 // Rules:
 //  - Deposit chosen by the buyer, minimum 10%. Balance split monthly over 3, 6 or 12 months.

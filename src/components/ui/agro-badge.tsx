@@ -130,6 +130,6 @@ export const EscrowReserveBadge = ({ size }: { size?: "xs" | "sm" | "md" }) => (
 );
 
 export const FarmRemitBadge = ({ size }: { size?: "xs" | "sm" | "md" }) => (
-  <AgroBadge tone="agro" icon={Coins} size={size}>Buy By Bit</AgroBadge>
+  <AgroBadge tone="agro" icon={Coins} size={size}>BuyByBit</AgroBadge>
 );
 

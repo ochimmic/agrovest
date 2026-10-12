@@ -83,7 +83,7 @@ function PayStatus() {
               </p>
               {order.purpose.planId && (
                 <p className="mt-0.5 text-[11px] text-white/70">
-                  Buy By Bit {order.purpose.installment === 0 ? "deposit" : `installment ${order.purpose.installment}`}
+                  BuyByBit {order.purpose.installment === 0 ? "deposit" : `installment ${order.purpose.installment}`}
                 </p>
               )}
               <p className="mt-2 text-[11px] text-white/60">
