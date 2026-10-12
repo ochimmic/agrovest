@@ -70,6 +70,10 @@ function Properties() {
               <div className="p-4">
                 <p className="font-semibold text-navy">{p.title}</p>
                 <p className="text-[11px] text-muted-foreground">{p.location} · AgroVest Direct</p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  <AgroBadge tone={p.verified ? "violet" : "warn"} size="xs">Title: {p.title_doc}</AgroBadge>
+                  <AgroBadge tone="neutral" size="xs">Inspected: {p.inspection.date}</AgroBadge>
+                </div>
                 <div className="mt-1.5">
                   <p className="text-[11px] text-muted-foreground line-through">Market ${p.price.toLocaleString()}</p>
                   <Money usd={propertyFees(p.price).agrovest} size="md" emphasis="violet" layout="inline" />
