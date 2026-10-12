@@ -74,7 +74,6 @@ const NAV: { id: Section; label: string; icon: LucideIcon; group: string }[] = [
   { id: "investments", label: "Investments", icon: TrendingUp, group: "Insights" },
   { id: "transactions", label: "Transactions", icon: CircleDollarSign, group: "Insights" },
   { id: "kyc", label: "KYC review", icon: FileCheck, group: "Queues" },
-  { id: "vendors", label: "Vendor approvals", icon: Store, group: "Queues" },
   { id: "consultants", label: "Consultants", icon: Megaphone, group: "Queues" },
   { id: "disputes", label: "Disputes", icon: AlertTriangle, group: "Queues" },
   { id: "rewards", label: "Broker rewards", icon: Gift, group: "Queues" },
@@ -108,7 +107,7 @@ function DesktopAdmin() {
           {section === "investments" && <InvestmentsView />}
           {section === "transactions" && <TransactionsView />}
           {section === "kyc" && <KycView />}
-          {section === "vendors" && <VendorsView />}
+          
           {section === "consultants" && <ConsultantsView />}
           {section === "disputes" && <DisputesView />}
           {section === "rewards" && <RewardsView />}
@@ -241,7 +240,7 @@ function TopBar({ section }: { section: Section }) {
         <div className="hidden md:flex items-center gap-2 rounded-full bg-secondary px-3 h-9 w-72 border border-border">
           <Search size={14} className="text-muted-foreground" />
           <input
-            placeholder="Search users, vendors, txns…"
+            placeholder="Search users, txns…"
             className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
           <kbd className="text-[10px] text-muted-foreground bg-background border border-border rounded px-1.5 py-0.5">
@@ -267,7 +266,7 @@ function Overview({ onJump }: { onJump: (s: Section) => void }) {
     { icon: Users, label: "App users", value: "12,487", delta: "+8.4%", up: true, series: usersSeries, tone: "violet" as const },
     { icon: TrendingUp, label: "Investments", value: "3,942", delta: "+12.1%", up: true, series: investSeries, tone: "agro" as const },
     { icon: Wallet, label: "AUM (cUSD)", value: "$8.42M", delta: "+5.7%", up: true, series: aumSeries, tone: "agro" as const },
-    { icon: Building2, label: "Active vendors", value: "342", delta: "+3.2%", up: true, series: vendorSeries, tone: "violet" as const },
+    { icon: Building2, label: "Houses listed", value: "342", delta: "+3.2%", up: true, series: vendorSeries, tone: "violet" as const },
     { icon: ShoppingBag, label: "Transactions / wk", value: "685", delta: "+9.4%", up: true, series: txSeries, tone: "violet" as const },
     { icon: AlertTriangle, label: "Open disputes", value: "5", delta: "-2", up: false, series: [9, 8, 8, 7, 7, 6, 6, 6, 5, 5, 5, 5], tone: "warn" as const },
   ];
@@ -914,14 +913,14 @@ const users: UserRow[] = [
   { id: "u2", name: "Mark Otieno", email: "mark@otieno.io", role: "Investor", kyc: "More info", country: "GH", joined: "Feb 2025" },
   { id: "u3", name: "Ada Pereira", email: "ada@p.io", role: "Broker", kyc: "Submitted", country: "NG", joined: "Mar 2025" },
   { id: "u4", name: "Tobi Kamau", email: "tobi@k.io", role: "Investor", kyc: "Under review", country: "KE", joined: "Apr 2025" },
-  { id: "u5", name: "Sarah Lin", email: "sarah@lin.co", role: "Vendor", kyc: "Approved", country: "NG", joined: "May 2025" },
+  { id: "u5", name: "Sarah Lin", email: "sarah@lin.co", role: "Investor", kyc: "Approved", country: "NG", joined: "May 2025" },
   { id: "u6", name: "Daniel Park", email: "daniel@p.io", role: "Investor", kyc: "Rejected", country: "ZA", joined: "Jun 2025" },
 ];
 
 function UsersView() {
   return (
     <DataTable
-      filters={["All", "Investor", "Broker", "Vendor"]}
+      filters={["All", "Investor", "Broker"]}
       rows={users}
       cols={[
         { key: "name", label: "User", render: (r) => (

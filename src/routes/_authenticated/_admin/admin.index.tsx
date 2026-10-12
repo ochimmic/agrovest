@@ -56,14 +56,6 @@ const queues = [
     tone: "from-violet to-[oklch(0.55_0.18_295)]",
   },
   {
-    to: "/admin/vendors",
-    icon: Store,
-    label: "Vendor approvals",
-    desc: "Marketplace storefront requests",
-    count: 8,
-    tone: "from-agro to-emerald-700",
-  },
-  {
     to: "/admin/consultants",
     icon: Megaphone,
     label: "Consultant cert",
@@ -140,8 +132,8 @@ const kpis = [
   },
   {
     icon: Building2,
-    label: "Active vendors",
-    value: "342",
+    label: "Houses listed",
+    value: "3",
     delta: "+3.2%",
     series: [210, 218, 226, 235, 248, 261, 274, 288, 301, 315, 328, 342],
     tone: "text-violet",

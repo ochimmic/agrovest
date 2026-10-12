@@ -77,11 +77,11 @@ import houseAbeokuta from "@/assets/house-abeokuta.jpg";
 
 // Buy Assets — houses for now. `price` is the actual market price (USD); AgroVest price is 1% less.
 export const properties = [
-  { id: "p1", title: "Lekki 3-Bed Detached House", price: 145000, location: "Lekki, Lagos", category: "House", vendor: "GoldHaven Realty", verified: true, image: houseLekki,
+  { id: "p1", title: "Lekki 3-Bed Detached House", price: 145000, location: "Lekki, Lagos", category: "House", vendor: "AgroVest Direct", verified: true, image: houseLekki,
     disclaimer: "Title: Governor's Consent. Inspected by AgroVest. Service charge billed separately by the estate." },
-  { id: "p2", title: "Abuja 4-Bed Duplex", price: 210000, location: "Lokogoma, Abuja", category: "House", vendor: "PrimeHomes Ltd", verified: true, image: houseAbuja,
-    disclaimer: "Title: C of O. Inspected by AgroVest. Final finishing (kitchen fittings) to be completed by vendor before handover." },
-  { id: "p3", title: "Abeokuta 3-Bed Bungalow", price: 52000, location: "Abeokuta, Ogun", category: "House", vendor: "Ogun Realty Hub", verified: false, image: houseAbeokuta,
+  { id: "p2", title: "Abuja 4-Bed Duplex", price: 210000, location: "Lokogoma, Abuja", category: "House", vendor: "AgroVest Direct", verified: true, image: houseAbuja,
+    disclaimer: "Title: C of O. Inspected by AgroVest. Final finishing (kitchen fittings) to be completed by AgroVest before handover." },
+  { id: "p3", title: "Abeokuta 3-Bed Bungalow", price: 52000, location: "Abeokuta, Ogun", category: "House", vendor: "AgroVest Direct", verified: false, image: houseAbeokuta,
     disclaimer: "Not yet inspected by AgroVest. Documents are under review — buy only after the Verified badge appears or do your own checks." },
 ];
 

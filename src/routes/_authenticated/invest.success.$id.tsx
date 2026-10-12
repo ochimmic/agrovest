@@ -25,7 +25,7 @@ function Success() {
   const label = kind === "property" ? "Purchase confirmed" : "Investment confirmed";
   const sub =
     kind === "property"
-      ? "Funds are in escrow. Vendor will reach out within 24 hours to coordinate handover."
+      ? "Funds are in escrow. AgroVest will reach out within 24 hours to coordinate handover."
       : "Your purchase is being reviewed. Documents will be issued within 24 hours.";
 
   return (

@@ -40,7 +40,7 @@ function Home() {
           <div className="relative">
             <div className="flex items-center justify-between">
               <p className="text-xs uppercase tracking-widest text-white/60">
-                {role === "investor" ? "Portfolio value" : role === "broker" ? "Commission to date" : role === "vendor" ? "Vendor balance" : "Explore AgroVest"}
+                {role === "investor" ? "Portfolio value" : role === "broker" ? "Commission to date" : "Explore AgroVest"}
               </p>
               <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium">
                 <ShieldCheck size={12} /> KYC {kyc}
@@ -89,7 +89,7 @@ function Home() {
             <div className="flex-1">
               <p className="font-semibold text-navy text-sm">Verify your identity</p>
               <p className="text-xs text-muted-foreground">
-                Required before investment, vendor selling, or broker rewards.
+                Required before investment or broker rewards.
               </p>
             </div>
             <ArrowRight size={16} className="mt-1 text-violet" />
@@ -101,7 +101,7 @@ function Home() {
           <h2 className="mb-2 text-sm font-semibold text-navy">Modules</h2>
           <div className="grid grid-cols-2 gap-3">
             <Tile icon={Sprout} label="FarmVest" sub="Palm · Cocoa · Latex" to="/invest/farmvest" tone="agro" />
-            <Tile icon={LineChart} label="Buy Assets" sub="Verified vendors" to="/invest/property" tone="violet" />
+            <Tile icon={LineChart} label="Buy Assets" sub="Sold by AgroVest" to="/invest/property" tone="violet" />
             <Tile icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" to="/vault" tone="navy" />
             <Tile icon={FileText} label="Documents" sub="Receipts & contracts" to="/documents" tone="soft" />
           </div>
@@ -209,12 +209,6 @@ function Home() {
           <Link to="/broker" className="block rounded-3xl gradient-agro p-4 text-white shadow-card">
             <p className="text-xs uppercase tracking-widest text-white/80">Broker</p>
             <p className="mt-1 font-semibold">Open broker dashboard</p>
-          </Link>
-        )}
-        {role === "vendor" && (
-          <Link to="/vendor" className="block rounded-3xl gradient-violet p-4 text-white shadow-card">
-            <p className="text-xs uppercase tracking-widest text-white/80">Vendor</p>
-            <p className="mt-1 font-semibold">Open vendor dashboard</p>
           </Link>
         )}
 

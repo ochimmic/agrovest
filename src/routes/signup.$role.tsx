@@ -28,12 +28,6 @@ const requirements: Record<Role, string[]> = {
     "Date of birth", "Government ID", "Face verification", "Address",
     "T&C, AML", "Wallet setup",
   ],
-  vendor: [
-    "Full legal name", "Business name (if any)", "Email / phone", "Password",
-    "Country & category", "Seller type", "Government ID", "Face verification",
-    "Business registration (if any)", "Proof of ownership", "Payout wallet",
-    "Vendor terms acceptance",
-  ],
   broker: [
     "Full legal name", "Email / phone", "Password", "Country & nationality",
     "Government ID", "Face verification", "Referral details",
@@ -43,7 +37,6 @@ const requirements: Record<Role, string[]> = {
 
 const labels: Record<Role, { title: string; sub: string }> = {
   investor: { title: "Create an Investor account", sub: "Verified investors gain access to FarmVest." },
-  vendor: { title: "Apply as a Vendor", sub: "Only verified vendors appear active on AgroVest." },
   broker: { title: "Join as a Broker", sub: "Refer leads and earn commission plus reward perks." },
 };
 

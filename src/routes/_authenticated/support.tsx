@@ -17,7 +17,7 @@ function Support() {
         </Link>
         <Link to="/support/dispute" className="flex items-center gap-3 rounded-2xl bg-card border border-border p-4">
           <span className="h-10 w-10 rounded-xl bg-warn/15 text-warn flex items-center justify-center"><AlertTriangle size={16} /></span>
-          <div className="flex-1"><p className="text-sm font-semibold text-navy">Open a dispute</p><p className="text-[11px] text-muted-foreground">For purchases or vendors</p></div>
+          <div className="flex-1"><p className="text-sm font-semibold text-navy">Open a dispute</p><p className="text-[11px] text-muted-foreground">For purchases or payments</p></div>
         </Link>
         <div className="flex items-center gap-3 rounded-2xl bg-card border border-border p-4">
           <span className="h-10 w-10 rounded-xl bg-agro-soft text-agro flex items-center justify-center"><Headphones size={16} /></span>

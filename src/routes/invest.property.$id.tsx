@@ -104,7 +104,7 @@ function PropertyDetail() {
               <h2 className="text-sm font-semibold text-navy">What you'll receive</h2>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 <li>• Bill of sale & ownership transfer documents</li>
-                <li>• Vendor warranty (where applicable)</li>
+                <li>• AgroVest handover warranty</li>
                 <li>• AgroVest escrow protection until delivery</li>
               </ul>
             </section>
@@ -149,7 +149,7 @@ function PropertyDetail() {
 
             <div className="flex items-start gap-2 rounded-2xl bg-violet-soft/40 border border-violet/20 p-3 text-xs text-navy">
               <Lock size={14} className="mt-0.5 text-violet" />
-              <p>Funds held in escrow. Released to vendor only after you confirm handover.</p>
+              <p>Funds held in escrow. Released to AgroVest only after you confirm handover.</p>
             </div>
           </>
         )}
