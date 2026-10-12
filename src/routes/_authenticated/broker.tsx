@@ -6,6 +6,9 @@ import { AppShell } from "@/components/shell/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { LocalTime } from "@/components/ui/local-time";
+import { Money } from "@/components/ui/money";
+import { fmtNgn } from "@/lib/fx";
+import { withdrawalFee } from "@/lib/broker-tiers";
 
 export const Route = createFileRoute("/_authenticated/broker")({
   head: () => ({
@@ -22,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/broker")({
 });
 
 type Ref = { full_name: string; joined_at: string; kyc: string; purchases: number };
-type Payout = { id: string; amount_usd: number; method: string; status: string; admin_note: string | null; created_at: string };
+type Payout = { id: string; reference: string; fee_usd: number; net_usd: number | null; amount_usd: number; method: string; status: string; admin_note: string | null; created_at: string };
 type Method = { method: "bank" | "crypto"; bank?: string; account_name?: string; account_number?: string; address?: string; token?: string };
 
 function Broker() {
@@ -33,6 +36,8 @@ function Broker() {
   const [m, setM] = useState<Method>({ method: "bank" });
   const [amount, setAmount] = useState("");
   const [busy, setBusy] = useState(false);
+  const [bal, setBal] = useState({ earned: 0, withdrawn: 0, pending: 0, available: 0, plots: 0 });
+  const [comms, setComms] = useState<{ id: string; asset_name: string; pct: number; amount_usd: number; created_at: string }[]>([]);
 
   const load = useCallback(async () => {
     if (!user) return;
@@ -41,6 +46,13 @@ function Broker() {
       supabase.rpc("my_referrals"),
       supabase.from("payout_requests").select("*").eq("user_id", user.id).order("created_at", { ascending: false }),
     ]);
+    const [b, c] = await Promise.all([
+      supabase.rpc("my_commission_balance"),
+      supabase.from("broker_commissions").select("*").eq("broker_id", user.id).order("created_at", { ascending: false }),
+    ]);
+    const row = b.data?.[0];
+    if (row) setBal({ earned: +row.earned, withdrawn: +row.withdrawn, pending: +row.pending, available: +row.available, plots: +row.plots });
+    setComms(c.data ?? []);
     setCode(p.data?.referral_code ?? null);
     if (p.data?.payout_method) setM(p.data.payout_method as Method);
     setRefs((r.data ?? []) as Ref[]);
@@ -68,12 +80,13 @@ function Broker() {
   async function request() {
     const amt = Number(amount);
     if (!amt || amt <= 0) return toast.error("Enter an amount");
+    if (amt > bal.available) return toast.error("Amount is more than your available commission");
     if (!methodOk) return toast.error("Save your payout details first");
     setBusy(true);
     const { error } = await supabase.from("payout_requests").insert({ amount_usd: amt, method: m.method, details: m });
     setBusy(false);
     if (error) return toast.error(error.message);
-    setAmount(""); toast.success("Payout requested. AgroVest will review it."); void load();
+    setAmount(""); toast.success("Withdrawal requested. AgroVest pays within 24 hours."); void load();
   }
 
   const input = "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm";
@@ -89,6 +102,26 @@ function Broker() {
               <button aria-label="Copy link" onClick={() => { void navigator.clipboard?.writeText(link); toast.success("Link copied"); }} className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center"><Copy size={14} /></button>
               <button aria-label="Share link" onClick={() => void share()} className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center"><Share2 size={14} /></button>
             </div>
+          )}
+        </section>
+
+        <section className="rounded-3xl border border-border bg-card p-4">
+          <p className="text-xs text-muted-foreground">Available commission</p>
+          <Money usd={bal.available} size="xl" emphasis="agro" layout="inline" decimals />
+          <div className="mt-3 grid grid-cols-3 gap-2 text-[11px]">
+            <div><p className="text-muted-foreground">Total earned</p><p className="font-semibold">${bal.earned.toLocaleString()}</p><p className="text-muted-foreground">{fmtNgn(bal.earned)}</p></div>
+            <div><p className="text-muted-foreground">Pending payout</p><p className="font-semibold">${bal.pending.toLocaleString()}</p><p className="text-muted-foreground">{fmtNgn(bal.pending)}</p></div>
+            <div><p className="text-muted-foreground">Paid out</p><p className="font-semibold">${bal.withdrawn.toLocaleString()}</p><p className="text-muted-foreground">{fmtNgn(bal.withdrawn)}</p></div>
+          </div>
+          {comms.length > 0 && (
+            <ul className="mt-3 space-y-1.5 border-t border-border pt-3">
+              {comms.slice(0, 8).map((c) => (
+                <li key={c.id} className="flex items-center justify-between gap-2 text-xs">
+                  <span className="truncate">{c.asset_name} · {c.pct}% · <LocalTime at={c.created_at} /></span>
+                  <span className="shrink-0 font-medium text-agro">+${Number(c.amount_usd).toLocaleString()} · {fmtNgn(Number(c.amount_usd))}</span>
+                </li>
+              ))}
+            </ul>
           )}
         </section>
 
@@ -151,13 +184,18 @@ function Broker() {
             <button onClick={() => void saveMethod()} className="w-full rounded-full bg-secondary py-2 text-sm font-medium">Save payout details</button>
             <div className="flex gap-2 pt-2 border-t border-border">
               <input className={input} placeholder="Amount (USD)" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
-              <button disabled={busy} onClick={() => void request()} className="shrink-0 rounded-full bg-agro px-4 text-sm font-medium text-white disabled:opacity-50">Request</button>
+              <button disabled={busy} onClick={() => void request()} className="shrink-0 rounded-full bg-agro px-4 text-sm font-medium text-white disabled:opacity-50">Withdraw</button>
             </div>
+            {Number(amount) > 0 && (() => { const w = withdrawalFee(bal.plots, Number(amount)); return (
+              <p className="text-[11px] text-muted-foreground">
+                ≈ {fmtNgn(Number(amount))} · {w.free ? "No fee, milestone reached." : `20% emergency fee $${w.fee.toLocaleString()} (${fmtNgn(w.fee)}).`} You receive <b className="text-foreground">${w.net.toLocaleString()} · {fmtNgn(w.net)}</b> within 24 hours.
+              </p>
+            ); })()}
             {payouts.length > 0 && (
               <ul className="space-y-1.5">
                 {payouts.map((p) => (
                   <li key={p.id} className="flex items-center justify-between text-xs">
-                    <span>${Number(p.amount_usd).toLocaleString()} · {p.method} · <LocalTime at={p.created_at} /></span>
+                    <span>{p.reference} · ${Number(p.amount_usd).toLocaleString()} ({fmtNgn(Number(p.amount_usd))}){Number(p.fee_usd) > 0 ? ` · fee $${Number(p.fee_usd).toLocaleString()}` : ""} · {p.method} · <LocalTime at={p.created_at} />{p.admin_note ? ` · ${p.admin_note}` : ""}</span>
                     <span className={`font-medium capitalize ${p.status === "paid" ? "text-agro" : p.status === "rejected" ? "text-destructive" : "text-warn"}`}>{p.status}</span>
                   </li>
                 ))}
