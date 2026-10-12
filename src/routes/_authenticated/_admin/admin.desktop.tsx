@@ -18,10 +18,12 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useFxRate, NGN_PER_USD } from "@/lib/fx";
+import { HouseManager } from "@/components/admin/HouseManager";
 const naira = (n: number) => `₦${Math.round(n || 0).toLocaleString()}`;
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/desktop")({
   head: () => ({ meta: [{ title: "Admin console · AgroVest" }, { name: "robots", content: "noindex" }] }),
+  validateSearch: (s: Record<string, unknown>): { section?: string } => (typeof s.section === "string" ? { section: s.section } : {}),
   component: DesktopAdmin,
 });
 
@@ -99,12 +101,13 @@ const NAV: { id: Section; label: string; icon: LucideIcon; group: string; page?:
   { id: "kyc", label: "KYC review", icon: FileCheck, group: "Queues", page: "/admin/kyc" },
   { id: "documents", label: "Documents", icon: FileText, group: "Queues", page: "/admin/documents" },
   { id: "payouts", label: "Broker payouts", icon: Gift, group: "Queues", page: "/admin/payouts" },
-  { id: "houses", label: "Houses (Buy Assets)", icon: Building2, group: "Catalog", page: "/admin/properties" },
+  { id: "houses", label: "Houses (Buy Assets)", icon: Building2, group: "Catalog" },
 ];
 
 function DesktopAdmin() {
   const isDesktop = useIsDesktop(1024);
-  const [section, setSection] = useState<Section>("overview");
+  const search = Route.useSearch();
+  const [section, setSection] = useState<Section>(() => (NAV.some((n) => n.id === search.section) ? (search.section as Section) : "overview"));
   const live = useLiveData();
   useFxRate();
   const d = live.data;
@@ -193,7 +196,7 @@ function DesktopAdmin() {
           {section === "kyc" && <KycView d={d} />}
           {section === "documents" && <DocsView d={d} />}
           {section === "payouts" && <PayoutsView d={d} />}
-          {section === "houses" && <HousesView d={d} />}
+          {section === "houses" && <HouseManager wide onChange={live.reload} />}
         </main>
       </div>
     </div>
@@ -416,22 +419,6 @@ function PayoutsView({ d }: { d: Data }) {
           p.reference, nameOf(d, p.user_id), p.method, usd(p.amount_usd), usd(p.fee_usd),
           <span>{usd(p.net_usd)}<br /><span className="text-[11px] text-muted-foreground">{naira(Number(p.net_usd) * Number(p.rate))}</span></span>,
           <Pill s={p.status} />, date(p.created_at),
-        ])}
-      />
-    </Panel>
-  );
-}
-
-function HousesView({ d }: { d: Data }) {
-  return (
-    <Panel title={`Houses (${d.houses.length})`}>
-      <Table
-        cols={["Title", "Location", "Market price", "Title doc", "Verified", "Status"]}
-        empty="No houses yet."
-        rows={d.houses.map((h) => [
-          h.title, h.location,
-          <span>{naira(Number(h.market_price_ngn))}<br /><span className="text-[11px] text-muted-foreground">{usd(Number(h.market_price_ngn) / NGN_PER_USD)}</span></span>,
-          h.title_doc, h.verified ? "Yes" : "No", <Pill s={h.status} />,
         ])}
       />
     </Panel>
