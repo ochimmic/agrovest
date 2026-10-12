@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Money } from "@/components/ui/money";
 import {
   CustodyBackedBadge, OnChainBadge, BscBadge, ProjectedBadge,
-  NotAdviceBadge, RiskBadge, ComingSoonBadge, EscrowReserveBadge,
+  NotAdviceBadge, RiskBadge, ComingSoonBadge, 
 } from "@/components/ui/agro-badge";
 
 
@@ -109,19 +109,20 @@ function Detail() {
               ))}
             </div>
             <p className="mt-2 text-[11px] text-muted-foreground">
-              6 plots = 1 acre · 15 plots = 1 hectare · 2.5 acres = 1 hectare
+              6 plots = 1 acre · 2.5 acres = 1 hectare (15 plots) · ₦950,000 + ₦200,000 management fee per plot ·{" "}
+              <Link to="/calculator" className="font-medium text-violet">Land calculator</Link>
             </p>
 
             <div className="mt-4 flex items-center justify-between rounded-2xl bg-secondary p-3">
               <span className="text-sm font-medium text-navy">Quantity</span>
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => setQty(Math.max(1, qty - 1))}
+                  onClick={() => setQty(Math.max(unit === "plot" ? 0.5 : 0.5, qty - 0.5))}
                   className="h-8 w-8 rounded-full bg-background text-foreground border border-border shadow-card"
                 >−</button>
                 <span className="w-8 text-center text-sm font-semibold tabular">{qty}</span>
                 <button
-                  onClick={() => setQty(qty + 1)}
+                  onClick={() => setQty(qty + 0.5)}
                   className="h-8 w-8 rounded-full bg-background text-foreground border border-border shadow-card"
                 >+</button>
               </div>
@@ -133,23 +134,20 @@ function Detail() {
           <section className="rounded-3xl border border-border bg-card p-4">
             <h2 className="flex items-center justify-between text-sm font-semibold text-navy">
               <span>Price breakdown</span>
-              <EscrowReserveBadge size="xs" />
+              
             </h2>
             <dl className="mt-3 space-y-2 text-sm">
-              <RowMoney k="Base amount" usd={p.base} />
-              <RowMoney k="Platform fee (3%)" usd={p.platformFee} />
-              <RowMoney k="Network fee" usd={p.networkFee} />
-              <RowMoney k="Escrow reserve (20%, held)" usd={p.escrowReserve} muted />
+              <RowMoney k={`Land · ${p.plots} plot${p.plots === 1 ? "" : "s"}`} usd={p.base} />
               {p.discount > 0 && (
-                <RowMoney k="Bundle discount" usd={-p.discount} accent />
+                <RowMoney k={`Size discount (${p.discountPct}%)`} usd={-p.discount} accent />
               )}
+              <RowMoney k="Management fee (non-refundable)" usd={p.managementFee} />
               <div className="border-t border-border my-2" />
               <RowMoney k="Final payable" usd={p.final} bold />
             </dl>
             <p className="mt-3 text-[10px] text-muted-foreground leading-relaxed">
-              The 20% escrow reserve is held by AgroVest and released to the asset operator on
-              verified milestones. It is not an additional charge — it is part of the funds set aside
-              for asset performance protection.
+              The ₦200,000 per plot management fee pays for caring for your land and crops. It is
+              non-refundable. Discounts: 2% from 1 acre, 3% from 12 acres, 4% from 24 hectares.
             </p>
           </section>
         )}
@@ -179,19 +177,15 @@ function Detail() {
             <TrendingUp size={14} className="text-agro" /> Yield schedule
           </h2>
           <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
-            Yield starts in Year 3 at 20% and steps up by 10% each year until Year 6.
-            From Year 6 onward, 50% per year continues indefinitely. Year 3 yield is
-            accrued but <span className="font-medium text-navy">locked</span> — withdrawals
-            begin <span className="font-medium text-navy">Year 4</span> (Y3 unlocks with the
-            Y4 distribution).
+            Maturity begins between the 3rd and 4th year. Annual ROI is 30% in Year 3,
+            40% in Year 4 and <span className="font-medium text-navy">50% every year from Year 5</span> onward.
           </p>
-          <div className="mt-3 grid grid-cols-5 gap-1.5 text-center">
+          <div className="mt-3 grid grid-cols-4 gap-1.5 text-center">
             {[
               { y: "Y1–2", pct: "0%", tone: "muted" },
-              { y: "Y3", pct: "20%", tone: "warn" },
-              { y: "Y4", pct: "30%", tone: "agro" },
-              { y: "Y5", pct: "40%", tone: "agro" },
-              { y: "Y6+", pct: "50%", tone: "agro" },
+              { y: "Y3", pct: "30%", tone: "agro" },
+              { y: "Y4", pct: "40%", tone: "agro" },
+              { y: "Y5+", pct: "50%", tone: "agro" },
             ].map((s) => {
               const toneCls =
                 s.tone === "agro"

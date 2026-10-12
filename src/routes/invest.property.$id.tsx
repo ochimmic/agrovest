@@ -7,9 +7,20 @@ import { Money } from "@/components/ui/money";
 import { properties, propertyFees } from "@/lib/mock-data";
 import { addHolding, addTx, getState } from "@/lib/store";
 import { toast } from "sonner";
-import { EscrowReserveBadge } from "@/components/ui/agro-badge";
 
-export const Route = createFileRoute("/invest/property/$id")({ component: PropertyDetail });
+
+export const Route = createFileRoute("/invest/property/$id")({
+  head: ({ params }) => {
+    const p = properties.find((x) => x.id === params.id);
+    const t = `${p?.title ?? "Property"} | AgroVest Buy Assets`;
+    return { meta: [
+      { title: t }, { name: "description", content: "AgroVest-priced house, 1% below market, with 3% escrow protection." },
+      { property: "og:title", content: t }, { property: "og:description", content: "Buy houses through AgroVest with escrow protection." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
+    ] };
+  },
+  component: PropertyDetail,
+});
 
 function PropertyDetail() {
   const { id } = Route.useParams();
@@ -19,7 +30,7 @@ function PropertyDetail() {
   const [paying, setPaying] = useState(false);
 
   const fees = propertyFees(p.price);
-  const { platformFee, escrowReserve, total } = fees;
+  const { agrovest, escrow, total } = fees;
 
 
   function start() {
@@ -50,7 +61,9 @@ function PropertyDetail() {
 
   return (
     <MobileFrame>
-      <div className="relative h-52 bg-gradient-to-br from-navy/80 to-violet/80">
+      <div className="relative h-56 bg-gradient-to-br from-navy/80 to-violet/80">
+        <img src={p.image} alt={p.title} width={1024} height={640} className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
         <button
           onClick={() => (step === "checkout" ? setStep("detail") : nav({ to: "/invest/property" }))}
           className="absolute left-3 top-[max(0.75rem,env(safe-area-inset-top))] h-10 w-10 rounded-full glass flex items-center justify-center text-navy"
@@ -67,12 +80,14 @@ function PropertyDetail() {
         {step === "detail" ? (
           <>
             <div>
-              <Money usd={p.price} size="xl" emphasis="violet" layout="inline" />
+              <p className="text-xs text-muted-foreground">Actual market price <span className="line-through">${p.price.toLocaleString()}</span></p>
+              <p className="mt-1 text-[11px] font-medium text-agro">AgroVest price (1% less)</p>
+              <Money usd={agrovest} size="xl" emphasis="violet" layout="inline" />
               <p className="text-xs text-muted-foreground mt-1">Listed by {p.vendor}</p>
             </div>
             <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
               <div className="flex items-center gap-2 text-navy">
-                <ShieldCheck size={14} className="text-agro" /> Vendor {p.verified ? "verified" : "pending verification"} — {p.vendor}
+                <ShieldCheck size={14} className={p.verified ? "text-agro" : "text-warn"} /> {p.verified ? "Verified — AgroVest has inspected this property" : "Not verified — AgroVest has not inspected this property yet"}
               </div>
               <div className="flex items-center gap-2 text-navy">
                 <FileText size={14} className="text-violet" /> Ownership documents on file
@@ -81,6 +96,10 @@ function PropertyDetail() {
                 <AlertTriangle size={14} className="text-warn" /> Dispute & refund policy applies
               </div>
             </div>
+            <section className="rounded-3xl border border-warn/30 bg-warn/10 p-4">
+              <h2 className="flex items-center gap-1.5 text-sm font-semibold text-navy"><AlertTriangle size={14} className="text-warn" /> Disclaimer</h2>
+              <p className="mt-1 text-xs text-foreground leading-relaxed">{p.disclaimer}</p>
+            </section>
             <section className="rounded-3xl border border-border bg-card p-4">
               <h2 className="text-sm font-semibold text-navy">What you'll receive</h2>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
@@ -105,17 +124,17 @@ function PropertyDetail() {
             <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-navy">Price breakdown</h3>
-                <EscrowReserveBadge size="xs" />
+                
               </div>
-              <RowM k="Asset price" usd={p.price} />
-              <RowM k="Platform fee (3%)" usd={platformFee} />
-              <RowM k="Escrow reserve (20%, held)" usd={escrowReserve} muted />
+              <RowM k="Actual market price" usd={p.price} muted />
+              <RowM k="AgroVest price (1% less)" usd={agrovest} />
+              <RowM k="Escrow (3%)" usd={escrow} />
               <div className="border-t border-border my-1" />
               <RowM k="Total payable" usd={total} bold />
               <p className="flex items-start gap-1.5 text-[10px] text-muted-foreground leading-relaxed">
                 <Info size={11} className="mt-0.5 shrink-0" />
-                The 20% escrow reserve is held by AgroVest from the vendor's payout and released only
-                after you confirm delivery. It protects your purchase — it's not an additional charge to you.
+                The 3% escrow charge covers AgroVest holding your funds safely until you confirm
+                handover of the property and its documents.
               </p>
             </div>
 
@@ -124,7 +143,7 @@ function PropertyDetail() {
               <div className="mt-3 space-y-2">
                 <PayOption label="$CLYST Wallet" sub="On Binance Smart Chain" active />
                 <PayOption label="Card / Bank transfer" sub="Connect to fiat ramp" />
-                <PayOption label="AssetPay installments" sub="Pay small-small over 3, 6 or 12 months" />
+                <PayOption label="Buy By Bit installments" sub="Pay small-small over 3, 6 or 12 months" />
               </div>
             </div>
 
@@ -139,11 +158,11 @@ function PropertyDetail() {
       <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom))] border-t border-border">
         {step === "detail" ? (
           <AgroButton size="xl" onClick={start}>
-            Buy now · ${p.price.toLocaleString()} · ≈ ₦{(p.price * 1550).toLocaleString()}
+            Buy now · ${total.toLocaleString()} · ≈ ₦{Math.round(total * 1550).toLocaleString()}
           </AgroButton>
         ) : (
           <AgroButton size="xl" onClick={pay} disabled={paying}>
-            {paying ? "Confirming…" : `Confirm & pay $${total.toLocaleString()} · ≈ ₦${(total * 1550).toLocaleString()}`}
+            {paying ? "Confirming…" : `Confirm & pay $${total.toLocaleString()} · ≈ ₦${Math.round(total * 1550).toLocaleString()}`}
           </AgroButton>
         )}
       </div>

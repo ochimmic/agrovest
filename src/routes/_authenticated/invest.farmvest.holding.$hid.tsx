@@ -45,18 +45,17 @@ function HoldingDetail() {
   }
 
   const asset = farmAssets.find((a) => a.id === holding.assetId) ?? farmAssets[0];
-  const platformFee = Math.round(holding.invested * 0.02);
+  const platformFee = 0;
   const netPrincipal = holding.invested - platformFee;
-  // Steady-state projected annual yield (Y6+ = 50% of principal)
+  // Steady-state projected annual yield (Y5+ = 50% of principal)
   const projectedYr = Math.round(holding.invested * 0.5);
   const txHash = `0x${holding.id.replace(/[^a-f0-9]/gi, "").padEnd(8, "a").slice(0, 8)}…${holding.id.slice(-4)}`;
 
   const schedule = [
-    { y: "Y1–2", pct: "0%", note: "Maturation", tone: "muted" as const },
-    { y: "Y3", pct: "20%", note: "Accrued · locked", tone: "warn" as const },
-    { y: "Y4", pct: "30%", note: "Withdrawable · Y3 unlocks", tone: "agro" as const },
-    { y: "Y5", pct: "40%", note: "Withdrawable", tone: "agro" as const },
-    { y: "Y6+", pct: "50% / yr", note: "Steady-state, perpetual", tone: "agro" as const },
+    { y: "Y1–2", pct: "0%", note: "Maturation", tone: "muted" as "muted" | "warn" | "agro" },
+    { y: "Y3", pct: "30%", note: "Maturity begins", tone: "agro" as const },
+    { y: "Y4", pct: "40%", note: "Annual ROI", tone: "agro" as const },
+    { y: "Y5+", pct: "50% / yr", note: "Every year after", tone: "agro" as const },
   ];
 
   const timeline = [
@@ -206,11 +205,11 @@ function HoldingDetail() {
           <h2 className="text-sm font-semibold text-navy">Investment breakdown</h2>
           <div className="mt-3 space-y-2 text-sm">
             <Row k="Principal" v={`$${netPrincipal.toLocaleString()}`} />
-            <Row k="Platform fee (2%)" v={`$${platformFee.toLocaleString()}`} />
+            
             <Row k="Total invested" v={`$${holding.invested.toLocaleString()}`} strong />
             <div className="my-2 h-px bg-border" />
             <Row k="Expected yield" v={asset.expectedYield} />
-            <Row k="Projected /yr (Y6+)" v={`$${projectedYr.toLocaleString()}`} accent />
+            <Row k="Projected /yr (Y5+)" v={`$${projectedYr.toLocaleString()}`} accent />
             <Row k="Appreciation" v={asset.appreciation} />
           </div>
         </section>
@@ -219,9 +218,7 @@ function HoldingDetail() {
         <section className="rounded-3xl border border-border bg-card p-4">
           <h2 className="text-sm font-semibold text-navy">Yield schedule</h2>
           <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
-            Year 3 yield is accrued but locked. Withdrawals begin Year 4 — the Year 3 amount
-            unlocks with the Year 4 distribution. From Year 6 onward, 50% per year continues
-            indefinitely.
+            Maturity begins between the 3rd and 4th year: 30% in Year 3, 40% in Year 4, then 50% every year from Year 5.
           </p>
           <ul className="mt-3 space-y-1.5">
             {schedule.map((s) => {

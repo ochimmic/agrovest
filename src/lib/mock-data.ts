@@ -25,8 +25,8 @@ export const farmAssets: FarmAsset[] = [
     category: "palm",
     location: "Abeokuta, Ogun State, Nigeria",
     unitsAvailable: 412,
-    pricePerPlot: 1000,
-    expectedYield: "20–50% / yr (Y3–Y6+)",
+    pricePerPlot: 741.94,
+    expectedYield: "30–50% / yr (from Y3)",
     appreciation: "+18% / 3yr",
     risk: "Conservative",
     status: "Active",
@@ -41,8 +41,8 @@ export const farmAssets: FarmAsset[] = [
     category: "cocoa",
     location: "Ondo, Nigeria",
     unitsAvailable: 287,
-    pricePerPlot: 1000,
-    expectedYield: "20–50% / yr (Y3–Y6+)",
+    pricePerPlot: 741.94,
+    expectedYield: "30–50% / yr (from Y3)",
     appreciation: "+22% / 3yr",
     risk: "Moderate",
     status: "Coming soon",
@@ -58,8 +58,8 @@ export const farmAssets: FarmAsset[] = [
     category: "latex",
     location: "Edo, Nigeria",
     unitsAvailable: 156,
-    pricePerPlot: 1000,
-    expectedYield: "20–50% / yr (Y3–Y6+)",
+    pricePerPlot: 741.94,
+    expectedYield: "30–50% / yr (from Y3)",
     appreciation: "+15% / 3yr",
     risk: "Low",
     status: "Coming soon",
@@ -71,10 +71,18 @@ export const farmAssets: FarmAsset[] = [
   },
 ];
 
+import houseLekki from "@/assets/house-lekki.jpg";
+import houseAbuja from "@/assets/house-abuja.jpg";
+import houseAbeokuta from "@/assets/house-abeokuta.jpg";
+
+// Buy Assets — houses for now. `price` is the actual market price (USD); AgroVest price is 1% less.
 export const properties = [
-  { id: "p1", title: "Lekki Residence — 3 Bed", price: 145000, location: "Lekki, Lagos", category: "Real Estate", vendor: "GoldHaven Realty", verified: true },
-  { id: "p2", title: "Toyota Camry 2022", price: 28500, location: "Abuja", category: "Automobile", vendor: "PrimeAuto", verified: true },
-  { id: "p3", title: "Premium Sofa Suite", price: 3400, location: "PH, Rivers", category: "Household", vendor: "Aurum Living", verified: false },
+  { id: "p1", title: "Lekki 3-Bed Detached House", price: 145000, location: "Lekki, Lagos", category: "House", vendor: "GoldHaven Realty", verified: true, image: houseLekki,
+    disclaimer: "Title: Governor's Consent. Inspected by AgroVest. Service charge billed separately by the estate." },
+  { id: "p2", title: "Abuja 4-Bed Duplex", price: 210000, location: "Lokogoma, Abuja", category: "House", vendor: "PrimeHomes Ltd", verified: true, image: houseAbuja,
+    disclaimer: "Title: C of O. Inspected by AgroVest. Final finishing (kitchen fittings) to be completed by vendor before handover." },
+  { id: "p3", title: "Abeokuta 3-Bed Bungalow", price: 52000, location: "Abeokuta, Ogun", category: "House", vendor: "Ogun Realty Hub", verified: false, image: houseAbeokuta,
+    disclaimer: "Not yet inspected by AgroVest. Documents are under review — buy only after the Verified badge appears or do your own checks." },
 ];
 
 export const consultants = [
@@ -89,28 +97,6 @@ export const documents = [
   { id: "d3", title: "Custody Receipt — Ondo Cocoa", status: "Pending" as const, date: "2025-09-02" },
 ];
 
-// Fee structure (locked):
-//   Platform fee   = 3% of base
-//   Escrow reserve = 20% of base (held in escrow, released on milestones)
-//   Network fee    = 0.5% on bundle units (acre / hectare) only
-// 1 plot = $1,000; 6 plots = 1 acre ($5,880 after discount); 15 plots = 1 hectare ($14,700).
-export const FEES = { platformPct: 0.03, escrowReservePct: 0.2, networkPct: 0.005 } as const;
-
-export function priceFor(unit: "plot" | "acre" | "hectare", qty: number) {
-  const base = unit === "plot" ? 1000 * qty : unit === "acre" ? 6000 * qty : 15000 * qty;
-  const platformFee = Math.round(base * FEES.platformPct);
-  const networkFee = unit === "plot" ? 0 : Math.round(base * FEES.networkPct);
-  const escrowReserve = Math.round(base * FEES.escrowReservePct);
-  const subtotal = base + platformFee + networkFee;
-  const discount =
-    unit === "acre" ? subtotal - 5880 * qty : unit === "hectare" ? subtotal - 14700 * qty : 0;
-  const final = subtotal - Math.max(discount, 0);
-  return { base, platformFee, networkFee, escrowReserve, subtotal, discount: Math.max(discount, 0), final };
-}
-
-export function propertyFees(price: number) {
-  const platformFee = Math.round(price * FEES.platformPct);
-  const escrowReserve = Math.round(price * FEES.escrowReservePct);
-  const total = price + platformFee;
-  return { price, platformFee, escrowReserve, total };
-}
+import { landPrice, propertyPrice, type LandUnit } from "@/lib/pricing";
+export function priceFor(unit: LandUnit, qty: number) { return landPrice(unit, qty); }
+export function propertyFees(price: number) { return propertyPrice(price); }

@@ -5,6 +5,7 @@ import { ArrowLeft, Check, Copy, ExternalLink, MessageSquare, Phone, Upload } fr
 import { ACCEPT, uploadPrivate } from "@/lib/uploads";
 import { toast } from "sonner";
 import { MobileFrame } from "@/components/shell/MobileFrame";
+import { OrderChat } from "@/components/payments/OrderChat";
 import { AgroBadge } from "@/components/ui/agro-badge";
 import { AgroButton } from "@/components/ui/agro-button";
 import { Money } from "@/components/ui/money";
@@ -82,7 +83,7 @@ function PayStatus() {
               </p>
               {order.purpose.planId && (
                 <p className="mt-0.5 text-[11px] text-white/70">
-                  AssetPay {order.purpose.installment === 0 ? "deposit" : `installment ${order.purpose.installment}`}
+                  Buy By Bit {order.purpose.installment === 0 ? "deposit" : `installment ${order.purpose.installment}`}
                 </p>
               )}
               <p className="mt-2 text-[11px] text-white/60">
@@ -180,13 +181,12 @@ function PayStatus() {
               </ol>
             </section>
 
-            <div className="grid grid-cols-2 gap-2">
+            <OrderChat orderId={order.id} />
+
+            <div className="grid grid-cols-1 gap-2">
               <a href={`tel:${SUPPORT_PHONE}`} className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card p-3 text-xs font-medium text-foreground">
                 <Phone size={14} /> Call admin
               </a>
-              <Link to="/support" className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-card p-3 text-xs font-medium text-foreground">
-                <MessageSquare size={14} /> Chat admin
-              </Link>
             </div>
           </>
         )}

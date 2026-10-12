@@ -1,4 +1,4 @@
-// AssetPay — installment ("pay small-small") plans for FarmVest and Buy Assets.
+// Buy By Bit (formerly AssetPay) — installment ("pay small-small") plans for FarmVest and Buy Assets.
 //
 // Rules:
 //  - Deposit chosen by the buyer, minimum 10%. Balance split monthly over 3, 6 or 12 months.
@@ -6,7 +6,7 @@
 //    confirmed manually by an admin like any other payment.
 //  - Holding + documents are issued only after the plan is fully paid.
 //  - Missed installment: 7-day grace (reminder) → 5% late fee → cancelled after
-//    30 days overdue, refund of amount paid minus a 10% cancellation fee.
+//    30 days overdue, 30% of the amount paid is forfeited.
 import { useSyncExternalStore } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,7 +17,7 @@ export const PLAN_MONTHS = [3, 6, 12] as const;
 export const GRACE_DAYS = 7;
 export const LATE_FEE_PCT = 5;
 export const CANCEL_AFTER_DAYS = 30;
-export const CANCEL_FEE_PCT = 10;
+export const CANCEL_FEE_PCT = 30; // forfeiture on cancellation or default
 
 const DAY = 86_400_000;
 

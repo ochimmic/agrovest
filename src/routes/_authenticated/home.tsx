@@ -196,7 +196,7 @@ function Home() {
                   <p className="text-[11px] text-muted-foreground">{a.location}</p>
                   <div className="mt-2 flex items-center justify-between text-[11px]">
                     <AgroBadge tone="agro" size="xs">{a.expectedYield}</AgroBadge>
-                    <span className="text-muted-foreground">${a.pricePerPlot}/plot</span>
+                    <span className="text-muted-foreground">₦1.15M/plot</span>
                   </div>
                 </div>
               </Link>

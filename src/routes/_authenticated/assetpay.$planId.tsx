@@ -13,9 +13,9 @@ import {
 export const Route = createFileRoute("/_authenticated/assetpay/$planId")({
   head: () => ({
     meta: [
-      { title: "AssetPay plan details | AgroVest" },
+      { title: "Buy By Bit plan details | AgroVest" },
       { name: "description", content: "Track your AgroVest installment plan, due dates and payments." },
-      { property: "og:title", content: "AssetPay plan details | AgroVest" },
+      { property: "og:title", content: "Buy By Bit plan details | AgroVest" },
       { property: "og:description", content: "See what's paid, what's next and pay your next installment." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -73,7 +73,7 @@ function PlanDetail() {
         )}
         {plan.status === "cancelled" && (
           <p className="rounded-2xl bg-destructive/10 border border-destructive/30 p-3 text-xs text-foreground">
-            Plan cancelled. {plan.cancelReason} Refund due: ${plan.refundUsd?.toLocaleString() ?? 0} (paid amount minus {CANCEL_FEE_PCT}% fee). AgroVest will contact you.
+            Plan cancelled. {plan.cancelReason} Refund due: ${plan.refundUsd?.toLocaleString() ?? 0} (amount paid minus {CANCEL_FEE_PCT}% forfeiture). AgroVest will contact you.
           </p>
         )}
         {(nextSt === "grace" || nextSt === "late") && plan.status === "active" && (
@@ -115,7 +115,7 @@ function PlanDetail() {
             type="button"
             className="w-full text-center text-xs text-destructive"
             onClick={() => {
-              if (!confirm(`Cancel this plan? You'll be refunded what you've paid minus a ${CANCEL_FEE_PCT}% fee.`)) return;
+              if (!confirm(`Cancel this plan? You'll be refunded what you've paid minus a ${CANCEL_FEE_PCT}% forfeiture.`)) return;
               cancelPlan(plan.id);
               toast.success("Plan cancelled");
             }}

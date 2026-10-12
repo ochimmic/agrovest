@@ -9,9 +9,9 @@ import { amountDue, installmentStatus, nextInstallment, paidUsd, useAssetPay } f
 export const Route = createFileRoute("/_authenticated/assetpay/")({
   head: () => ({
     meta: [
-      { title: "AssetPay installment plans | AgroVest" },
-      { name: "description", content: "Own farmland and assets small-small with AgroVest AssetPay installment plans." },
-      { property: "og:title", content: "AssetPay installment plans | AgroVest" },
+      { title: "Buy By Bit installment plans | AgroVest" },
+      { name: "description", content: "Own farmland and assets small-small with AgroVest Buy By Bit installment plans." },
+      { property: "og:title", content: "Buy By Bit installment plans | AgroVest" },
       { property: "og:description", content: "Pay from 10% down and spread the balance over 3, 6 or 12 months." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -28,7 +28,7 @@ function AssetPayHome() {
     <MobileFrame>
       <header className="flex items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
         <Link to="/profile" className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><ArrowLeft size={18} /></Link>
-        <h1 className="text-base font-semibold text-foreground">AssetPay</h1>
+        <h1 className="text-base font-semibold text-foreground">Buy By Bit</h1>
       </header>
       <main className="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
         <section className="rounded-3xl gradient-navy p-5 text-white shadow-pop">
@@ -46,7 +46,7 @@ function AssetPayHome() {
         <h2 className="text-sm font-semibold text-foreground">Your plans</h2>
         {plans.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-            No plans yet. Pick a farm, go to checkout and choose "Use AssetPay".
+            No plans yet. Pick a farm, go to checkout and choose "Use Buy By Bit".
           </p>
         ) : (
           plans.map((p) => {

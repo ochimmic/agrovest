@@ -18,6 +18,7 @@ import { Route as LegalRouteImport } from './routes/legal'
 import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as DesktopRouteImport } from './routes/desktop'
+import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
@@ -124,6 +125,11 @@ const ExploreRoute = ExploreRouteImport.update({
 const DesktopRoute = DesktopRouteImport.update({
   id: '/desktop',
   path: '/desktop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -471,6 +477,7 @@ const AuthenticatedInvestFarmvestHoldingHidRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calculator': typeof CalculatorRoute
   '/desktop': typeof DesktopRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
@@ -542,6 +549,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calculator': typeof CalculatorRoute
   '/desktop': typeof DesktopRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
@@ -612,6 +620,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/calculator': typeof CalculatorRoute
   '/desktop': typeof DesktopRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
@@ -686,6 +695,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/calculator'
     | '/desktop'
     | '/explore'
     | '/forgot'
@@ -757,6 +767,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/calculator'
     | '/desktop'
     | '/explore'
     | '/forgot'
@@ -826,6 +837,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/calculator'
     | '/desktop'
     | '/explore'
     | '/forgot'
@@ -900,6 +912,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  CalculatorRoute: typeof CalculatorRoute
   DesktopRoute: typeof DesktopRoute
   ExploreRoute: typeof ExploreRoute
   ForgotRoute: typeof ForgotRoute
@@ -980,6 +993,13 @@ declare module '@tanstack/react-router' {
       path: '/desktop'
       fullPath: '/desktop'
       preLoaderRoute: typeof DesktopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -1630,6 +1650,7 @@ const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  CalculatorRoute: CalculatorRoute,
   DesktopRoute: DesktopRoute,
   ExploreRoute: ExploreRoute,
   ForgotRoute: ForgotRoute,

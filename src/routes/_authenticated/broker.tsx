@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { Share2, Copy, Users, BadgeCheck, Landmark, Wallet } from "lucide-react";
 import { toast } from "sonner";
@@ -104,7 +104,7 @@ function Broker() {
             <p className="text-lg font-semibold text-navy">{refs.filter((r) => r.purchases > 0).length}</p>
           </div>
         </div>
-        <p className="rounded-2xl bg-secondary p-3 text-[11px] text-muted-foreground">Commission rates and rewards will be announced soon. Every referral is already being tracked to your account.</p>
+        <Link to="/broker/rewards" className="block rounded-2xl bg-secondary p-3 text-[11px] text-muted-foreground"><span className="font-medium text-foreground">5% commission on FarmVest, 2% on Buy Assets.</span> Climb Bronze → Silver → Gold → Diamond → Platinum for land, cars and partnership. Withdrawals before your milestone carry a 20% emergency fee. See tiers →</Link>
 
         <section>
           <h2 className="text-sm font-semibold text-navy mb-2">People you referred</h2>
