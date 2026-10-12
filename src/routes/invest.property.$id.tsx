@@ -96,6 +96,18 @@ function PropertyDetail() {
                 <AlertTriangle size={14} className="text-warn" /> Dispute & refund policy applies
               </div>
             </div>
+            <section className="rounded-3xl border border-border bg-card p-4">
+              <h2 className="text-sm font-semibold text-navy">AgroVest inspection report</h2>
+              <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
+                <div><p className="text-muted-foreground">Title document</p><p className="font-medium text-navy">{p.title_doc}</p></div>
+                <div><p className="text-muted-foreground">Inspection date</p><p className="font-medium text-navy">{p.inspection.date}</p></div>
+              </div>
+              <ul className="mt-3 space-y-1.5 text-xs">
+                {([["Survey plan checked", p.inspection.survey], ["Structural inspection", p.inspection.structural], ["Title search at land registry", p.inspection.titleSearch]] as const).map(([l, ok]) => (
+                  <li key={l} className="flex items-center justify-between"><span className="text-foreground">{l}</span><span className={ok ? "text-agro font-medium" : "text-warn font-medium"}>{ok ? "Passed" : "Pending"}</span></li>
+                ))}
+              </ul>
+            </section>
             <section className="rounded-3xl border border-warn/30 bg-warn/10 p-4">
               <h2 className="flex items-center gap-1.5 text-sm font-semibold text-navy"><AlertTriangle size={14} className="text-warn" /> Disclaimer</h2>
               <p className="mt-1 text-xs text-foreground leading-relaxed">{p.disclaimer}</p>
