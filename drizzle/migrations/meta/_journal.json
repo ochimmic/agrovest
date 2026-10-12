@@ -22,6 +22,13 @@
       "when": 1791823143315,
       "tag": "0002_properties_public_read_fix",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791826269446,
+      "tag": "0003_payout_rate",
+      "breakpoints": true
     }
   ]
 }
