@@ -59,6 +59,45 @@ export type Database = {
         }
         Relationships: []
       }
+      broker_commissions: {
+        Row: {
+          amount_usd: number
+          asset_name: string
+          base_usd: number
+          broker_id: string
+          created_at: string
+          id: string
+          investor_id: string
+          kind: string
+          order_id: string
+          pct: number
+        }
+        Insert: {
+          amount_usd: number
+          asset_name?: string
+          base_usd: number
+          broker_id: string
+          created_at?: string
+          id?: string
+          investor_id: string
+          kind: string
+          order_id: string
+          pct: number
+        }
+        Update: {
+          amount_usd?: number
+          asset_name?: string
+          base_usd?: number
+          broker_id?: string
+          created_at?: string
+          id?: string
+          investor_id?: string
+          kind?: string
+          order_id?: string
+          pct?: number
+        }
+        Relationships: []
+      }
       holdings: {
         Row: {
           asset_id: string
@@ -312,8 +351,11 @@ export type Database = {
           amount_usd: number
           created_at: string
           details: Json
+          fee_usd: number
           id: string
           method: string
+          net_usd: number | null
+          reference: string
           reviewed_by: string | null
           status: string
           updated_at: string
@@ -324,8 +366,11 @@ export type Database = {
           amount_usd: number
           created_at?: string
           details: Json
+          fee_usd?: number
           id?: string
           method: string
+          net_usd?: number | null
+          reference?: string
           reviewed_by?: string | null
           status?: string
           updated_at?: string
@@ -336,8 +381,11 @@ export type Database = {
           amount_usd?: number
           created_at?: string
           details?: Json
+          fee_usd?: number
           id?: string
           method?: string
+          net_usd?: number | null
+          reference?: string
           reviewed_by?: string | null
           status?: string
           updated_at?: string
@@ -426,6 +474,66 @@ export type Database = {
         }
         Relationships: []
       }
+      properties: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          disclaimer: string
+          id: string
+          image_path: string | null
+          inspection_date: string
+          location: string
+          market_price_ngn: number
+          status: string
+          structural_ok: boolean
+          survey_ok: boolean
+          title: string
+          title_doc: string
+          title_search_ok: boolean
+          updated_at: string
+          verified: boolean
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string
+          disclaimer?: string
+          id?: string
+          image_path?: string | null
+          inspection_date?: string
+          location?: string
+          market_price_ngn: number
+          status?: string
+          structural_ok?: boolean
+          survey_ok?: boolean
+          title: string
+          title_doc?: string
+          title_search_ok?: boolean
+          updated_at?: string
+          verified?: boolean
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          disclaimer?: string
+          id?: string
+          image_path?: string | null
+          inspection_date?: string
+          location?: string
+          market_price_ngn?: number
+          status?: string
+          structural_ok?: boolean
+          survey_ok?: boolean
+          title?: string
+          title_doc?: string
+          title_search_ok?: boolean
+          updated_at?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -473,6 +581,16 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      my_commission_balance: {
+        Args: never
+        Returns: {
+          available: number
+          earned: number
+          pending: number
+          plots: number
+          withdrawn: number
+        }[]
       }
       my_referrals: {
         Args: never
