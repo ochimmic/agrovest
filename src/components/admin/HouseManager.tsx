@@ -64,7 +64,7 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
   const input = "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm";
   const ngnVal = form ? Number(form.market_price_ngn.replace(/,/g, "")) || 0 : 0;
   const preview = housePrice({ market_price_ngn: ngnVal });
-
+  return (
     <div>
       <button onClick={() => { setFile(null); setForm({ ...blank }); }} className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-agro px-4 py-2 text-sm font-medium text-white"><Plus size={15} />Add house</button>
 
