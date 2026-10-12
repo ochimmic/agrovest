@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ShieldCheck, Plus, Search } from "lucide-react";
+import { ShieldCheck, Search } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { properties, propertyFees } from "@/lib/mock-data";
-import { VendorVerifiedBadge, AgroBadge } from "@/components/ui/agro-badge";
+import { AgroBadge } from "@/components/ui/agro-badge";
 import { Money } from "@/components/ui/money";
 
 
@@ -63,7 +63,7 @@ function Properties() {
               <div className="h-40 bg-gradient-to-br from-navy/80 to-violet/80 relative">
                 <img src={p.image} alt={p.title} loading="lazy" width={1024} height={640} className="absolute inset-0 h-full w-full object-cover" />
                 <span className="absolute top-2 left-2">
-                  {p.verified ? <VendorVerifiedBadge size="xs" /> : <AgroBadge tone="warn" size="xs">Not verified</AgroBadge>}
+                  {p.verified ? <AgroBadge tone="agro" size="xs">Verified by AgroVest</AgroBadge> : <AgroBadge tone="warn" size="xs">Not verified</AgroBadge>}
                 </span>
                 <span className="absolute top-2 right-2"><AgroBadge tone="neutral" size="xs">{p.category}</AgroBadge></span>
               </div>
@@ -85,10 +85,6 @@ function Properties() {
           )}
         </div>
 
-        <div className="rounded-3xl border border-dashed border-border bg-card p-4 text-center text-xs text-muted-foreground">
-          <Plus size={14} className="inline mr-1" />
-          Vendor? <Link to="/vendor/apply" className="text-violet font-medium">Apply to list</Link>
-        </div>
       </div>
     </AppShell>
   );

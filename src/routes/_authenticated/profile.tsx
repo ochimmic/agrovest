@@ -61,7 +61,6 @@ function Profile() {
         </Section>
 
         {role === "broker" && <RoleQuick to="/broker" label="Broker dashboard" />}
-        {role === "vendor" && <RoleQuick to="/vendor" label="Vendor dashboard" />}
         {admin && <RoleQuick to="/admin" label="Admin dashboard" />}
 
         <button

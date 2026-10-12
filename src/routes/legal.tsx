@@ -10,7 +10,7 @@ function Legal() {
         <h1 className="font-semibold text-navy">Legal</h1>
       </header>
       <div className="p-4 space-y-2">
-        {["Terms of Service","Privacy Policy","Risk Notice","Custody & Contract Terms","Vendor Policy","Broker Agreement"].map((t) => (
+        {["Terms of Service","Privacy Policy","Risk Notice","Custody & Contract Terms","Broker Agreement"].map((t) => (
           <div key={t} className="rounded-2xl bg-card border border-border p-4 text-sm text-navy flex justify-between">
             {t}<span className="text-muted-foreground">›</span>
           </div>

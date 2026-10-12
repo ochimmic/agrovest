@@ -60,7 +60,6 @@ export function isAdmin(s: AuthSnapshot = snap) {
 /** Primary non-admin role used by the app shell. */
 export function primaryRole(s: AuthSnapshot = snap): Role {
   if (s.roles.includes("broker")) return "broker";
-  if (s.roles.includes("vendor")) return "vendor";
   return "investor";
 }
 
