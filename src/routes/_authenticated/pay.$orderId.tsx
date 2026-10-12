@@ -55,7 +55,7 @@ function PayStatus() {
   return (
     <MobileFrame>
       <header className="flex items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
-        <Link to={order?.purpose.planId ? "/assetpay" : "/home"} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+        <Link to={order?.purpose.planId ? "/buybybit" : "/home"} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
           <ArrowLeft size={18} />
         </Link>
         <h1 className="text-base font-semibold text-foreground">Payment status</h1>
