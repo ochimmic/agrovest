@@ -142,7 +142,7 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
                 onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
                 onDragLeave={() => setDrag(false)}
                 onDrop={(e) => { e.preventDefault(); setDrag(false); pick(e.dataTransfer.files?.[0] ?? null); }}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed p-3 transition-colors has-[:focus-visible]:border-agro ${drag ? "border-agro bg-agro/10" : "border-border bg-secondary hover:border-agro/60"}`}
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed p-3 transition-colors has-[:focus-visible]:border-agro ${drag ? "border-agro bg-agro/10" : "border-agro/45 bg-secondary hover:border-agro"}`}
               >
                 <input type="file" accept="image/*" className="sr-only" onChange={(e) => pick(e.target.files?.[0] ?? null)} />
                 {objUrl || existing ? (
