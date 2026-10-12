@@ -7,7 +7,7 @@ import { AgroBadge } from "@/components/ui/agro-badge";
 import { LocalTime } from "@/components/ui/local-time";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { fmtNgn } from "@/lib/fx";
+const ngn = (usd: number, rate: number) => `₦${Math.round(usd * rate).toLocaleString()}`;
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/payouts")({
   head: () => ({
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/_admin/admin/payouts")({
   component: AdminPayouts,
 });
 
-type P = { id: string; reference: string; fee_usd: number; net_usd: number | null; user_id: string; amount_usd: number; method: string; details: Record<string, string>; status: string; admin_note: string | null; created_at: string };
+type P = { id: string; reference: string; fee_usd: number; net_usd: number | null; user_id: string; amount_usd: number; rate: number; method: string; details: Record<string, string>; status: string; admin_note: string | null; created_at: string };
 
 function AdminPayouts() {
   const { user } = useAuth();
@@ -65,8 +65,8 @@ function AdminPayouts() {
                 <AgroBadge size="xs" tone={p.status === "paid" ? "agro" : p.status === "rejected" ? "danger" : "warn"}>{p.status}</AgroBadge>
                 <span className="ml-auto text-[11px] text-muted-foreground"><LocalTime at={p.created_at} /></span>
               </div>
-              <p className="mt-1 text-lg font-semibold">${Number(p.amount_usd).toLocaleString()} <span className="text-xs font-normal text-muted-foreground">≈ {fmtNgn(Number(p.amount_usd))}</span></p>
-              <p className="text-xs">Send to broker: <b>${Number(p.net_usd ?? p.amount_usd).toLocaleString()} · {fmtNgn(Number(p.net_usd ?? p.amount_usd))}</b>{Number(p.fee_usd) > 0 ? ` (20% emergency fee $${Number(p.fee_usd).toLocaleString()} kept)` : " (no fee)"}</p>
+              <p className="mt-1 text-lg font-semibold">${Number(p.amount_usd).toLocaleString()} <span className="text-xs font-normal text-muted-foreground">≈ {ngn(Number(p.amount_usd), Number(p.rate))} · rate ₦{Number(p.rate).toLocaleString()}/$ locked at request</span></p>
+              <p className="text-xs">Send to broker: <b>${Number(p.net_usd ?? p.amount_usd).toLocaleString()} · {ngn(Number(p.net_usd ?? p.amount_usd), Number(p.rate))}</b>{Number(p.fee_usd) > 0 ? ` (20% emergency fee $${Number(p.fee_usd).toLocaleString()} kept)` : " (no fee)"}</p>
               <p className="text-xs text-muted-foreground">
                 {p.method === "bank" ? `${p.details.bank} · ${p.details.account_number} · ${p.details.account_name}` : `${p.details.token ?? "USDT"} → ${p.details.address}`}
               </p>
