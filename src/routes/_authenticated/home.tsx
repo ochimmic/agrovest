@@ -29,8 +29,9 @@ function Home() {
   const kyc = useAppState((s) => s.kyc);
   const holdings = useAppState((s) => s.holdings);
   const txs = useAppState((s) => s.txs);
-  const openOrders = usePayments((s) => s.orders.filter((o) => o.status !== "confirmed" && o.status !== "rejected").length);
-  const pendingOrders = usePayments((s) => s.orders.filter((o) => o.status !== "confirmed" && o.status !== "rejected" && o.status !== "awaiting_payment"));
+  const orders = usePayments((s) => s.orders);
+  const openOrders = orders.filter((o) => o.status !== "confirmed" && o.status !== "rejected").length;
+  const pendingOrders = orders.filter((o) => o.status !== "confirmed" && o.status !== "rejected" && o.status !== "awaiting_payment");
   const [commission, setCommission] = useState(0);
   useLivePrices();
   const vaultAddress = useVault((s) => s.address);
