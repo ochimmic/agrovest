@@ -12,6 +12,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { LAND_NGN_PER_PLOT, MGMT_NGN_PER_PLOT } from "@/lib/pricing";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
+import { useVault, tokenList } from "@/lib/wallet/store";
+import { shortAddr } from "@/lib/wallet/chain";
+import { useLivePrices } from "@/lib/clyst-price";
 import { farmAssets } from "@/lib/mock-data";
 import {
   BscBadge, NonCustodialBadge, CustodyBackedBadge, RiskBadge, AgroBadge,
@@ -25,10 +28,16 @@ function Home() {
   const role = useAppState((s) => s.role);
   const kyc = useAppState((s) => s.kyc);
   const holdings = useAppState((s) => s.holdings);
-  const wallet = useAppState((s) => s.wallet);
   const txs = useAppState((s) => s.txs);
   const openOrders = usePayments((s) => s.orders.filter((o) => o.status !== "confirmed" && o.status !== "rejected").length);
+  const pendingOrders = usePayments((s) => s.orders.filter((o) => o.status !== "confirmed" && o.status !== "rejected" && o.status !== "awaiting_payment"));
   const [commission, setCommission] = useState(0);
+  useLivePrices();
+  const vaultAddress = useVault((s) => s.address);
+  const vaultNetwork = useVault((s) => s.network);
+  const vaultCustom = useVault((s) => s.customTokens);
+  const vaultBalances = useVault((s) => s.balances);
+  const vaultLoading = useVault((s) => s.loading);
 
   useEffect(() => {
     if (role !== "broker") return;
@@ -38,7 +47,17 @@ function Home() {
     });
   }, [role]);
 
-  const portfolioValue = role === "broker" ? commission : holdings.reduce((sum, h) => sum + h.invested, 0);
+  const rwaValue = holdings.reduce((sum, h) => sum + h.invested, 0);
+  const houseCount = holdings.filter((h) => (h as { category?: string }).category === "property").length;
+  const farmCount = holdings.length - houseCount;
+  const pendingCount = pendingOrders.length;
+  const pendingUsd = pendingOrders.reduce((s, o) => s + o.amountUsd, 0);
+  const cryptoRows = tokenList({ network: vaultNetwork, customTokens: vaultCustom } as Parameters<typeof tokenList>[0])
+    .map((t) => ({ symbol: t.symbol, amount: vaultBalances[t.symbol]?.formatted ?? 0, usd: t.usd }))
+    .filter((t) => t.amount > 0);
+  const cryptoValue = cryptoRows.reduce((s, t) => s + t.amount * t.usd, 0);
+  const usd = (v: number) => `$${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const ngn = (v: number) => `₦${Math.round(v * NGN_PER_USD).toLocaleString()}`;
   const first = user?.name?.split(" ")[0] ?? "Investor";
 
   return (
@@ -50,44 +69,81 @@ function Home() {
           <h1 className="text-2xl font-semibold text-navy">Hi, {first}</h1>
         </section>
 
-        {/* Portfolio / role hero */}
+        {/* Portfolio hero — RWA and AssetVault kept separate */}
         <section className="relative overflow-hidden rounded-3xl gradient-navy p-5 text-white shadow-pop">
           <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-violet/40 blur-3xl" />
           <div className="absolute -bottom-14 -left-10 h-40 w-40 rounded-full bg-agro/25 blur-3xl" />
-          <div className="relative">
+          <div className="relative space-y-3">
             <div className="flex items-center justify-between">
-              <p className="text-xs uppercase tracking-widest text-white/60">
-                {role === "investor" ? "Portfolio value" : role === "broker" ? "Commission to date" : "Explore AgroVest"}
-              </p>
+              <p className="text-xs uppercase tracking-widest text-white/60">My portfolio</p>
               <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium">
                 <ShieldCheck size={12} /> KYC {kyc}
               </span>
             </div>
-            <p className="mt-2 text-[34px] font-semibold tracking-tight tabular">
-              ${portfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-            </p>
-            <p className="text-[11px] text-white/70 tabular">≈ ₦{Math.round(portfolioValue * NGN_PER_USD).toLocaleString()}</p>
 
-            <div className="mt-1 flex items-center gap-2 text-xs">
-              <span className="rounded-full bg-agro/15 px-2 py-0.5 text-agro font-medium">+0.0%</span>
-              <span className="text-white/60">Wallet: {wallet ? `${wallet.clyst} $CLYST` : "Not set up"}</span>
+            {role === "broker" && (
+              <div className="rounded-2xl bg-white/10 p-3">
+                <p className="text-[10px] uppercase tracking-widest text-white/60">Commission to date</p>
+                <p className="mt-1 text-2xl font-semibold tabular">{usd(commission)}</p>
+                <p className="text-[11px] text-white/70 tabular">≈ {ngn(commission)}</p>
+              </div>
+            )}
+
+            {/* RWA */}
+            <div className="rounded-2xl bg-white/10 p-3">
+              <div className="flex items-center justify-between">
+                <p className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/70">
+                  <Building2 size={12} /> RWA investments
+                </p>
+                <CustodyBackedBadge size="xs" />
+              </div>
+              <p className="mt-1 text-[28px] font-semibold tracking-tight tabular leading-tight">{usd(rwaValue)}</p>
+              <p className="text-[11px] text-white/70 tabular">≈ {ngn(rwaValue)}</p>
+              <p className="mt-1 text-[11px] text-white/60">
+                {farmCount} farm · {houseCount} house holding{holdings.length === 1 ? "" : "s"}
+              </p>
+              {pendingCount > 0 && (
+                <Link to="/orders" className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2 py-0.5 text-[10px] font-medium text-amber-200">
+                  <CalendarClock size={11} /> {pendingCount} pending admin confirmation · {usd(pendingUsd)}
+                </Link>
+              )}
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-1.5">
-              <BscBadge size="xs" />
-              <NonCustodialBadge size="xs" />
-              <CustodyBackedBadge size="xs" />
+
+            {/* AssetVault */}
+            <div className="rounded-2xl bg-white/10 p-3">
+              <div className="flex items-center justify-between">
+                <p className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/70">
+                  <Wallet size={12} /> AssetVault crypto
+                </p>
+                <div className="flex gap-1"><BscBadge size="xs" /><NonCustodialBadge size="xs" /></div>
+              </div>
+              {vaultAddress ? (
+                <>
+                  <p className="mt-1 text-[28px] font-semibold tracking-tight tabular leading-tight">
+                    {vaultLoading && cryptoValue === 0 ? "…" : usd(cryptoValue)}
+                  </p>
+                  <p className="text-[11px] text-white/70 tabular">≈ {ngn(cryptoValue)} · {shortAddr(vaultAddress)}</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {cryptoRows.map((t) => (
+                      <span key={t.symbol} className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] tabular">
+                        {t.amount.toLocaleString(undefined, { maximumFractionDigits: t.amount < 1 ? 6 : 2 })} {t.symbol}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <p className="mt-1 text-sm text-white/70">
+                  Not set up on this device.{" "}
+                  <Link to="/wallet/intro" className="font-medium text-agro underline">Set up wallet</Link>
+                </p>
+              )}
             </div>
-            <div className="mt-5 grid grid-cols-2 gap-2">
-              <Link
-                to="/invest/farmvest"
-                className="rounded-2xl bg-white/15 px-4 py-3 text-sm font-medium hover:bg-white/20 transition"
-              >
+
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <Link to="/invest/farmvest" className="rounded-2xl bg-white/15 px-4 py-3 text-sm font-medium hover:bg-white/20 transition">
                 Invest now <ArrowRight className="inline" size={14} />
               </Link>
-              <Link
-                to="/vault"
-                className="rounded-2xl bg-agro text-white px-4 py-3 text-sm font-medium hover:brightness-110 transition"
-              >
+              <Link to="/vault" className="rounded-2xl bg-agro text-white px-4 py-3 text-sm font-medium hover:brightness-110 transition">
                 Open Vault
               </Link>
             </div>
