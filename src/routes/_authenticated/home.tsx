@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { NGN_PER_USD, useFxRate, fmtUsd } from "@/lib/fx";
 import { usePayments } from "@/lib/payments";
 import { supabase } from "@/integrations/supabase/client";
-import { PLOT_LAND_NGN, PLOT_MGMT_FEE_NGN } from "@/lib/pricing";
+import { LAND_NGN_PER_PLOT, MGMT_NGN_PER_PLOT } from "@/lib/pricing";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
 import { farmAssets } from "@/lib/mock-data";
@@ -64,9 +64,9 @@ function Home() {
               </span>
             </div>
             <p className="mt-2 text-[34px] font-semibold tracking-tight tabular">
-              ${portfolioValue.toLocaleString()}<span className="text-white/40 text-lg">.00</span>
+              ${portfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
-            <p className="text-[11px] text-white/70 tabular">≈ ₦{(portfolioValue * NGN_PER_USD).toLocaleString()}</p>
+            <p className="text-[11px] text-white/70 tabular">≈ ₦{Math.round(portfolioValue * NGN_PER_USD).toLocaleString()}</p>
 
             <div className="mt-1 flex items-center gap-2 text-xs">
               <span className="rounded-full bg-agro/15 px-2 py-0.5 text-agro font-medium">+0.0%</span>
@@ -121,6 +121,8 @@ function Home() {
             <Tile icon={LineChart} label="Buy Assets" sub="Sold by AgroVest" to="/invest/property" tone="violet" />
             <Tile icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" to="/vault" tone="navy" />
             <Tile icon={FileText} label="Documents" sub="Receipts & contracts" to="/documents" tone="soft" />
+            <Tile icon={CalendarClock} label="BuyByBit" sub="Pay small-small · 3/6/12 mo" to="/buybybit" tone="agro" />
+            <Tile icon={MessageCircle} label="My orders" sub={openOrders ? `${openOrders} open · chat & receipts` : "Chat & receipts"} to="/orders" tone="violet" />
           </div>
           <Link to="/calculator" className="mt-3 flex items-center gap-3 rounded-3xl border border-border bg-card p-4 shadow-card">
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-agro-soft text-agro"><Calculator size={18} /></span>
@@ -139,7 +141,7 @@ function Home() {
               <Activity size={14} className="text-violet" />
               <h2 className="text-sm font-semibold text-navy">Recent activity</h2>
             </div>
-            <Link to="/vault" className="text-xs text-violet">See all</Link>
+            <Link to="/orders" className="text-xs text-violet">See all</Link>
           </div>
           {txs.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-border bg-card p-5 text-center">
@@ -221,7 +223,7 @@ function Home() {
                   <p className="text-[11px] text-muted-foreground">{a.location}</p>
                   <div className="mt-2 flex items-center justify-between text-[11px]">
                     <AgroBadge tone="agro" size="xs">{a.expectedYield}</AgroBadge>
-                    <span className="text-muted-foreground">₦1.15M/plot</span>
+                    <span className="text-muted-foreground">₦{((LAND_NGN_PER_PLOT + MGMT_NGN_PER_PLOT) / 1e6).toFixed(2)}M · {fmtUsd((LAND_NGN_PER_PLOT + MGMT_NGN_PER_PLOT) / NGN_PER_USD)}/plot</span>
                   </div>
                 </div>
               </Link>
