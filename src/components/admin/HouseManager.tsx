@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Home as HomeIcon, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Pencil, Trash2, Home as HomeIcon, X, ImagePlus } from "lucide-react";
 import { toast } from "sonner";
 import { AgroBadge } from "@/components/ui/agro-badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,9 +19,31 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
   const [form, setForm] = useState<Form | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
+  const [drag, setDrag] = useState(false);
+  const [existing, setExisting] = useState<string | null>(null);
+  const [objUrl, setObjUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!file) { setObjUrl(null); return; }
+    const url = URL.createObjectURL(file);
+    setObjUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  function pick(f: File | null) {
+    if (!f) { setFile(null); return; }
+    if (!f.type.startsWith("image/")) return toast.error("Choose an image file (JPG or PNG)");
+    if (f.size > 5 * 1024 * 1024) return toast.error("Photo must be 5 MB or smaller");
+    setFile(f);
+  }
+
+  function openNew() {
+    setFile(null); setExisting(null); setForm({ ...blank });
+  }
 
   function edit(h: House) {
     setFile(null);
+    setExisting(h.image);
     setForm({ ...h, market_price_ngn: String(h.market_price_ngn) });
   }
 
@@ -66,7 +88,7 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
   const preview = housePrice({ market_price_ngn: ngnVal });
   return (
     <div>
-      <button onClick={() => { setFile(null); setForm({ ...blank }); }} className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-agro px-4 py-2 text-sm font-medium text-[oklch(0.18_0.01_250)]"><Plus size={15} />Add house</button>
+      <button onClick={openNew} className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-agro px-4 py-2 text-sm font-medium text-[oklch(0.18_0.01_250)]"><Plus size={15} />Add house</button>
 
       {houses === null ? <Skeleton className="h-40 w-full rounded-2xl" /> : houses.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">No houses yet.</p>
@@ -114,9 +136,31 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
                 </div>
               )}
             </div>
-            <label className="block text-xs text-muted-foreground">Photo
-              <input type="file" accept="image/*" className="mt-1 block w-full text-xs" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
-            </label>
+            <div>
+              <p className="mb-1.5 text-xs font-medium text-foreground">House photo</p>
+              <label
+                onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+                onDragLeave={() => setDrag(false)}
+                onDrop={(e) => { e.preventDefault(); setDrag(false); pick(e.dataTransfer.files?.[0] ?? null); }}
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 border-dashed p-3 transition-colors has-[:focus-visible]:border-agro ${drag ? "border-agro bg-agro/10" : "border-agro/45 bg-secondary hover:border-agro"}`}
+              >
+                <input type="file" accept="image/*" className="sr-only" onChange={(e) => pick(e.target.files?.[0] ?? null)} />
+                {objUrl || existing ? (
+                  <img src={objUrl ?? existing!} alt="" className="h-16 w-24 shrink-0 rounded-lg object-cover" />
+                ) : (
+                  <span className="flex h-16 w-24 shrink-0 items-center justify-center rounded-lg bg-background"><ImagePlus size={22} className="text-muted-foreground" /></span>
+                )}
+                <span className="min-w-0">
+                  <span className="block text-sm font-medium text-foreground">{objUrl ? "Photo selected" : existing ? "Current photo" : "Click to upload a photo"}</span>
+                  <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground">
+                    {file ? `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB` : "or drag an image here — JPG or PNG, up to 5 MB"}
+                  </span>
+                </span>
+              </label>
+              {(file || form.image_path) && (
+                <button type="button" onClick={() => { setFile(null); setExisting(null); setForm({ ...form, image_path: null }); }} className="mt-1 text-[11px] text-destructive underline">Remove photo</button>
+              )}
+            </div>
             <div className="grid grid-cols-2 gap-2">
               <select className={input} value={form.title_doc} onChange={(e) => setForm({ ...form, title_doc: e.target.value })}>
                 {["C of O", "Governor's Consent", "Registered Deed", "Gazette", "Excision", "Under review"].map((t) => <option key={t}>{t}</option>)}
