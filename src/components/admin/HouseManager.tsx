@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Home as HomeIcon, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Pencil, Trash2, Home as HomeIcon, X, ImagePlus } from "lucide-react";
 import { toast } from "sonner";
 import { AgroBadge } from "@/components/ui/agro-badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,9 +19,31 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
   const [form, setForm] = useState<Form | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
+  const [drag, setDrag] = useState(false);
+  const [existing, setExisting] = useState<string | null>(null);
+  const [objUrl, setObjUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!file) { setObjUrl(null); return; }
+    const url = URL.createObjectURL(file);
+    setObjUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  function pick(f: File | null) {
+    if (!f) { setFile(null); return; }
+    if (!f.type.startsWith("image/")) return toast.error("Choose an image file (JPG or PNG)");
+    if (f.size > 5 * 1024 * 1024) return toast.error("Photo must be 5 MB or smaller");
+    setFile(f);
+  }
+
+  function openNew() {
+    setFile(null); setExisting(null); setForm({ ...blank });
+  }
 
   function edit(h: House) {
     setFile(null);
+    setExisting(h.image);
     setForm({ ...h, market_price_ngn: String(h.market_price_ngn) });
   }
 
