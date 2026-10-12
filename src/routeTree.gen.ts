@@ -24,7 +24,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as InvestIndexRouteImport } from './routes/invest.index'
 import { Route as SignupRoleRouteImport } from './routes/signup.$role'
 import { Route as ServicesMpRouteImport } from './routes/services.mp'
-import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
 import { Route as AuthenticatedSupportRouteImport } from './routes/_authenticated/support'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
@@ -52,10 +51,6 @@ import { Route as AuthenticatedWalletIntroRouteImport } from './routes/_authenti
 import { Route as AuthenticatedWalletImportRouteImport } from './routes/_authenticated/wallet.import'
 import { Route as AuthenticatedWalletCreateRouteImport } from './routes/_authenticated/wallet.create'
 import { Route as AuthenticatedWalletConfirmRouteImport } from './routes/_authenticated/wallet.confirm'
-import { Route as AuthenticatedVendorOrdersRouteImport } from './routes/_authenticated/vendor.orders'
-import { Route as AuthenticatedVendorListingsRouteImport } from './routes/_authenticated/vendor.listings'
-import { Route as AuthenticatedVendorDisputesRouteImport } from './routes/_authenticated/vendor.disputes'
-import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
 import { Route as AuthenticatedVaultTokensRouteImport } from './routes/_authenticated/vault.tokens'
 import { Route as AuthenticatedVaultSettingsRouteImport } from './routes/_authenticated/vault.settings'
 import { Route as AuthenticatedVaultSendRouteImport } from './routes/_authenticated/vault.send'
@@ -69,7 +64,6 @@ import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedInvestSuccessIdRouteImport } from './routes/_authenticated/invest.success.$id'
 import { Route as AuthenticatedInvestCheckoutIdRouteImport } from './routes/_authenticated/invest.checkout.$id'
 import { Route as AuthenticatedAssetpayNewIdRouteImport } from './routes/_authenticated/assetpay.new.$id'
-import { Route as AuthenticatedAdminAdminVendorsRouteImport } from './routes/_authenticated/_admin/admin.vendors'
 import { Route as AuthenticatedAdminAdminRewardsRouteImport } from './routes/_authenticated/_admin/admin.rewards'
 import { Route as AuthenticatedAdminAdminPayoutsRouteImport } from './routes/_authenticated/_admin/admin.payouts'
 import { Route as AuthenticatedAdminAdminPaymentsRouteImport } from './routes/_authenticated/_admin/admin.payments'
@@ -155,11 +149,6 @@ const ServicesMpRoute = ServicesMpRouteImport.update({
   id: '/mp',
   path: '/mp',
   getParentRoute: () => ServicesRoute,
-} as any)
-const AuthenticatedVendorRoute = AuthenticatedVendorRouteImport.update({
-  id: '/vendor',
-  path: '/vendor',
-  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedVaultRoute = AuthenticatedVaultRouteImport.update({
   id: '/vault',
@@ -303,30 +292,6 @@ const AuthenticatedWalletConfirmRoute =
     path: '/wallet/confirm',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedVendorOrdersRoute =
-  AuthenticatedVendorOrdersRouteImport.update({
-    id: '/orders',
-    path: '/orders',
-    getParentRoute: () => AuthenticatedVendorRoute,
-  } as any)
-const AuthenticatedVendorListingsRoute =
-  AuthenticatedVendorListingsRouteImport.update({
-    id: '/listings',
-    path: '/listings',
-    getParentRoute: () => AuthenticatedVendorRoute,
-  } as any)
-const AuthenticatedVendorDisputesRoute =
-  AuthenticatedVendorDisputesRouteImport.update({
-    id: '/disputes',
-    path: '/disputes',
-    getParentRoute: () => AuthenticatedVendorRoute,
-  } as any)
-const AuthenticatedVendorApplyRoute =
-  AuthenticatedVendorApplyRouteImport.update({
-    id: '/apply',
-    path: '/apply',
-    getParentRoute: () => AuthenticatedVendorRoute,
-  } as any)
 const AuthenticatedVaultTokensRoute =
   AuthenticatedVaultTokensRouteImport.update({
     id: '/tokens',
@@ -401,12 +366,6 @@ const AuthenticatedAssetpayNewIdRoute =
     id: '/new/$id',
     path: '/new/$id',
     getParentRoute: () => AuthenticatedAssetpayRoute,
-  } as any)
-const AuthenticatedAdminAdminVendorsRoute =
-  AuthenticatedAdminAdminVendorsRouteImport.update({
-    id: '/admin/vendors',
-    path: '/admin/vendors',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminAdminRewardsRoute =
   AuthenticatedAdminAdminRewardsRouteImport.update({
@@ -500,7 +459,6 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/support': typeof AuthenticatedSupportRouteWithChildren
   '/vault': typeof AuthenticatedVaultRouteWithChildren
-  '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/invest/': typeof InvestIndexRoute
@@ -513,10 +471,6 @@ export interface FileRoutesByFullPath {
   '/vault/send': typeof AuthenticatedVaultSendRoute
   '/vault/settings': typeof AuthenticatedVaultSettingsRoute
   '/vault/tokens': typeof AuthenticatedVaultTokensRoute
-  '/vendor/apply': typeof AuthenticatedVendorApplyRoute
-  '/vendor/disputes': typeof AuthenticatedVendorDisputesRoute
-  '/vendor/listings': typeof AuthenticatedVendorListingsRoute
-  '/vendor/orders': typeof AuthenticatedVendorOrdersRoute
   '/wallet/confirm': typeof AuthenticatedWalletConfirmRoute
   '/wallet/create': typeof AuthenticatedWalletCreateRoute
   '/wallet/import': typeof AuthenticatedWalletImportRoute
@@ -540,7 +494,6 @@ export interface FileRoutesByFullPath {
   '/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
   '/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
-  '/admin/vendors': typeof AuthenticatedAdminAdminVendorsRoute
   '/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
   '/invest/success/$id': typeof AuthenticatedInvestSuccessIdRoute
@@ -569,7 +522,6 @@ export interface FileRoutesByTo {
   '/security': typeof AuthenticatedSecurityRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/support': typeof AuthenticatedSupportRouteWithChildren
-  '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/invest': typeof InvestIndexRoute
@@ -582,10 +534,6 @@ export interface FileRoutesByTo {
   '/vault/send': typeof AuthenticatedVaultSendRoute
   '/vault/settings': typeof AuthenticatedVaultSettingsRoute
   '/vault/tokens': typeof AuthenticatedVaultTokensRoute
-  '/vendor/apply': typeof AuthenticatedVendorApplyRoute
-  '/vendor/disputes': typeof AuthenticatedVendorDisputesRoute
-  '/vendor/listings': typeof AuthenticatedVendorListingsRoute
-  '/vendor/orders': typeof AuthenticatedVendorOrdersRoute
   '/wallet/confirm': typeof AuthenticatedWalletConfirmRoute
   '/wallet/create': typeof AuthenticatedWalletCreateRoute
   '/wallet/import': typeof AuthenticatedWalletImportRoute
@@ -609,7 +557,6 @@ export interface FileRoutesByTo {
   '/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
   '/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
-  '/admin/vendors': typeof AuthenticatedAdminAdminVendorsRoute
   '/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
   '/invest/success/$id': typeof AuthenticatedInvestSuccessIdRoute
@@ -644,7 +591,6 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/support': typeof AuthenticatedSupportRouteWithChildren
   '/_authenticated/vault': typeof AuthenticatedVaultRouteWithChildren
-  '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/invest/': typeof InvestIndexRoute
@@ -657,10 +603,6 @@ export interface FileRoutesById {
   '/_authenticated/vault/send': typeof AuthenticatedVaultSendRoute
   '/_authenticated/vault/settings': typeof AuthenticatedVaultSettingsRoute
   '/_authenticated/vault/tokens': typeof AuthenticatedVaultTokensRoute
-  '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
-  '/_authenticated/vendor/disputes': typeof AuthenticatedVendorDisputesRoute
-  '/_authenticated/vendor/listings': typeof AuthenticatedVendorListingsRoute
-  '/_authenticated/vendor/orders': typeof AuthenticatedVendorOrdersRoute
   '/_authenticated/wallet/confirm': typeof AuthenticatedWalletConfirmRoute
   '/_authenticated/wallet/create': typeof AuthenticatedWalletCreateRoute
   '/_authenticated/wallet/import': typeof AuthenticatedWalletImportRoute
@@ -684,7 +626,6 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
   '/_authenticated/_admin/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/_authenticated/_admin/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
-  '/_authenticated/_admin/admin/vendors': typeof AuthenticatedAdminAdminVendorsRoute
   '/_authenticated/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/_authenticated/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
   '/_authenticated/invest/success/$id': typeof AuthenticatedInvestSuccessIdRoute
@@ -718,7 +659,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/support'
     | '/vault'
-    | '/vendor'
     | '/services/mp'
     | '/signup/$role'
     | '/invest/'
@@ -731,10 +671,6 @@ export interface FileRouteTypes {
     | '/vault/send'
     | '/vault/settings'
     | '/vault/tokens'
-    | '/vendor/apply'
-    | '/vendor/disputes'
-    | '/vendor/listings'
-    | '/vendor/orders'
     | '/wallet/confirm'
     | '/wallet/create'
     | '/wallet/import'
@@ -758,7 +694,6 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/payouts'
     | '/admin/rewards'
-    | '/admin/vendors'
     | '/assetpay/new/$id'
     | '/invest/checkout/$id'
     | '/invest/success/$id'
@@ -787,7 +722,6 @@ export interface FileRouteTypes {
     | '/security'
     | '/settings'
     | '/support'
-    | '/vendor'
     | '/services/mp'
     | '/signup/$role'
     | '/invest'
@@ -800,10 +734,6 @@ export interface FileRouteTypes {
     | '/vault/send'
     | '/vault/settings'
     | '/vault/tokens'
-    | '/vendor/apply'
-    | '/vendor/disputes'
-    | '/vendor/listings'
-    | '/vendor/orders'
     | '/wallet/confirm'
     | '/wallet/create'
     | '/wallet/import'
@@ -827,7 +757,6 @@ export interface FileRouteTypes {
     | '/admin/payments'
     | '/admin/payouts'
     | '/admin/rewards'
-    | '/admin/vendors'
     | '/assetpay/new/$id'
     | '/invest/checkout/$id'
     | '/invest/success/$id'
@@ -861,7 +790,6 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/support'
     | '/_authenticated/vault'
-    | '/_authenticated/vendor'
     | '/services/mp'
     | '/signup/$role'
     | '/invest/'
@@ -874,10 +802,6 @@ export interface FileRouteTypes {
     | '/_authenticated/vault/send'
     | '/_authenticated/vault/settings'
     | '/_authenticated/vault/tokens'
-    | '/_authenticated/vendor/apply'
-    | '/_authenticated/vendor/disputes'
-    | '/_authenticated/vendor/listings'
-    | '/_authenticated/vendor/orders'
     | '/_authenticated/wallet/confirm'
     | '/_authenticated/wallet/create'
     | '/_authenticated/wallet/import'
@@ -901,7 +825,6 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/payments'
     | '/_authenticated/_admin/admin/payouts'
     | '/_authenticated/_admin/admin/rewards'
-    | '/_authenticated/_admin/admin/vendors'
     | '/_authenticated/assetpay/new/$id'
     | '/_authenticated/invest/checkout/$id'
     | '/_authenticated/invest/success/$id'
@@ -1036,13 +959,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/services/mp'
       preLoaderRoute: typeof ServicesMpRouteImport
       parentRoute: typeof ServicesRoute
-    }
-    '/_authenticated/vendor': {
-      id: '/_authenticated/vendor'
-      path: '/vendor'
-      fullPath: '/vendor'
-      preLoaderRoute: typeof AuthenticatedVendorRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/vault': {
       id: '/_authenticated/vault'
@@ -1233,34 +1149,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWalletConfirmRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/vendor/orders': {
-      id: '/_authenticated/vendor/orders'
-      path: '/orders'
-      fullPath: '/vendor/orders'
-      preLoaderRoute: typeof AuthenticatedVendorOrdersRouteImport
-      parentRoute: typeof AuthenticatedVendorRoute
-    }
-    '/_authenticated/vendor/listings': {
-      id: '/_authenticated/vendor/listings'
-      path: '/listings'
-      fullPath: '/vendor/listings'
-      preLoaderRoute: typeof AuthenticatedVendorListingsRouteImport
-      parentRoute: typeof AuthenticatedVendorRoute
-    }
-    '/_authenticated/vendor/disputes': {
-      id: '/_authenticated/vendor/disputes'
-      path: '/disputes'
-      fullPath: '/vendor/disputes'
-      preLoaderRoute: typeof AuthenticatedVendorDisputesRouteImport
-      parentRoute: typeof AuthenticatedVendorRoute
-    }
-    '/_authenticated/vendor/apply': {
-      id: '/_authenticated/vendor/apply'
-      path: '/apply'
-      fullPath: '/vendor/apply'
-      preLoaderRoute: typeof AuthenticatedVendorApplyRouteImport
-      parentRoute: typeof AuthenticatedVendorRoute
-    }
     '/_authenticated/vault/tokens': {
       id: '/_authenticated/vault/tokens'
       path: '/tokens'
@@ -1351,13 +1239,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/assetpay/new/$id'
       preLoaderRoute: typeof AuthenticatedAssetpayNewIdRouteImport
       parentRoute: typeof AuthenticatedAssetpayRoute
-    }
-    '/_authenticated/_admin/admin/vendors': {
-      id: '/_authenticated/_admin/admin/vendors'
-      path: '/admin/vendors'
-      fullPath: '/admin/vendors'
-      preLoaderRoute: typeof AuthenticatedAdminAdminVendorsRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/_admin/admin/rewards': {
       id: '/_authenticated/_admin/admin/rewards'
@@ -1450,7 +1331,6 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAdminPaymentsRoute: typeof AuthenticatedAdminAdminPaymentsRoute
   AuthenticatedAdminAdminPayoutsRoute: typeof AuthenticatedAdminAdminPayoutsRoute
   AuthenticatedAdminAdminRewardsRoute: typeof AuthenticatedAdminAdminRewardsRoute
-  AuthenticatedAdminAdminVendorsRoute: typeof AuthenticatedAdminAdminVendorsRoute
   AuthenticatedAdminAdminIndexRoute: typeof AuthenticatedAdminAdminIndexRoute
 }
 
@@ -1468,7 +1348,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminAdminPaymentsRoute: AuthenticatedAdminAdminPaymentsRoute,
     AuthenticatedAdminAdminPayoutsRoute: AuthenticatedAdminAdminPayoutsRoute,
     AuthenticatedAdminAdminRewardsRoute: AuthenticatedAdminAdminRewardsRoute,
-    AuthenticatedAdminAdminVendorsRoute: AuthenticatedAdminAdminVendorsRoute,
     AuthenticatedAdminAdminIndexRoute: AuthenticatedAdminAdminIndexRoute,
   }
 
@@ -1548,23 +1427,6 @@ const AuthenticatedVaultRouteChildren: AuthenticatedVaultRouteChildren = {
 const AuthenticatedVaultRouteWithChildren =
   AuthenticatedVaultRoute._addFileChildren(AuthenticatedVaultRouteChildren)
 
-interface AuthenticatedVendorRouteChildren {
-  AuthenticatedVendorApplyRoute: typeof AuthenticatedVendorApplyRoute
-  AuthenticatedVendorDisputesRoute: typeof AuthenticatedVendorDisputesRoute
-  AuthenticatedVendorListingsRoute: typeof AuthenticatedVendorListingsRoute
-  AuthenticatedVendorOrdersRoute: typeof AuthenticatedVendorOrdersRoute
-}
-
-const AuthenticatedVendorRouteChildren: AuthenticatedVendorRouteChildren = {
-  AuthenticatedVendorApplyRoute: AuthenticatedVendorApplyRoute,
-  AuthenticatedVendorDisputesRoute: AuthenticatedVendorDisputesRoute,
-  AuthenticatedVendorListingsRoute: AuthenticatedVendorListingsRoute,
-  AuthenticatedVendorOrdersRoute: AuthenticatedVendorOrdersRoute,
-}
-
-const AuthenticatedVendorRouteWithChildren =
-  AuthenticatedVendorRoute._addFileChildren(AuthenticatedVendorRouteChildren)
-
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedAssetpayRoute: typeof AuthenticatedAssetpayRouteWithChildren
@@ -1580,7 +1442,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSupportRoute: typeof AuthenticatedSupportRouteWithChildren
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRouteWithChildren
-  AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedPayOrderIdRoute: typeof AuthenticatedPayOrderIdRoute
   AuthenticatedWalletConfirmRoute: typeof AuthenticatedWalletConfirmRoute
   AuthenticatedWalletCreateRoute: typeof AuthenticatedWalletCreateRoute
@@ -1607,7 +1468,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSupportRoute: AuthenticatedSupportRouteWithChildren,
   AuthenticatedVaultRoute: AuthenticatedVaultRouteWithChildren,
-  AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedPayOrderIdRoute: AuthenticatedPayOrderIdRoute,
   AuthenticatedWalletConfirmRoute: AuthenticatedWalletConfirmRoute,
   AuthenticatedWalletCreateRoute: AuthenticatedWalletCreateRoute,
