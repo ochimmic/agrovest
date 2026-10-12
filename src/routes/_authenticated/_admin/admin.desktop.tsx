@@ -19,6 +19,11 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useFxRate, NGN_PER_USD } from "@/lib/fx";
 import { HouseManager } from "@/components/admin/HouseManager";
+import { PaymentsWorkbench } from "@/components/admin/workbench/PaymentsWorkbench";
+import { KycWorkbench } from "@/components/admin/workbench/KycWorkbench";
+import { DocumentsWorkbench } from "@/components/admin/workbench/DocumentsWorkbench";
+import { PayoutsWorkbench } from "@/components/admin/workbench/PayoutsWorkbench";
+import { AuditWorkbench } from "@/components/admin/workbench/AuditWorkbench";
 const naira = (n: number) => `₦${Math.round(n || 0).toLocaleString()}`;
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/desktop")({
@@ -92,16 +97,17 @@ const usd = (n: number) => `$${Number(n || 0).toLocaleString(undefined, { maximu
 const date = (s?: string) => (s ? new Date(s).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }) : "—");
 
 /* ---------------- Layout ---------------- */
-type Section = "overview" | "payments" | "users" | "holdings" | "kyc" | "documents" | "payouts" | "houses";
+type Section = "overview" | "payments" | "users" | "holdings" | "kyc" | "documents" | "payouts" | "houses" | "audit";
 const NAV: { id: Section; label: string; icon: LucideIcon; group: string; page?: string }[] = [
   { id: "overview", label: "Overview", icon: LayoutDashboard, group: "Insights" },
   { id: "users", label: "Users", icon: Users, group: "Insights" },
   { id: "holdings", label: "Investments", icon: TrendingUp, group: "Insights" },
-  { id: "payments", label: "Payments", icon: Wallet, group: "Queues", page: "/admin/payments" },
-  { id: "kyc", label: "KYC review", icon: FileCheck, group: "Queues", page: "/admin/kyc" },
-  { id: "documents", label: "Documents", icon: FileText, group: "Queues", page: "/admin/documents" },
-  { id: "payouts", label: "Broker payouts", icon: Gift, group: "Queues", page: "/admin/payouts" },
+  { id: "payments", label: "Payments", icon: Wallet, group: "Queues" },
+  { id: "kyc", label: "KYC review", icon: FileCheck, group: "Queues" },
+  { id: "documents", label: "Documents", icon: FileText, group: "Queues" },
+  { id: "payouts", label: "Broker payouts", icon: Gift, group: "Queues" },
   { id: "houses", label: "Houses (Buy Assets)", icon: Building2, group: "Catalog" },
+  { id: "audit", label: "Audit trail", icon: ScrollText, group: "Catalog" },
 ];
 
 function DesktopAdmin() {
@@ -162,9 +168,6 @@ function DesktopAdmin() {
           ))}
         </nav>
         <div className="border-t border-white/10 p-3 space-y-1">
-          <Link to="/admin/audit" className="flex items-center gap-2 rounded-xl px-2 h-9 text-xs text-white/80 hover:bg-white/8">
-            <ScrollText size={14} /> Audit logs
-          </Link>
           <Link to="/home" className="flex items-center gap-2 rounded-xl px-2 h-9 text-xs text-white/80 hover:bg-white/8">
             ← Back to app
           </Link>
@@ -190,12 +193,13 @@ function DesktopAdmin() {
         <main className="flex-1 overflow-y-auto p-6 space-y-5">
           {live.error && <p className="rounded-xl bg-destructive/10 text-destructive text-sm p-3">Couldn't load some data: {live.error}</p>}
           {section === "overview" && <Overview d={d} counts={counts} onJump={setSection} />}
-          {section === "payments" && <PaymentsView d={d} />}
+          {section === "payments" && <PaymentsWorkbench embedded />}
           {section === "users" && <UsersView d={d} />}
           {section === "holdings" && <HoldingsView d={d} />}
-          {section === "kyc" && <KycView d={d} />}
-          {section === "documents" && <DocsView d={d} />}
-          {section === "payouts" && <PayoutsView d={d} />}
+          {section === "kyc" && <KycWorkbench embedded />}
+          {section === "documents" && <DocumentsWorkbench embedded />}
+          {section === "payouts" && <PayoutsWorkbench embedded />}
+          {section === "audit" && <AuditWorkbench embedded />}
           {section === "houses" && <HouseManager wide onChange={live.reload} />}
         </main>
       </div>
