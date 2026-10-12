@@ -73,7 +73,7 @@ function PlanDetail() {
         )}
         {plan.status === "cancelled" && (
           <p className="rounded-2xl bg-destructive/10 border border-destructive/30 p-3 text-xs text-foreground">
-            Plan cancelled. {plan.cancelReason} Refund due: ${plan.refundUsd?.toLocaleString() ?? 0} (paid amount minus {CANCEL_FEE_PCT}% fee). AgroVest will contact you.
+            Plan cancelled. {plan.cancelReason} Refund due: ${plan.refundUsd?.toLocaleString() ?? 0} (amount paid minus {CANCEL_FEE_PCT}% forfeiture). AgroVest will contact you.
           </p>
         )}
         {(nextSt === "grace" || nextSt === "late") && plan.status === "active" && (
@@ -115,7 +115,7 @@ function PlanDetail() {
             type="button"
             className="w-full text-center text-xs text-destructive"
             onClick={() => {
-              if (!confirm(`Cancel this plan? You'll be refunded what you've paid minus a ${CANCEL_FEE_PCT}% fee.`)) return;
+              if (!confirm(`Cancel this plan? You'll be refunded what you've paid minus a ${CANCEL_FEE_PCT}% forfeiture.`)) return;
               cancelPlan(plan.id);
               toast.success("Plan cancelled");
             }}
