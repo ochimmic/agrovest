@@ -1,4 +1,4 @@
-import { fmtNgn, fmtUsd } from "@/lib/fx";
+import { fmtNgn, fmtUsd, useFxRate } from "@/lib/fx";
 
 /**
  * Renders an amount in USD with the NGN equivalent below or inline.
@@ -19,6 +19,7 @@ export function Money({
   emphasis?: "primary" | "muted" | "agro" | "violet" | "white";
   className?: string;
 }) {
+  useFxRate();
   const sz = {
     xs: { main: "text-[11px]", sub: "text-[10px]" },
     sm: { main: "text-xs", sub: "text-[10px]" },

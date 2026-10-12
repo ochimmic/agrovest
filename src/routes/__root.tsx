@@ -1,3 +1,4 @@
+import { useFxRate } from "@/lib/fx";
 import type { ErrorComponentProps } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -135,6 +136,8 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   useEffect(() => { initTheme(); }, []);
+  const fx = useFxRate();
+  useEffect(() => { if (fx.source === "live") void router.invalidate(); }, [fx.rate, fx.source, router]);
   useEffect(() => {
     initAuth();
     let syncedFor: string | null = null;

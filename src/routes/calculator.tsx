@@ -4,7 +4,7 @@ import { ArrowLeft, Calculator } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { convertLand, landPrice, toPlots, type LandUnit } from "@/lib/pricing";
 import { yieldPctForYear } from "@/lib/yield-schedule";
-import { NGN_PER_USD } from "@/lib/fx";
+import { NGN_PER_USD, useFxRate } from "@/lib/fx";
 import { farmAssets } from "@/lib/mock-data";
 import { useLivePrices, fmtClyst } from "@/lib/clyst-price";
 
@@ -26,6 +26,7 @@ const ngn = (n: number) => `₦${Math.round(n).toLocaleString()} · $${Math.roun
 const fmt = (n: number) => Number(n.toFixed(2)).toLocaleString();
 
 function Calc() {
+  useFxRate();
   const [tab, setTab] = useState<"land" | "fx">("land");
   return (
     <MobileFrame>
@@ -45,6 +46,7 @@ function Calc() {
 }
 
 function Fx() {
+  const fx = useFxRate();
   const { prices, error } = useLivePrices();
   const [ngnStr, setNgn] = useState("1150000");
   const [usdStr, setUsd] = useState(String(Math.round(1150000 / NGN_PER_USD * 100) / 100));
@@ -61,7 +63,7 @@ function Fx() {
             onChange={(e) => { setUsd(e.target.value); const n = Number(e.target.value) || 0; setNgn(String(Math.round(n * NGN_PER_USD))); }}
             className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-3 text-lg font-semibold text-foreground" />
         </label>
-        <p className="text-[11px] text-muted-foreground">Platform rate: ₦{NGN_PER_USD.toLocaleString()} = $1 (indicative).</p>
+        <p className="text-[11px] text-muted-foreground">{fx.source === "live" ? "Live rate" : "Loading live rate…"}: $1 = ₦{fx.rate.toLocaleString()}{fx.updatedAt ? ` · updated ${new Date(fx.updatedAt).toLocaleString()}` : ""}</p>
       </section>
       <section className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
         <h2 className="font-semibold text-foreground">$CLYST equivalent</h2>
@@ -81,6 +83,7 @@ function Fx() {
 }
 
 function Land() {
+  useFxRate();
   const [unit, setUnit] = useState<LandUnit>("plot");
   const [qty, setQty] = useState("1");
   const q = Math.max(0, Number(qty) || 0);
