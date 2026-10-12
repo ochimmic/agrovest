@@ -29,6 +29,13 @@
       "when": 1791826269446,
       "tag": "0003_payout_rate",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791827092318,
+      "tag": "0004_chat_attachments_buyer_read",
+      "breakpoints": true
     }
   ]
 }
