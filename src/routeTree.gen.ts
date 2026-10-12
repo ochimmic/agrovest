@@ -65,6 +65,7 @@ import { Route as AuthenticatedInvestSuccessIdRouteImport } from './routes/_auth
 import { Route as AuthenticatedInvestCheckoutIdRouteImport } from './routes/_authenticated/invest.checkout.$id'
 import { Route as AuthenticatedAssetpayNewIdRouteImport } from './routes/_authenticated/assetpay.new.$id'
 import { Route as AuthenticatedAdminAdminRewardsRouteImport } from './routes/_authenticated/_admin/admin.rewards'
+import { Route as AuthenticatedAdminAdminPropertiesRouteImport } from './routes/_authenticated/_admin/admin.properties'
 import { Route as AuthenticatedAdminAdminPayoutsRouteImport } from './routes/_authenticated/_admin/admin.payouts'
 import { Route as AuthenticatedAdminAdminPaymentsRouteImport } from './routes/_authenticated/_admin/admin.payments'
 import { Route as AuthenticatedAdminAdminPartnersRouteImport } from './routes/_authenticated/_admin/admin.partners'
@@ -373,6 +374,12 @@ const AuthenticatedAdminAdminRewardsRoute =
     path: '/admin/rewards',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminAdminPropertiesRoute =
+  AuthenticatedAdminAdminPropertiesRouteImport.update({
+    id: '/admin/properties',
+    path: '/admin/properties',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminAdminPayoutsRoute =
   AuthenticatedAdminAdminPayoutsRouteImport.update({
     id: '/admin/payouts',
@@ -493,6 +500,7 @@ export interface FileRoutesByFullPath {
   '/admin/partners': typeof AuthenticatedAdminAdminPartnersRoute
   '/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
   '/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
+  '/admin/properties': typeof AuthenticatedAdminAdminPropertiesRoute
   '/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
   '/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
@@ -556,6 +564,7 @@ export interface FileRoutesByTo {
   '/admin/partners': typeof AuthenticatedAdminAdminPartnersRoute
   '/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
   '/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
+  '/admin/properties': typeof AuthenticatedAdminAdminPropertiesRoute
   '/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
   '/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
@@ -625,6 +634,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/partners': typeof AuthenticatedAdminAdminPartnersRoute
   '/_authenticated/_admin/admin/payments': typeof AuthenticatedAdminAdminPaymentsRoute
   '/_authenticated/_admin/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
+  '/_authenticated/_admin/admin/properties': typeof AuthenticatedAdminAdminPropertiesRoute
   '/_authenticated/_admin/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
   '/_authenticated/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/_authenticated/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
@@ -693,6 +703,7 @@ export interface FileRouteTypes {
     | '/admin/partners'
     | '/admin/payments'
     | '/admin/payouts'
+    | '/admin/properties'
     | '/admin/rewards'
     | '/assetpay/new/$id'
     | '/invest/checkout/$id'
@@ -756,6 +767,7 @@ export interface FileRouteTypes {
     | '/admin/partners'
     | '/admin/payments'
     | '/admin/payouts'
+    | '/admin/properties'
     | '/admin/rewards'
     | '/assetpay/new/$id'
     | '/invest/checkout/$id'
@@ -824,6 +836,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/partners'
     | '/_authenticated/_admin/admin/payments'
     | '/_authenticated/_admin/admin/payouts'
+    | '/_authenticated/_admin/admin/properties'
     | '/_authenticated/_admin/admin/rewards'
     | '/_authenticated/assetpay/new/$id'
     | '/_authenticated/invest/checkout/$id'
@@ -1247,6 +1260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminRewardsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/_admin/admin/properties': {
+      id: '/_authenticated/_admin/admin/properties'
+      path: '/admin/properties'
+      fullPath: '/admin/properties'
+      preLoaderRoute: typeof AuthenticatedAdminAdminPropertiesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/_admin/admin/payouts': {
       id: '/_authenticated/_admin/admin/payouts'
       path: '/admin/payouts'
@@ -1330,6 +1350,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAdminPartnersRoute: typeof AuthenticatedAdminAdminPartnersRoute
   AuthenticatedAdminAdminPaymentsRoute: typeof AuthenticatedAdminAdminPaymentsRoute
   AuthenticatedAdminAdminPayoutsRoute: typeof AuthenticatedAdminAdminPayoutsRoute
+  AuthenticatedAdminAdminPropertiesRoute: typeof AuthenticatedAdminAdminPropertiesRoute
   AuthenticatedAdminAdminRewardsRoute: typeof AuthenticatedAdminAdminRewardsRoute
   AuthenticatedAdminAdminIndexRoute: typeof AuthenticatedAdminAdminIndexRoute
 }
@@ -1347,6 +1368,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminAdminPartnersRoute: AuthenticatedAdminAdminPartnersRoute,
     AuthenticatedAdminAdminPaymentsRoute: AuthenticatedAdminAdminPaymentsRoute,
     AuthenticatedAdminAdminPayoutsRoute: AuthenticatedAdminAdminPayoutsRoute,
+    AuthenticatedAdminAdminPropertiesRoute:
+      AuthenticatedAdminAdminPropertiesRoute,
     AuthenticatedAdminAdminRewardsRoute: AuthenticatedAdminAdminRewardsRoute,
     AuthenticatedAdminAdminIndexRoute: AuthenticatedAdminAdminIndexRoute,
   }

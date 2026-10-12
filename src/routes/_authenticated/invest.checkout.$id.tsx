@@ -18,12 +18,14 @@ import { createPayOrder, markPaidOnChain, type PayRail } from "@/lib/payments";
 import { useAppState } from "@/lib/store";
 import { amountDue, attachOrder, installmentLabel, useAssetPay } from "@/lib/assetpay";
 import { CalendarClock } from "lucide-react";
+import { useHouse, housePrice } from "@/lib/properties";
 
 const search = z.object({
   unit: z.enum(["plot", "acre", "hectare"]).default("plot"),
   qty: z.coerce.number().min(0.5).default(1),
   plan: z.string().optional(),
   inst: z.coerce.number().optional(),
+  kind: z.enum(["farm", "property"]).default("farm"),
 });
 
 export const Route = createFileRoute("/_authenticated/invest/checkout/$id")({
@@ -43,13 +45,16 @@ export const Route = createFileRoute("/_authenticated/invest/checkout/$id")({
 
 function Checkout() {
   const { id } = Route.useParams();
-  const { unit, qty, plan: planId, inst } = Route.useSearch();
+  const { unit, qty, plan: planId, inst, kind } = Route.useSearch();
+  const isHouse = kind === "property";
+  const house = useHouse(isHouse ? id : "__none__");
   const nav = useNavigate();
   const asset = farmAssets.find((a) => a.id === id) ?? farmAssets[0]!;
   const plan = useAssetPay((s) => (planId ? s.plans.find((x) => x.id === planId) : undefined));
   const installment = plan && inst != null ? plan.installments.find((i) => i.index === inst) : undefined;
   const fullPrice = priceFor(unit, qty);
-  const p = installment ? { ...fullPrice, final: amountDue(installment) } : fullPrice;
+  const hp = house ? housePrice(house) : null;
+  const p = installment ? { ...fullPrice, final: amountDue(installment) } : isHouse ? { ...fullPrice, final: hp?.total ?? 0 } : fullPrice;
   const [paying, setPaying] = useState(false);
   const [unlock, setUnlock] = useState(false);
   const [rail, setRail] = useState<PayRail>("crypto");
@@ -75,11 +80,11 @@ function Checkout() {
 
   const purpose = {
     kind: "investment" as const,
-    assetId: asset.id,
-    assetName: asset.name,
-    category: asset.category,
-    unit,
-    qty,
+    assetId: isHouse ? id : asset.id,
+    assetName: isHouse ? house?.title ?? "House" : asset.name,
+    category: isHouse ? ("property" as const) : asset.category,
+    unit: isHouse ? ("house" as const) : unit,
+    qty: isHouse ? 1 : qty,
     ...(installment && plan ? { planId: plan.id, installment: installment.index } : {}),
   };
   const link = (orderId: string) => { if (installment && plan) attachOrder(plan.id, installment.index, orderId); };
@@ -102,7 +107,7 @@ function Checkout() {
         to: TREASURY_ADDRESS,
         amount: tokenAmount.toFixed(Math.min(token.decimals, 8)),
         kind: "payment",
-        note: `${asset.name} · ${order.reference}`,
+        note: `${purpose.assetName} · ${order.reference}`,
       });
       markPaidOnChain(order.id, hash, network);
       link(order.id);
@@ -144,7 +149,7 @@ function Checkout() {
   return (
     <MobileFrame>
       <header className="flex items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
-        <Link to="/invest/farmvest/$id" params={{ id }} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+        <Link to={isHouse ? "/invest/property/$id" : "/invest/farmvest/$id"} params={{ id }} className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
           <ArrowLeft size={18} />
         </Link>
         <h1 className="text-base font-semibold text-foreground">Secure checkout</h1>
@@ -153,8 +158,8 @@ function Checkout() {
       <main className="flex-1 overflow-y-auto hide-scrollbar px-4 pt-4 space-y-4">
         <div className="rounded-3xl border border-border bg-card p-4">
           <p className="text-xs text-muted-foreground">Investing in</p>
-          <p className="mt-0.5 font-semibold text-foreground">{asset.name}</p>
-          <p className="text-xs text-muted-foreground">{qty} × {unit}</p>
+          <p className="mt-0.5 font-semibold text-foreground">{purpose.assetName}</p>
+          <p className="text-xs text-muted-foreground">{isHouse ? `${house?.location ?? ""} · AgroVest Direct` : `${qty} × ${unit}`}</p>
         </div>
 
         {installment ? (
@@ -164,6 +169,16 @@ function Checkout() {
             {amountDue(installment) > installment.amountUsd && <RowM k="Late fee (5%)" usd={amountDue(installment) - installment.amountUsd} />}
             <div className="border-t border-border my-1" />
             <RowM k="Pay now" usd={p.final} bold />
+          </div>
+        ) : isHouse ? (
+          <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
+            {hp ? (<>
+              <RowM k="Actual market price" usd={hp.actual} muted />
+              <RowM k="AgroVest price (1% less)" usd={hp.agrovest} />
+              <RowM k="Escrow (3%)" usd={hp.escrow} />
+              <div className="border-t border-border my-1" />
+              <RowM k="Total" usd={hp.total} bold />
+            </>) : <p className="text-xs text-muted-foreground">Loading price…</p>}
           </div>
         ) : (
         <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
@@ -175,7 +190,7 @@ function Checkout() {
         </div>
         )}
 
-        {!installment && (
+        {!installment && !isHouse && (
           <Link
             to="/assetpay/new/$id"
             params={{ id }}
@@ -284,6 +299,7 @@ function Checkout() {
           disabled={
             paying ||
             usdBlocked ||
+            (isHouse && (!hp || house?.status !== "active")) ||
             (rail === "crypto" && (!address || !token || insufficient))
           }
         >

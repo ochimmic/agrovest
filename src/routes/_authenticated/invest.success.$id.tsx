@@ -3,7 +3,8 @@ import { z } from "zod";
 import { CheckCircle2, FileText, Home } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { AgroButton } from "@/components/ui/agro-button";
-import { farmAssets, properties } from "@/lib/mock-data";
+import { farmAssets } from "@/lib/mock-data";
+import { useHouse } from "@/lib/properties";
 
 const search = z.object({
   kind: z.enum(["farm", "property"]).default("farm"),
@@ -17,9 +18,10 @@ export const Route = createFileRoute("/_authenticated/invest/success/$id")({
 function Success() {
   const { id } = Route.useParams();
   const { kind } = Route.useSearch();
+  const house = useHouse(kind === "property" ? id : "__none__");
   const name =
     kind === "property"
-      ? properties.find((p) => p.id === id)?.title ?? "your asset"
+      ? house?.title ?? "your asset"
       : farmAssets.find((a) => a.id === id)?.name ?? "your investment";
 
   const label = kind === "property" ? "Purchase confirmed" : "Investment confirmed";

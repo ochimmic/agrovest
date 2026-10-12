@@ -8,6 +8,20 @@
       "when": 1791820207279,
       "tag": "0000_order_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791822874143,
+      "tag": "0001_properties_and_broker_commissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791823143315,
+      "tag": "0002_properties_public_read_fix",
+      "breakpoints": true
     }
   ]
 }
