@@ -44,7 +44,7 @@ function FarmVest() {
       const f = h.unit === "plot" ? 1 : h.unit === "acre" ? 6 : 15;
       return s + h.units * f;
     }, 0);
-    // Steady-state yield (Y6+ = 50% / yr)
+    // Steady-state yield (Y5+ = 50% / yr)
     const projected = Math.round(invested * 0.5);
     const byCat = holdings.reduce<Record<string, number>>((acc, h) => {
       acc[h.category] = (acc[h.category] ?? 0) + h.invested;
@@ -106,15 +106,14 @@ function FarmVest() {
                 <span className="h-1.5 w-3 rounded-full bg-white/35" /> Maturation (Y1–2)
               </span>
               <span className="inline-flex items-center gap-1">
-                <span className="h-1.5 w-3 rounded-full bg-amber-300/80" /> Y3 · 20% locked
+                <span className="h-1.5 w-3 rounded-full bg-amber-300/80" /> Y3 · 30% · Y4 · 40%
               </span>
               <span className="inline-flex items-center gap-1">
-                <span className="h-1.5 w-3 rounded-full bg-emerald-300" /> Y4+ withdrawable
+                <span className="h-1.5 w-3 rounded-full bg-emerald-300" /> Y5+ · 50% / yr
               </span>
             </div>
             <p className="mt-2 text-[10px] text-white/60 leading-snug">
-              Yield: Y3 20% (locked) → Y4 30% → Y5 40% → Y6+ 50% per year. Withdrawals begin Year 4
-              (Y3 unlocks with the Y4 distribution).
+              Annual ROI: Y3 30% → Y4 40% → Y5+ 50% per year. Maturity begins between the 3rd and 4th year.
             </p>
             <div className="mt-2 flex gap-1.5">
               {ranges.map((r) => (

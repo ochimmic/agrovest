@@ -21,7 +21,7 @@ import { CalendarClock } from "lucide-react";
 
 const search = z.object({
   unit: z.enum(["plot", "acre", "hectare"]).default("plot"),
-  qty: z.coerce.number().min(1).default(1),
+  qty: z.coerce.number().min(0.5).default(1),
   plan: z.string().optional(),
   inst: z.coerce.number().optional(),
 });
@@ -159,7 +159,7 @@ function Checkout() {
 
         {installment ? (
           <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
-            <p className="text-xs font-medium text-violet">AssetPay · {installmentLabel(installment.index)}</p>
+            <p className="text-xs font-medium text-violet">Buy By Bit · {installmentLabel(installment.index)}</p>
             <RowM k="Installment" usd={installment.amountUsd} />
             {amountDue(installment) > installment.amountUsd && <RowM k="Late fee (5%)" usd={amountDue(installment) - installment.amountUsd} />}
             <div className="border-t border-border my-1" />
@@ -167,11 +167,9 @@ function Checkout() {
           </div>
         ) : (
         <div className="rounded-3xl border border-border bg-card p-4 space-y-2 text-sm">
-          <RowM k="Base" usd={p.base} />
-          <RowM k="Platform fee (3%)" usd={p.platformFee} />
-          <RowM k="Network fee" usd={p.networkFee} />
-          <RowM k="Escrow reserve (20%, held)" usd={p.escrowReserve} muted />
-          {p.discount > 0 && <RowM k="Discount" usd={-p.discount} accent />}
+          <RowM k={`Land · ${fullPrice.plots} plot${fullPrice.plots === 1 ? "" : "s"}`} usd={fullPrice.base} />
+          {fullPrice.discount > 0 && <RowM k={`Size discount (${fullPrice.discountPct}%)`} usd={-fullPrice.discount} accent />}
+          <RowM k="Management fee (non-refundable)" usd={fullPrice.managementFee} />
           <div className="border-t border-border my-1" />
           <RowM k="Total" usd={p.final} bold />
         </div>
@@ -186,7 +184,7 @@ function Checkout() {
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet text-white"><CalendarClock size={16} /></span>
             <span className="flex-1">
-              <span className="block text-sm font-semibold text-foreground">Can't pay at once? Use AssetPay</span>
+              <span className="block text-sm font-semibold text-foreground">Can't pay at once? Use Buy By Bit</span>
               <span className="block text-[11px] text-muted-foreground">From 10% down, balance over 3, 6 or 12 months</span>
             </span>
           </Link>
