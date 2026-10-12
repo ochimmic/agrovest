@@ -3,3 +3,4 @@
 - Buy Assets houses live in the cloud `properties` table (NGN price is source of truth, photos in private `property-images` bucket via signed URLs) and are edited at /admin/properties. Why: AgroVest is the sole seller and admins must manage listings without code changes.
 - Broker commissions are credited by a DB trigger when a referred investor's order is confirmed (FarmVest 5%, property 2%); payout requests are validated against available balance and the emergency fee is computed server-side. Why: money owed must not be forgeable from the browser.
 - BNB and $CLYST USD prices come live from PancakeSwap V2 pools (src/lib/clyst-price.ts), which overwrite the TOKENS defaults at runtime. Why: crypto checkout amounts must match market price.
+- The NGN/USD rate is fetched live in the browser (src/lib/fx.ts, refreshed every 10 min and on focus) with a fallback; orders store the rate used. Why: dollar equivalents must track the market.
