@@ -43,6 +43,7 @@ import { Route as InvestFarmvestIndexRouteImport } from './routes/invest.farmves
 import { Route as AuthenticatedVaultIndexRouteImport } from './routes/_authenticated/vault.index'
 import { Route as AuthenticatedPrichatIndexRouteImport } from './routes/_authenticated/prichat.index'
 import { Route as AuthenticatedBuybybitIndexRouteImport } from './routes/_authenticated/buybybit.index'
+import { Route as AuthenticatedAssetpayIndexRouteImport } from './routes/_authenticated/assetpay.index'
 import { Route as ServicesMpIdRouteImport } from './routes/services.mp.$id'
 import { Route as InvestPropertyIdRouteImport } from './routes/invest.property.$id'
 import { Route as InvestFarmvestIdRouteImport } from './routes/invest.farmvest.$id'
@@ -60,10 +61,12 @@ import { Route as AuthenticatedPrichatIdRouteImport } from './routes/_authentica
 import { Route as AuthenticatedPayOrderIdRouteImport } from './routes/_authenticated/pay.$orderId'
 import { Route as AuthenticatedBuybybitPlanIdRouteImport } from './routes/_authenticated/buybybit.$planId'
 import { Route as AuthenticatedBrokerRewardsRouteImport } from './routes/_authenticated/broker.rewards'
+import { Route as AuthenticatedAssetpayPlanIdRouteImport } from './routes/_authenticated/assetpay.$planId'
 import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_authenticated/_admin/admin.index'
 import { Route as AuthenticatedInvestSuccessIdRouteImport } from './routes/_authenticated/invest.success.$id'
 import { Route as AuthenticatedInvestCheckoutIdRouteImport } from './routes/_authenticated/invest.checkout.$id'
 import { Route as AuthenticatedBuybybitNewIdRouteImport } from './routes/_authenticated/buybybit.new.$id'
+import { Route as AuthenticatedAssetpayNewIdRouteImport } from './routes/_authenticated/assetpay.new.$id'
 import { Route as AuthenticatedAdminAdminRewardsRouteImport } from './routes/_authenticated/_admin/admin.rewards'
 import { Route as AuthenticatedAdminAdminPropertiesRouteImport } from './routes/_authenticated/_admin/admin.properties'
 import { Route as AuthenticatedAdminAdminPayoutsRouteImport } from './routes/_authenticated/_admin/admin.payouts'
@@ -248,6 +251,12 @@ const AuthenticatedBuybybitIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedBuybybitRoute,
   } as any)
+const AuthenticatedAssetpayIndexRoute =
+  AuthenticatedAssetpayIndexRouteImport.update({
+    id: '/assetpay/',
+    path: '/assetpay/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ServicesMpIdRoute = ServicesMpIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -344,6 +353,12 @@ const AuthenticatedBrokerRewardsRoute =
     path: '/rewards',
     getParentRoute: () => AuthenticatedBrokerRoute,
   } as any)
+const AuthenticatedAssetpayPlanIdRoute =
+  AuthenticatedAssetpayPlanIdRouteImport.update({
+    id: '/assetpay/$planId',
+    path: '/assetpay/$planId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminAdminIndexRoute =
   AuthenticatedAdminAdminIndexRouteImport.update({
     id: '/admin/',
@@ -367,6 +382,12 @@ const AuthenticatedBuybybitNewIdRoute =
     id: '/new/$id',
     path: '/new/$id',
     getParentRoute: () => AuthenticatedBuybybitRoute,
+  } as any)
+const AuthenticatedAssetpayNewIdRoute =
+  AuthenticatedAssetpayNewIdRouteImport.update({
+    id: '/assetpay/new/$id',
+    path: '/assetpay/new/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAdminAdminRewardsRoute =
   AuthenticatedAdminAdminRewardsRouteImport.update({
@@ -469,6 +490,7 @@ export interface FileRoutesByFullPath {
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/invest/': typeof InvestIndexRoute
+  '/assetpay/$planId': typeof AuthenticatedAssetpayPlanIdRoute
   '/broker/rewards': typeof AuthenticatedBrokerRewardsRoute
   '/buybybit/$planId': typeof AuthenticatedBuybybitPlanIdRoute
   '/pay/$orderId': typeof AuthenticatedPayOrderIdRoute
@@ -486,6 +508,7 @@ export interface FileRoutesByFullPath {
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/services/mp/$id': typeof ServicesMpIdRoute
+  '/assetpay/': typeof AuthenticatedAssetpayIndexRoute
   '/buybybit/': typeof AuthenticatedBuybybitIndexRoute
   '/prichat/': typeof AuthenticatedPrichatIndexRoute
   '/vault/': typeof AuthenticatedVaultIndexRoute
@@ -502,6 +525,7 @@ export interface FileRoutesByFullPath {
   '/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/admin/properties': typeof AuthenticatedAdminAdminPropertiesRoute
   '/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
+  '/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/buybybit/new/$id': typeof AuthenticatedBuybybitNewIdRoute
   '/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
   '/invest/success/$id': typeof AuthenticatedInvestSuccessIdRoute
@@ -533,6 +557,7 @@ export interface FileRoutesByTo {
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/invest': typeof InvestIndexRoute
+  '/assetpay/$planId': typeof AuthenticatedAssetpayPlanIdRoute
   '/broker/rewards': typeof AuthenticatedBrokerRewardsRoute
   '/buybybit/$planId': typeof AuthenticatedBuybybitPlanIdRoute
   '/pay/$orderId': typeof AuthenticatedPayOrderIdRoute
@@ -550,6 +575,7 @@ export interface FileRoutesByTo {
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/services/mp/$id': typeof ServicesMpIdRoute
+  '/assetpay': typeof AuthenticatedAssetpayIndexRoute
   '/buybybit': typeof AuthenticatedBuybybitIndexRoute
   '/prichat': typeof AuthenticatedPrichatIndexRoute
   '/vault': typeof AuthenticatedVaultIndexRoute
@@ -566,6 +592,7 @@ export interface FileRoutesByTo {
   '/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/admin/properties': typeof AuthenticatedAdminAdminPropertiesRoute
   '/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
+  '/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/buybybit/new/$id': typeof AuthenticatedBuybybitNewIdRoute
   '/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
   '/invest/success/$id': typeof AuthenticatedInvestSuccessIdRoute
@@ -603,6 +630,7 @@ export interface FileRoutesById {
   '/services/mp': typeof ServicesMpRouteWithChildren
   '/signup/$role': typeof SignupRoleRoute
   '/invest/': typeof InvestIndexRoute
+  '/_authenticated/assetpay/$planId': typeof AuthenticatedAssetpayPlanIdRoute
   '/_authenticated/broker/rewards': typeof AuthenticatedBrokerRewardsRoute
   '/_authenticated/buybybit/$planId': typeof AuthenticatedBuybybitPlanIdRoute
   '/_authenticated/pay/$orderId': typeof AuthenticatedPayOrderIdRoute
@@ -620,6 +648,7 @@ export interface FileRoutesById {
   '/invest/farmvest/$id': typeof InvestFarmvestIdRoute
   '/invest/property/$id': typeof InvestPropertyIdRoute
   '/services/mp/$id': typeof ServicesMpIdRoute
+  '/_authenticated/assetpay/': typeof AuthenticatedAssetpayIndexRoute
   '/_authenticated/buybybit/': typeof AuthenticatedBuybybitIndexRoute
   '/_authenticated/prichat/': typeof AuthenticatedPrichatIndexRoute
   '/_authenticated/vault/': typeof AuthenticatedVaultIndexRoute
@@ -636,6 +665,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/payouts': typeof AuthenticatedAdminAdminPayoutsRoute
   '/_authenticated/_admin/admin/properties': typeof AuthenticatedAdminAdminPropertiesRoute
   '/_authenticated/_admin/admin/rewards': typeof AuthenticatedAdminAdminRewardsRoute
+  '/_authenticated/assetpay/new/$id': typeof AuthenticatedAssetpayNewIdRoute
   '/_authenticated/buybybit/new/$id': typeof AuthenticatedBuybybitNewIdRoute
   '/_authenticated/invest/checkout/$id': typeof AuthenticatedInvestCheckoutIdRoute
   '/_authenticated/invest/success/$id': typeof AuthenticatedInvestSuccessIdRoute
@@ -672,6 +702,7 @@ export interface FileRouteTypes {
     | '/services/mp'
     | '/signup/$role'
     | '/invest/'
+    | '/assetpay/$planId'
     | '/broker/rewards'
     | '/buybybit/$planId'
     | '/pay/$orderId'
@@ -689,6 +720,7 @@ export interface FileRouteTypes {
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/services/mp/$id'
+    | '/assetpay/'
     | '/buybybit/'
     | '/prichat/'
     | '/vault/'
@@ -705,6 +737,7 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/properties'
     | '/admin/rewards'
+    | '/assetpay/new/$id'
     | '/buybybit/new/$id'
     | '/invest/checkout/$id'
     | '/invest/success/$id'
@@ -736,6 +769,7 @@ export interface FileRouteTypes {
     | '/services/mp'
     | '/signup/$role'
     | '/invest'
+    | '/assetpay/$planId'
     | '/broker/rewards'
     | '/buybybit/$planId'
     | '/pay/$orderId'
@@ -753,6 +787,7 @@ export interface FileRouteTypes {
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/services/mp/$id'
+    | '/assetpay'
     | '/buybybit'
     | '/prichat'
     | '/vault'
@@ -769,6 +804,7 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/properties'
     | '/admin/rewards'
+    | '/assetpay/new/$id'
     | '/buybybit/new/$id'
     | '/invest/checkout/$id'
     | '/invest/success/$id'
@@ -805,6 +841,7 @@ export interface FileRouteTypes {
     | '/services/mp'
     | '/signup/$role'
     | '/invest/'
+    | '/_authenticated/assetpay/$planId'
     | '/_authenticated/broker/rewards'
     | '/_authenticated/buybybit/$planId'
     | '/_authenticated/pay/$orderId'
@@ -822,6 +859,7 @@ export interface FileRouteTypes {
     | '/invest/farmvest/$id'
     | '/invest/property/$id'
     | '/services/mp/$id'
+    | '/_authenticated/assetpay/'
     | '/_authenticated/buybybit/'
     | '/_authenticated/prichat/'
     | '/_authenticated/vault/'
@@ -838,6 +876,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/payouts'
     | '/_authenticated/_admin/admin/properties'
     | '/_authenticated/_admin/admin/rewards'
+    | '/_authenticated/assetpay/new/$id'
     | '/_authenticated/buybybit/new/$id'
     | '/_authenticated/invest/checkout/$id'
     | '/_authenticated/invest/success/$id'
@@ -1106,6 +1145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBuybybitIndexRouteImport
       parentRoute: typeof AuthenticatedBuybybitRoute
     }
+    '/_authenticated/assetpay/': {
+      id: '/_authenticated/assetpay/'
+      path: '/assetpay'
+      fullPath: '/assetpay/'
+      preLoaderRoute: typeof AuthenticatedAssetpayIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/services/mp/$id': {
       id: '/services/mp/$id'
       path: '/$id'
@@ -1225,6 +1271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBrokerRewardsRouteImport
       parentRoute: typeof AuthenticatedBrokerRoute
     }
+    '/_authenticated/assetpay/$planId': {
+      id: '/_authenticated/assetpay/$planId'
+      path: '/assetpay/$planId'
+      fullPath: '/assetpay/$planId'
+      preLoaderRoute: typeof AuthenticatedAssetpayPlanIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/_admin/admin/': {
       id: '/_authenticated/_admin/admin/'
       path: '/admin'
@@ -1252,6 +1305,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/buybybit/new/$id'
       preLoaderRoute: typeof AuthenticatedBuybybitNewIdRouteImport
       parentRoute: typeof AuthenticatedBuybybitRoute
+    }
+    '/_authenticated/assetpay/new/$id': {
+      id: '/_authenticated/assetpay/new/$id'
+      path: '/assetpay/new/$id'
+      fullPath: '/assetpay/new/$id'
+      preLoaderRoute: typeof AuthenticatedAssetpayNewIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/_admin/admin/rewards': {
       id: '/_authenticated/_admin/admin/rewards'
@@ -1465,12 +1525,15 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedSupportRoute: typeof AuthenticatedSupportRouteWithChildren
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRouteWithChildren
+  AuthenticatedAssetpayPlanIdRoute: typeof AuthenticatedAssetpayPlanIdRoute
   AuthenticatedPayOrderIdRoute: typeof AuthenticatedPayOrderIdRoute
   AuthenticatedWalletConfirmRoute: typeof AuthenticatedWalletConfirmRoute
   AuthenticatedWalletCreateRoute: typeof AuthenticatedWalletCreateRoute
   AuthenticatedWalletImportRoute: typeof AuthenticatedWalletImportRoute
   AuthenticatedWalletIntroRoute: typeof AuthenticatedWalletIntroRoute
   AuthenticatedWalletSecurityRoute: typeof AuthenticatedWalletSecurityRoute
+  AuthenticatedAssetpayIndexRoute: typeof AuthenticatedAssetpayIndexRoute
+  AuthenticatedAssetpayNewIdRoute: typeof AuthenticatedAssetpayNewIdRoute
   AuthenticatedInvestCheckoutIdRoute: typeof AuthenticatedInvestCheckoutIdRoute
   AuthenticatedInvestSuccessIdRoute: typeof AuthenticatedInvestSuccessIdRoute
   AuthenticatedInvestFarmvestHoldingHidRoute: typeof AuthenticatedInvestFarmvestHoldingHidRoute
@@ -1491,12 +1554,15 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedSupportRoute: AuthenticatedSupportRouteWithChildren,
   AuthenticatedVaultRoute: AuthenticatedVaultRouteWithChildren,
+  AuthenticatedAssetpayPlanIdRoute: AuthenticatedAssetpayPlanIdRoute,
   AuthenticatedPayOrderIdRoute: AuthenticatedPayOrderIdRoute,
   AuthenticatedWalletConfirmRoute: AuthenticatedWalletConfirmRoute,
   AuthenticatedWalletCreateRoute: AuthenticatedWalletCreateRoute,
   AuthenticatedWalletImportRoute: AuthenticatedWalletImportRoute,
   AuthenticatedWalletIntroRoute: AuthenticatedWalletIntroRoute,
   AuthenticatedWalletSecurityRoute: AuthenticatedWalletSecurityRoute,
+  AuthenticatedAssetpayIndexRoute: AuthenticatedAssetpayIndexRoute,
+  AuthenticatedAssetpayNewIdRoute: AuthenticatedAssetpayNewIdRoute,
   AuthenticatedInvestCheckoutIdRoute: AuthenticatedInvestCheckoutIdRoute,
   AuthenticatedInvestSuccessIdRoute: AuthenticatedInvestSuccessIdRoute,
   AuthenticatedInvestFarmvestHoldingHidRoute:
