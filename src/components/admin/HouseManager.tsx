@@ -95,8 +95,8 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
       )}
 
       {form && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 sm:items-center" onClick={() => setForm(null)}>
-          <div className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-background p-4 sm:rounded-3xl space-y-2.5" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center" onClick={() => setForm(null)}>
+          <div className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-background p-4 text-foreground sm:rounded-3xl space-y-2.5" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold">{form.id ? "Edit house" : "Add house"}</h2>
               <button aria-label="Close" onClick={() => setForm(null)} className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center"><X size={14} /></button>
@@ -125,8 +125,8 @@ export function HouseManager({ onChange, wide = false }: { onChange?: () => void
             </div>
             <div className="grid grid-cols-2 gap-1.5 text-xs">
               {([["verified", "Verified by AgroVest"], ["survey_ok", "Survey plan checked"], ["structural_ok", "Structural inspection"], ["title_search_ok", "Title search passed"]] as const).map(([k, l]) => (
-                <label key={k} className="flex items-center gap-2 rounded-xl border border-border px-2.5 py-2">
-                  <input type="checkbox" checked={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.checked })} />{l}
+                <label key={k} className="flex items-center gap-2 rounded-xl border border-border bg-secondary px-2.5 py-2 text-foreground cursor-pointer">
+                  <input type="checkbox" className="h-4 w-4 accent-agro" checked={form[k]} onChange={(e) => setForm({ ...form, [k]: e.target.checked })} />{l}
                 </label>
               ))}
             </div>
