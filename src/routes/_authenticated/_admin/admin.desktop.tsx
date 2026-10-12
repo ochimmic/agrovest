@@ -17,7 +17,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { fmtNgn, useFxRate, NGN_PER_USD } from "@/lib/fx";
+import { useFxRate, NGN_PER_USD } from "@/lib/fx";
+const naira = (n: number) => `₦${Math.round(n || 0).toLocaleString()}`;
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/desktop")({
   head: () => ({ meta: [{ title: "Admin console · AgroVest" }, { name: "robots", content: "noindex" }] }),
@@ -285,7 +286,7 @@ function Overview({ d, counts, onJump }: { d: Data; counts: Partial<Record<Secti
     <>
       <div className="grid grid-cols-3 xl:grid-cols-6 gap-3">
         <Kpi label="Users" value={d.profiles.length.toString()} sub={`${brokers} broker${brokers === 1 ? "" : "s"}`} />
-        <Kpi label="Confirmed volume" value={usd(volume)} sub={fmtNgn(volume * NGN_PER_USD)} />
+        <Kpi label="Confirmed volume" value={usd(volume)} sub={naira(volume * NGN_PER_USD)} />
         <Kpi label="Assets held" value={usd(aum)} sub={`${d.holdings.length} holdings`} />
         <Kpi label="Orders" value={d.orders.length.toString()} sub={`${confirmed.length} confirmed`} />
         <Kpi label="Commissions owed" value={usd(commissions)} sub={`${d.commissions.length} credits`} />
@@ -343,7 +344,7 @@ function PaymentsView({ d }: { d: Data }) {
           o.payer_name || nameOf(d, o.user_id),
           o.purpose?.assetName ?? "—",
           `${o.rail} · ${o.token}`,
-          <span>{usd(o.amount_usd)}<br /><span className="text-[11px] text-muted-foreground">{fmtNgn(Number(o.amount_usd) * Number(o.rate || NGN_PER_USD))}</span></span>,
+          <span>{usd(o.amount_usd)}<br /><span className="text-[11px] text-muted-foreground">{naira(Number(o.amount_usd) * Number(o.rate || NGN_PER_USD))}</span></span>,
           o.receipt_path ? "Uploaded" : o.tx_hash ? "On-chain" : "—",
           <Pill s={o.status} />,
           date(o.updated_at),
@@ -413,7 +414,7 @@ function PayoutsView({ d }: { d: Data }) {
         empty="No payout requests yet."
         rows={d.payouts.map((p) => [
           p.reference, nameOf(d, p.user_id), p.method, usd(p.amount_usd), usd(p.fee_usd),
-          <span>{usd(p.net_usd)}<br /><span className="text-[11px] text-muted-foreground">{fmtNgn(Number(p.net_usd) * Number(p.rate))}</span></span>,
+          <span>{usd(p.net_usd)}<br /><span className="text-[11px] text-muted-foreground">{naira(Number(p.net_usd) * Number(p.rate))}</span></span>,
           <Pill s={p.status} />, date(p.created_at),
         ])}
       />
@@ -429,7 +430,7 @@ function HousesView({ d }: { d: Data }) {
         empty="No houses yet."
         rows={d.houses.map((h) => [
           h.title, h.location,
-          <span>{fmtNgn(Number(h.market_price_ngn))}<br /><span className="text-[11px] text-muted-foreground">{usd(Number(h.market_price_ngn) / NGN_PER_USD)}</span></span>,
+          <span>{naira(Number(h.market_price_ngn))}<br /><span className="text-[11px] text-muted-foreground">{usd(Number(h.market_price_ngn) / NGN_PER_USD)}</span></span>,
           h.title_doc, h.verified ? "Yes" : "No", <Pill s={h.status} />,
         ])}
       />
