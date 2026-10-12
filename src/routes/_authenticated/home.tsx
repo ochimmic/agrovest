@@ -4,6 +4,7 @@ import {
   AlertTriangle, FileText, Headphones, Sparkles, Lock,
   Activity, ShoppingBag, Building2, Gift, ArrowDownLeft, ArrowUpRight, RefreshCw, Calculator,
 } from "lucide-react";
+import { NGN_PER_USD, useFxRate } from "@/lib/fx";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
 import { farmAssets } from "@/lib/mock-data";
@@ -14,6 +15,7 @@ import {
 export const Route = createFileRoute("/_authenticated/home")({ component: Home });
 
 function Home() {
+  useFxRate();
   const user = useAppState((s) => s.user);
   const role = useAppState((s) => s.role);
   const kyc = useAppState((s) => s.kyc);
@@ -49,7 +51,7 @@ function Home() {
             <p className="mt-2 text-[34px] font-semibold tracking-tight tabular">
               ${portfolioValue.toLocaleString()}<span className="text-white/40 text-lg">.00</span>
             </p>
-            <p className="text-[11px] text-white/70 tabular">≈ ₦{(portfolioValue * 1550).toLocaleString()}</p>
+            <p className="text-[11px] text-white/70 tabular">≈ ₦{(portfolioValue * NGN_PER_USD).toLocaleString()}</p>
 
             <div className="mt-1 flex items-center gap-2 text-xs">
               <span className="rounded-full bg-agro/15 px-2 py-0.5 text-agro font-medium">+0.0%</span>
