@@ -355,6 +355,7 @@ export type Database = {
           id: string
           method: string
           net_usd: number | null
+          rate: number
           reference: string
           reviewed_by: string | null
           status: string
@@ -370,6 +371,7 @@ export type Database = {
           id?: string
           method: string
           net_usd?: number | null
+          rate?: number
           reference?: string
           reviewed_by?: string | null
           status?: string
@@ -385,6 +387,7 @@ export type Database = {
           id?: string
           method?: string
           net_usd?: number | null
+          rate?: number
           reference?: string
           reviewed_by?: string | null
           status?: string

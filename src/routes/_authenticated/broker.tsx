@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { LocalTime } from "@/components/ui/local-time";
 import { Money } from "@/components/ui/money";
-import { fmtNgn } from "@/lib/fx";
+import { fmtNgn, useFxRate, NGN_PER_USD } from "@/lib/fx";
 import { withdrawalFee } from "@/lib/broker-tiers";
 
 export const Route = createFileRoute("/_authenticated/broker")({
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/broker")({
 });
 
 type Ref = { full_name: string; joined_at: string; kyc: string; purchases: number };
-type Payout = { id: string; reference: string; fee_usd: number; net_usd: number | null; amount_usd: number; method: string; status: string; admin_note: string | null; created_at: string };
+type Payout = { id: string; reference: string; fee_usd: number; net_usd: number | null; amount_usd: number; rate: number; method: string; status: string; admin_note: string | null; created_at: string };
 type Method = { method: "bank" | "crypto"; bank?: string; account_name?: string; account_number?: string; address?: string; token?: string };
 
 function Broker() {
@@ -33,6 +33,7 @@ function Broker() {
   const [code, setCode] = useState<string | null>(null);
   const [refs, setRefs] = useState<Ref[]>([]);
   const [payouts, setPayouts] = useState<Payout[]>([]);
+  useFxRate();
   const [m, setM] = useState<Method>({ method: "bank" });
   const [amount, setAmount] = useState("");
   const [busy, setBusy] = useState(false);
@@ -83,7 +84,7 @@ function Broker() {
     if (amt > bal.available) return toast.error("Amount is more than your available commission");
     if (!methodOk) return toast.error("Save your payout details first");
     setBusy(true);
-    const { error } = await supabase.from("payout_requests").insert({ amount_usd: amt, method: m.method, details: m });
+    const { error } = await supabase.from("payout_requests").insert({ amount_usd: amt, method: m.method, details: m, rate: NGN_PER_USD });
     setBusy(false);
     if (error) return toast.error(error.message);
     setAmount(""); toast.success("Withdrawal requested. AgroVest pays within 24 hours."); void load();
@@ -195,7 +196,7 @@ function Broker() {
               <ul className="space-y-1.5">
                 {payouts.map((p) => (
                   <li key={p.id} className="flex items-center justify-between text-xs">
-                    <span>{p.reference} · ${Number(p.amount_usd).toLocaleString()} ({fmtNgn(Number(p.amount_usd))}){Number(p.fee_usd) > 0 ? ` · fee $${Number(p.fee_usd).toLocaleString()}` : ""} · {p.method} · <LocalTime at={p.created_at} />{p.admin_note ? ` · ${p.admin_note}` : ""}</span>
+                    <span>{p.reference} · ${Number(p.amount_usd).toLocaleString()} (₦{Math.round(Number(p.amount_usd) * Number(p.rate)).toLocaleString()} @ ₦{Number(p.rate).toLocaleString()}/$){Number(p.fee_usd) > 0 ? ` · fee $${Number(p.fee_usd).toLocaleString()}` : ""} · {p.method} · <LocalTime at={p.created_at} />{p.admin_note ? ` · ${p.admin_note}` : ""}</span>
                     <span className={`font-medium capitalize ${p.status === "paid" ? "text-agro" : p.status === "rejected" ? "text-destructive" : "text-warn"}`}>{p.status}</span>
                   </li>
                 ))}
