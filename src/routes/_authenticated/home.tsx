@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ShieldCheck, ArrowRight, Sprout, LineChart, Wallet, GraduationCap,
   AlertTriangle, FileText, Headphones, Sparkles, Lock,
-  Activity, ShoppingBag, Building2, Gift, ArrowDownLeft, ArrowUpRight, RefreshCw,
+  Activity, ShoppingBag, Building2, Gift, ArrowDownLeft, ArrowUpRight, RefreshCw, Calculator,
 } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { useAppState } from "@/lib/store";
@@ -105,6 +105,14 @@ function Home() {
             <Tile icon={Wallet} label="AssetVault" sub="Non-custodial · BSC" to="/vault" tone="navy" />
             <Tile icon={FileText} label="Documents" sub="Receipts & contracts" to="/documents" tone="soft" />
           </div>
+          <Link to="/calculator" className="mt-3 flex items-center gap-3 rounded-3xl border border-border bg-card p-4 shadow-card">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-agro-soft text-agro"><Calculator size={18} /></span>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-navy">Land &amp; currency calculator</p>
+              <p className="text-[11px] text-muted-foreground">Plots, acres, hectares · price &amp; ROI · ₦ ⇄ $</p>
+            </div>
+            <ArrowRight size={16} className="text-agro" />
+          </Link>
         </section>
 
         {/* Activity */}

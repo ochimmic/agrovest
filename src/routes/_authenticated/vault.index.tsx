@@ -122,7 +122,7 @@ function VaultHome() {
             <div className="mt-5 grid grid-cols-4 gap-2">
               <Action label="Send" Icon={ArrowUpRight} to="/vault/send" />
               <Action label="Receive" Icon={ArrowDownLeft} to="/vault/receive" />
-              <Action label="Fund" Icon={Landmark} to="/prichat" />
+              <Action label="Deposit" Icon={Landmark} to="/vault/receive" />
               <Action label="Tokens" Icon={Settings2} to="/vault/tokens" />
             </div>
           </div>

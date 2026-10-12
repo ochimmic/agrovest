@@ -1,4 +1,4 @@
-// GoPay — Bank transfer top-up between the user and AgroVest.
+// Legacy bank top-up — Bank transfer top-up between the user and AgroVest.
 // There is no peer-to-peer selling. Every order is the user paying NGN
 // into AgroVest's One-Time account number; AgroVest admin confirms the receipt
 // and credits cUSD to the user's AssetVault.
@@ -277,7 +277,7 @@ export function advance(id: string, next: OrderStatus, sysMsg?: string) {
       amount: order.amountUsd,
       token: "USD",
       status: "confirmed",
-      meta: `GoPay · ${order.reference ?? order.id}`,
+      meta: `Bank deposit · ${order.reference ?? order.id}`,
     });
     if (order.purpose) {
       addHolding({

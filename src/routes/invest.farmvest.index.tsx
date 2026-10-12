@@ -1,3 +1,4 @@
+import { Calculator as CalcIcon, ArrowRight as ArrowRightIcon } from "lucide-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/shell/AppShell";
 import { farmAssets } from "@/lib/mock-data";
@@ -151,6 +152,15 @@ function FarmVest() {
           </div>
 
         </section>
+
+        <Link to="/calculator" className="flex items-center gap-3 rounded-3xl border border-border bg-card p-4 shadow-card">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-agro-soft text-agro"><CalcIcon size={18} /></span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-navy">Land &amp; currency calculator</p>
+            <p className="text-[11px] text-muted-foreground">Plots ⇄ acres ⇄ hectares, price, discount, ROI · ₦ ⇄ $</p>
+          </div>
+          <ArrowRightIcon size={16} className="text-agro" />
+        </Link>
 
         {dash.count > 0 && (
           <section className="mt-4">

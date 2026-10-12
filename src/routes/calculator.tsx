@@ -4,6 +4,8 @@ import { ArrowLeft, Calculator } from "lucide-react";
 import { MobileFrame } from "@/components/shell/MobileFrame";
 import { convertLand, landPrice, toPlots, type LandUnit } from "@/lib/pricing";
 import { yieldPctForYear } from "@/lib/yield-schedule";
+import { NGN_PER_USD } from "@/lib/fx";
+import { farmAssets } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/calculator")({
   head: () => ({
@@ -19,10 +21,51 @@ export const Route = createFileRoute("/calculator")({
   component: Calc,
 });
 
-const ngn = (n: number) => `₦${Math.round(n).toLocaleString()}`;
+const ngn = (n: number) => `₦${Math.round(n).toLocaleString()} · $${Math.round(n / NGN_PER_USD).toLocaleString()}`;
 const fmt = (n: number) => Number(n.toFixed(2)).toLocaleString();
 
 function Calc() {
+  const [tab, setTab] = useState<"land" | "fx">("land");
+  return (
+    <MobileFrame>
+      <header className="flex items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
+        <Link to="/invest/farmvest" className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><ArrowLeft size={18} /></Link>
+        <h1 className="flex items-center gap-2 text-base font-semibold text-foreground"><Calculator size={16} /> Calculator &amp; converter</h1>
+      </header>
+      <div className="mx-4 mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-secondary p-1">
+        {([["land", "Land"], ["fx", "Currency"]] as const).map(([k, l]) => (
+          <button key={k} type="button" onClick={() => setTab(k)}
+            className={`rounded-xl py-2 text-sm font-medium ${tab === k ? "bg-card text-foreground shadow-card" : "text-muted-foreground"}`}>{l}</button>
+        ))}
+      </div>
+      {tab === "land" ? <Land /> : <Fx />}
+    </MobileFrame>
+  );
+}
+
+function Fx() {
+  const [ngnStr, setNgn] = useState("1150000");
+  const [usdStr, setUsd] = useState(String(Math.round(1150000 / NGN_PER_USD * 100) / 100));
+  return (
+    <main className="flex-1 overflow-y-auto p-4 space-y-4">
+      <section className="rounded-3xl border border-border bg-card p-4 space-y-3">
+        <label className="block text-xs text-muted-foreground">Naira (₦)
+          <input inputMode="decimal" value={ngnStr} aria-label="Naira"
+            onChange={(e) => { setNgn(e.target.value); const n = Number(e.target.value) || 0; setUsd(String(Math.round(n / NGN_PER_USD * 100) / 100)); }}
+            className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-3 text-lg font-semibold text-foreground" />
+        </label>
+        <label className="block text-xs text-muted-foreground">US Dollar ($)
+          <input inputMode="decimal" value={usdStr} aria-label="US Dollar"
+            onChange={(e) => { setUsd(e.target.value); const n = Number(e.target.value) || 0; setNgn(String(Math.round(n * NGN_PER_USD))); }}
+            className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-3 text-lg font-semibold text-foreground" />
+        </label>
+        <p className="text-[11px] text-muted-foreground">Platform rate: ₦{NGN_PER_USD.toLocaleString()} = $1 (indicative).</p>
+      </section>
+    </main>
+  );
+}
+
+function Land() {
   const [unit, setUnit] = useState<LandUnit>("plot");
   const [qty, setQty] = useState("1");
   const q = Math.max(0, Number(qty) || 0);
@@ -33,11 +76,6 @@ function Calc() {
   const roi = [3, 4, 5].map((y) => ({ y, pct: yieldPctForYear(y), amt: p.landNgn * yieldPctForYear(y) }));
 
   return (
-    <MobileFrame>
-      <header className="flex items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))]">
-        <Link to="/invest/farmvest" className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><ArrowLeft size={18} /></Link>
-        <h1 className="flex items-center gap-2 text-base font-semibold text-foreground"><Calculator size={16} /> Land calculator</h1>
-      </header>
       <main className="flex-1 overflow-y-auto p-4 space-y-4">
         <section className="rounded-3xl border border-border bg-card p-4 space-y-3">
           <div className="grid grid-cols-3 gap-2">
@@ -80,9 +118,12 @@ function Calc() {
           <p className="text-[10px] text-muted-foreground">Market projections, not guaranteed. Maturity begins between the 3rd and 4th year.</p>
         </section>
 
-        <Link to="/invest/farmvest" className="block rounded-2xl bg-primary py-3 text-center text-sm font-semibold text-primary-foreground">Explore farms</Link>
+        {plots >= 0.5 && !tooBig ? (
+          <Link to="/invest/checkout/$id" params={{ id: farmAssets[0].id }} search={{ unit, qty: q, kind: "farm" }}
+            className="block rounded-2xl bg-primary py-3 text-center text-sm font-semibold text-primary-foreground">Invest now · {farmAssets[0].name}</Link>
+        ) : null}
+        <Link to="/invest/farmvest" className="block rounded-2xl bg-secondary py-3 text-center text-sm font-semibold text-secondary-foreground">Explore farms</Link>
       </main>
-    </MobileFrame>
   );
 }
 
